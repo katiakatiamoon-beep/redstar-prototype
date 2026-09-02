@@ -1,0 +1,678 @@
+<title>UX-прототип: РКН и штрафы</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<style>
+  :root{
+    --page:#EAEAEA; --canvas:#FFFFFF; --tint:#F4F4F4;
+    --ink:#171717; --ink-2:#4D4D4D; --ink-3:#8C8C8C;
+    --border:#DCDCDC; --border-2:#C2C2C2;
+    --cta:#171717; --cta-hover:#000000;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--page); color:var(--ink); font-family:'Inter','Segoe UI',Arial,sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3{ margin:0; font-weight:800; }
+  p{ margin:0; }
+  a{ color:inherit; }
+  ::selection{ background:#171717; color:#fff; }
+
+  .proto-tag{ position:fixed; top:12px; left:12px; z-index:200; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:#171717; color:#fff; padding:5px 10px; border-radius:4px; opacity:.85; }
+
+  .canvas-scroll{ width:100%; overflow-x:auto; }
+  .canvas{ width:1440px; min-width:1440px; margin:0 auto; background:var(--canvas); box-shadow:0 0 0 1px var(--border-2); }
+
+  section{ padding:0; }
+  .tint{ background:var(--tint); }
+  .sec-pad{ padding:128px 0; }
+
+  /* annotation redline tag */
+  details.spec{ margin-bottom:32px; }
+  details.spec summary{ list-style:none; cursor:pointer; display:inline-block; }
+  details.spec summary::-webkit-details-marker{ display:none; }
+  .annot{ display:inline-flex; align-items:center; gap:7px; font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--ink-3); background:#F0F0F0; border:1px dashed var(--border-2); border-radius:5px; padding:6px 11px; }
+  .annot::before{ content:'▦'; font-size:11px; }
+  .annot::after{ content:'  ·  показать UX-детали ▾'; opacity:.75; }
+  details.spec[open] .annot::after{ content:'  ·  скрыть ▴'; }
+  .spec-body{ margin-top:14px; border:1px solid var(--border-2); border-radius:8px; padding:18px 22px; background:#FAFAFA; display:grid; gap:11px; max-width:920px; }
+  .spec-row{ font-size:13.5px; color:var(--ink-2); line-height:1.6; }
+  .spec-row b{ color:var(--ink); font-weight:700; }
+
+  /* headings */
+  .eyebrow{ font-size:14px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-bottom:18px; }
+  h2.h-title{ font-size:50px; letter-spacing:-.015em; margin-bottom:30px; max-width:20ch; line-height:1.12; }
+  .body-txt{ font-size:21px; color:var(--ink-2); max-width:66ch; line-height:1.65; }
+  .body-txt + .body-txt{ margin-top:28px; }
+  .fine{ font-size:15px; color:var(--ink-3); max-width:66ch; margin-top:14px; }
+
+  /* buttons */
+  .btn{ font-weight:700; font-size:20px; border:none; border-radius:9px; padding:24px 40px; cursor:pointer; display:inline-flex; align-items:center; gap:10px; text-decoration:none; background:var(--cta); color:#fff; transition:background .12s ease, transform .12s ease; }
+  .btn:hover{ background:var(--cta-hover); transform:translateY(-1px); }
+  .btn:active{ transform:translateY(0); }
+  .btn:focus-visible{ outline:2px solid #171717; outline-offset:2px; }
+  .btn::after{ content:'→'; }
+  .btn.no-arrow::after{ content:''; }
+  .btn-outline{ background:transparent; color:var(--ink); border:1.5px solid var(--ink); }
+  .btn-outline:hover{ background:var(--ink); color:#fff; }
+  .btn-ghost{ background:transparent; color:var(--ink-2); border:1px solid var(--border-2); padding:14px 22px; font-size:16px; }
+  .btn-ghost:hover{ background:#F0F0F0; }
+
+  /* placeholder visual */
+  .placeholder{ background:repeating-linear-gradient(135deg,#EFEFEF,#EFEFEF 9px,#E3E3E3 9px,#E3E3E3 18px); border:1.5px dashed var(--border-2); border-radius:8px; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--ink-3); font-size:16px; font-weight:600; line-height:1.5; padding:24px; }
+
+  /* header */
+  header.site{ height:96px; display:flex; align-items:center; border-bottom:1px solid var(--border); }
+  header.site .in{ width:1320px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; }
+  .logo-wf{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:22px; }
+  .logo-wf .sq{ width:17px; height:17px; border:2px solid var(--ink); flex:none; }
+  .head-right{ display:flex; align-items:center; gap:26px; }
+  .head-phone{ font-size:17px; font-weight:600; color:var(--ink-2); }
+  .icon-wf{ display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; border:1.5px solid var(--border-2); font-size:11px; font-weight:700; color:var(--ink-2); flex:none; }
+  .icon-row{ display:flex; align-items:center; gap:8px; }
+
+  /* hero */
+  .hero-in{ width:1200px; margin:0 auto; padding:132px 0 140px; text-align:center; }
+  .hero-copy{ max-width:1200px; margin:0 auto; }
+  .hero h1{ font-size:92px; line-height:1.06; letter-spacing:-.02em; margin:0 auto 44px; }
+  .hero .lede{ font-size:24px; color:var(--ink-2); max-width:720px; margin:0 auto 20px; line-height:1.5; }
+  .hero .lede:last-of-type{ margin-bottom:64px; }
+  .hero-cta-row{ display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap; }
+  .hero .micro{ font-size:15.5px; color:var(--ink-3); margin-top:24px; }
+  .trust-panel{ display:inline-flex; margin-top:56px; background:var(--tint); border-radius:14px; padding:22px 28px; }
+  .hero-trust{ display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; }
+  .trust-chip{ display:inline-flex; align-items:center; gap:8px; font-size:14.5px; font-weight:600; color:var(--ink-2); background:#fff; border:1px solid var(--border-2); border-radius:999px; padding:10px 18px; }
+  .trust-chip::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--ink); flex:none; }
+
+  /* risks */
+  .in-1140{ width:1140px; margin:0 auto; }
+  .risks-center{ text-align:center; }
+  .risks-center details.spec{ text-align:left; }
+  .risk-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:30px; margin-top:52px; }
+  .risk-card{ border:1px solid var(--border); border-radius:10px; padding:34px 30px; background:#fff; }
+  .risk-card .num{ font-size:15px; font-weight:800; color:var(--ink-3); margin-bottom:20px; }
+  .risk-card p{ font-size:19px; color:var(--ink); font-weight:500; line-height:1.55; }
+  .risk-label{ font-size:13.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-3); margin-top:56px; }
+
+  /* checklist */
+  .in-1240{ width:1240px; margin:0 auto; }
+  .req-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:48px; }
+  .req-card{ border:1px solid var(--border); border-radius:10px; padding:30px; background:#fff; display:flex; flex-direction:column; gap:16px; }
+  .req-card .rn{ font-size:28px; font-weight:800; color:var(--border-2); }
+  .req-card p{ font-size:18px; color:var(--ink); font-weight:500; line-height:1.5; }
+  .req-more{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; overflow:hidden; max-height:0; transition:max-height .4s ease; }
+  .req-more.open{ max-height:900px; margin-top:26px; }
+  .req-toggle{ margin-top:40px; background:none; border:1px dashed var(--border-2); border-radius:8px; padding:16px 22px; font-size:16px; font-weight:700; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:8px; }
+  .req-toggle:hover{ background:#F0F0F0; }
+  .req-toggle .chev{ transition:transform .25s ease; }
+  .req-toggle[aria-expanded="true"] .chev{ transform:rotate(180deg); }
+  .req-cta{ margin-top:60px; display:flex; align-items:center; gap:26px; }
+  .req-cta .fine{ margin:0; }
+
+  /* compare */
+  .cmp-wrap{ margin-top:56px; display:grid; grid-template-columns:1fr 96px 1fr; align-items:stretch; }
+  .cmp-col{ display:flex; flex-direction:column; gap:20px; }
+  .cmp-head{ font-size:15px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; padding-bottom:18px; margin-bottom:10px; border-bottom:2px solid var(--ink); }
+  .cmp-col.was .cmp-head{ color:var(--ink-3); border-bottom-color:var(--border-2); }
+  .cmp-row{ display:flex; gap:16px; align-items:flex-start; font-size:19px; padding:24px 26px; border-radius:8px; border:1px solid var(--border); }
+  .cmp-col.was .cmp-row{ color:var(--ink-3); background:transparent; }
+  .cmp-col.now .cmp-row{ color:var(--ink); font-weight:500; background:#fff; border-color:var(--ink); box-shadow:0 6px 18px -12px rgba(0,0,0,.25); }
+  .cmp-mark{ flex:none; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; }
+  .cmp-col.was .cmp-mark{ border:1.5px solid var(--border-2); color:var(--border-2); }
+  .cmp-col.now .cmp-mark{ background:var(--ink); color:#fff; }
+  .cmp-arrows{ display:flex; flex-direction:column; justify-content:center; align-items:center; gap:52px; padding-top:54px; }
+  .cmp-arrows span{ font-size:24px; color:var(--border-2); }
+
+  /* next / paths */
+  .path-grid{ display:grid; grid-template-columns:1fr 1fr; gap:36px; margin-top:52px; }
+  .path-card{ border:1px solid var(--border); border-radius:10px; padding:34px; }
+  .path-card .pl{ font-size:13.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); margin-bottom:24px; }
+  .path-steps{ display:flex; flex-direction:column; gap:0; }
+  .path-step{ display:flex; align-items:flex-start; gap:16px; padding:16px 0; }
+  .path-step:not(:last-child){ border-bottom:1px dashed var(--border); }
+  .path-step .sn{ flex:none; width:26px; height:26px; border-radius:50%; border:1.5px solid var(--ink); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+  .path-step p{ font-size:17.5px; font-weight:600; padding-top:1px; }
+  .path-note{ margin-top:36px; font-size:16px; color:var(--ink-3); }
+
+  /* support */
+  .in-1320{ width:1320px; margin:0 auto; }
+  .sup-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:30px; margin-top:52px; align-items:start; }
+  .sup-card{ border:1px solid var(--border); border-radius:10px; background:#fff; overflow:hidden; }
+  .sup-card .sh{ padding:22px 24px; font-size:19px; font-weight:800; background:var(--tint); cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .sup-card .sh::-webkit-details-marker{ display:none; }
+  .sup-card .sh::after{ content:'+'; font-weight:400; font-size:24px; color:var(--ink-3); flex:none; }
+  .sup-card[open] .sh{ border-bottom:1px solid var(--border); }
+  .sup-card[open] .sh::after{ content:'–'; }
+  .sup-card ul{ list-style:none; margin:0; padding:20px 24px 26px; display:grid; gap:13px; }
+  .sup-card li{ font-size:17px; color:var(--ink-2); padding-left:18px; position:relative; line-height:1.5; }
+  .sup-card li::before{ content:'—'; position:absolute; left:0; color:var(--ink-3); }
+  .sup-cta{ margin-top:60px; }
+
+  /* company */
+  .co-grid{ display:grid; grid-template-columns:5fr 7fr; gap:56px; align-items:center; margin-top:18px; }
+  .co-visual{ aspect-ratio:4/3; }
+  .fact-list{ display:flex; flex-direction:column; }
+  .fact-row{ display:flex; gap:20px; align-items:baseline; padding:21px 0; border-bottom:1px solid var(--border); }
+  .fact-row:last-child{ border-bottom:none; }
+  .fact-row .fv{ font-weight:800; font-size:20px; flex:none; width:210px; }
+  .fact-row .fv.cert{ display:inline-flex; align-items:center; width:auto; min-width:150px; font-size:14.5px; font-weight:700; border:1.5px solid var(--ink); border-radius:999px; padding:7px 16px; }
+  .fact-row .fd{ font-size:18px; color:var(--ink-2); }
+
+  /* cases */
+  .case-grid{ display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:52px; }
+  .case-card{ border:1px solid var(--border); border-radius:10px; background:#fff; padding:34px 34px 30px; display:flex; flex-direction:column; gap:22px; }
+  .case-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .case-name{ font-weight:800; font-size:21px; }
+  .case-term{ font-size:13.5px; font-weight:700; color:var(--ink-3); background:var(--tint); border-radius:999px; padding:7px 14px; white-space:nowrap; }
+  .case-desc{ font-size:17.5px; color:var(--ink-2); line-height:1.6; }
+  .case-stat{ margin-top:auto; padding-top:22px; border-top:1px dashed var(--border); display:flex; align-items:baseline; gap:14px; }
+  .case-stat b{ font-size:38px; font-weight:800; }
+  .case-stat span{ font-size:14px; color:var(--ink-3); font-weight:600; }
+
+  /* faq */
+  .in-900{ width:900px; margin:0 auto; }
+  details.faq{ border-bottom:1px solid var(--border); padding:32px 0; }
+  details.faq:first-of-type{ border-top:1px solid var(--border); }
+  details.faq summary{ cursor:pointer; list-style:none; font-weight:700; font-size:21px; display:flex; justify-content:space-between; gap:16px; align-items:center; }
+  details.faq summary::-webkit-details-marker{ display:none; }
+  details.faq summary::after{ content:'+'; font-weight:400; font-size:26px; color:var(--ink-3); flex:none; }
+  details.faq[open] summary::after{ content:'–'; }
+  details.faq .a{ font-size:18.5px; color:var(--ink-2); margin-top:20px; max-width:64ch; line-height:1.6; }
+
+  /* final cta */
+  .final-grid{ display:grid; grid-template-columns:7fr 5fr; gap:60px; align-items:center; margin-top:18px; }
+  .final-grid h2{ font-size:46px; max-width:16ch; margin-bottom:28px; line-height:1.18; }
+  .final-card{ border:1px solid var(--border-2); border-radius:12px; background:#fff; padding:44px; box-shadow:0 20px 48px -28px rgba(0,0,0,.28); }
+  .form-grid{ display:grid; gap:22px; }
+  .field{ display:flex; flex-direction:column; gap:9px; }
+  .field label{ font-size:13px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
+  .field input{ font-family:'Inter',sans-serif; font-size:18px; padding:17px 18px; border-radius:7px; border:1.5px solid var(--border-2); background:#fff; color:var(--ink); }
+  .field input:focus{ outline:none; border-color:var(--ink); }
+  .consent{ display:flex; gap:12px; align-items:flex-start; font-size:14px; color:var(--ink-3); margin-top:6px; }
+  .consent input{ margin-top:2px; }
+  .form-status{ font-size:15px; color:var(--ink); margin-top:16px; display:none; font-weight:600; }
+  .form-status.show{ display:block; }
+
+  /* footer */
+  footer.site{ border-top:1px solid var(--border); }
+  .foot-in{ width:1320px; margin:0 auto; padding:60px 0 68px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:32px; }
+  footer.site h3{ font-size:24px; margin-bottom:12px; }
+  .foot-sub{ font-size:17px; color:var(--ink-3); }
+  .foot-contacts{ display:flex; gap:40px; }
+  .foot-item .l{ font-size:12.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
+  .foot-item .v{ font-size:18px; font-weight:700; }
+
+  /* modal */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(20,20,20,.5); display:flex; align-items:center; justify-content:center; padding:20px; z-index:300; opacity:0; pointer-events:none; transition:opacity .2s ease; }
+  .modal-overlay.open{ opacity:1; pointer-events:auto; }
+  .modal-box{ background:#fff; border-radius:12px; padding:38px 36px; max-width:460px; width:100%; box-shadow:0 30px 70px -20px rgba(0,0,0,.4); position:relative; }
+  .modal-close{ position:absolute; top:16px; right:16px; width:30px; height:30px; border-radius:50%; border:1px solid var(--border-2); background:#F4F4F4; color:var(--ink-2); cursor:pointer; font-size:16px; line-height:1; }
+  .modal-box h3{ font-size:23px; margin-bottom:8px; padding-right:24px; }
+  .modal-box .modal-sub{ font-size:16px; color:var(--ink-2); margin-bottom:6px; font-weight:400; line-height:1.5; }
+</style>
+
+<div class="proto-tag">UX-прототип · wireframe · 1440px</div>
+
+<div class="canvas-scroll">
+<div class="canvas">
+
+  <header class="site">
+    <div class="in">
+      <div class="logo-wf"><span class="sq"></span>Редстар</div>
+      <div class="head-right">
+        <span class="head-phone">8 (4852) 31-94-04</span>
+        <div class="icon-row">
+          <span class="icon-wf" title="Telegram">TG</span>
+          <span class="icon-wf" title="Max">M</span>
+        </div>
+        <button class="btn-ghost" data-open-modal data-modal-title="Оставить заявку" data-modal-sub="Ответим в среднем за 9 минут в рабочее время.">Оставить заявку</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 01 HERO -->
+  <section class="hero">
+    <div class="hero-in">
+      <details class="spec"><summary><span class="annot">Сетка: контент 1200px, центр · без визуала — чистый текстовый экран · высота ~760px</span></summary>
+        <div class="spec-body">
+          <div class="spec-row"><b>Текст:</b> заголовок, лид и CTA — по центру, в одной вертикальной оси, с большим воздухом между каждым элементом; заголовку — вся ширина контента, лид уже (720px) для читаемости.</div>
+          <div class="spec-row"><b>CTA:</b> одна крупная кнопка по центру, отделена от лида увеличенным отступом — читается как самостоятельное, весомое действие, а не мелкая деталь под текстом.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> без колонок и без визуального элемента — по данным исследований конверсионных B2B/агентских лендингов (Datadog, Linear и др.), минимализм и один явный посыл на первом экране конвертируют лучше конкурирующего визуала.</div>
+          <div class="spec-row"><b>Акценты:</b> «бесплатно» и срок — словами в лиде и микротексте под кнопкой, без отдельных бейджей.</div>
+          <div class="spec-row"><b>Визуал:</b> декоративной иллюстрации нет — по CRO-исследованиям она конкурирует с сообщением. Вместо неё — «trust signals above the fold»: реальные факты доверия видны сразу, а не спрятаны в футере в блоке «О компании».</div>
+          <div class="spec-row"><b>Сканирование:</b> строго вертикально по центральной оси — заголовок → лид → кнопка → микротекст, без бокового рассеивания внимания.</div>
+          <div class="spec-row"><b>Связь со следующим блоком:</b> заголовок называет угрозу — блок «Риски» сразу объясняет, откуда она берётся; фон не меняется, разрыва нет.</div>
+        </div>
+      </details>
+      <div class="hero-copy">
+        <h1>Штраф до 6&nbsp;000&nbsp;000&nbsp;₽ грозит даже одностраничному сайту</h1>
+        <p class="lede">Если на сайте есть форма заявки, обратного звонка или установлена Яндекс.Метрика — вы уже обрабатываете персональные данные.</p>
+        <p class="lede" style="white-space:nowrap; max-width:none;">Бесплатно оценим готовность вашего сайта к проверке Роскомнадзора.</p>
+        <div class="hero-cta-row">
+          <button class="btn" data-open-modal data-modal-title="Получить бесплатный аудит" data-modal-sub="Аудит по основным требованиям 152-ФЗ. Пришлём список нарушений и как их закрыть.">Получить бесплатный аудит за 1 день</button>
+        </div>
+        <p class="micro">Аудит по основным требованиям 152-ФЗ. Пришлем список нарушений и как их закрыть.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 РИСКИ -->
+  <section class="sec-pad">
+    <div class="in-1140 risks-center">
+      <details class="spec"><summary><span class="annot">Сетка: контент 1140px · заголовок+интро на всю ширину · 3 карточки в ряд · высота ~520px</span></summary>
+        <div class="spec-body">
+          <div class="spec-row"><b>Текст:</b> заголовок и вводный абзац на всю читаемую ширину — задают контекст до того, как пользователь дойдёт до карточек.</div>
+          <div class="spec-row"><b>CTA:</b> намеренно отсутствует — это блок нагнетания контекста, а не конверсии; CTA появится ниже, в блоке с чек-листом.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> 3 равные карточки в ряд, ровно по числу рисков — без приоритизации между причинами.</div>
+          <div class="spec-row"><b>Акценты:</b> номера 01/02/03 внутри карточек — работают как счётчик прочтения для глаза.</div>
+          <div class="spec-row"><b>Визуал:</b> иллюстрации нет намеренно — текстовая пауза после насыщенного hero.</div>
+          <div class="spec-row"><b>Сканирование:</b> F-паттерн сверху (заголовок → абзац), затем горизонтальный проход по трём карточкам слева направо.</div>
+          <div class="spec-row"><b>Связь со следующим блоком:</b> смысловой мостик «а что делать» — ниже меняется фон (tint) и сразу предлагается решение (чек-лист).</div>
+        </div>
+      </details>
+      <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto;">РКН не смотрит,<br>большой у вас бизнес или маленький</h2>
+      <p class="body-txt" style="margin-left:auto; margin-right:auto;">С 30 мая 2025 года штрафы за нарушение закона о персональных данных выросли в разы. Даже если на сайте нет ни одной формы, а стоит только Яндекс.Метрика — вы уже собираете персональные данные посетителей и попадаете в зону риска получить штраф до 6 млн рублей<sup>*</sup>.</p>
+      <p class="fine" style="margin-left:auto; margin-right:auto;">*по КоАП РФ, ст. 13.11 (первое нарушение) — рекомендуем сверить актуальную сумму с юристом.</p>
+      <div class="risk-label">Риски</div>
+      <div class="risk-grid">
+        <div class="risk-card"><div class="num">01</div><p>Сайт сделан давно, и с тех пор опубликованные юридические документы не обновлялись</p></div>
+        <div class="risk-card"><div class="num">02</div><p>Техподдержка занимается только технической стороной сайта, не касаясь законодательства</p></div>
+        <div class="risk-card"><div class="num">03</div><p>В компании нет ответственного за соответствие сайта требованиям 152-ФЗ</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 ЧЕК-ЛИСТ -->
+  <section class="sec-pad tint">
+    <div class="in-1240">
+      <details class="spec"><summary><span class="annot">Сетка: контент 1240px · 3×3 карточки · аккордеон (1–3 открыты) · высота ~420–680px</span></summary>
+        <div class="spec-body">
+          <div class="spec-row"><b>Текст:</b> заголовок и короткое пояснение сверху, дальше сразу карточки — минимум текста между заголовком и функциональным элементом.</div>
+          <div class="spec-row"><b>CTA:</b> одна кнопка в самом конце, после всех 9 пунктов — решение принимается уже видя полный объём проверки, а не после первых трёх.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> сетка 3×3 — намеренная перекличка с рядом из 3 карточек в блоке «Риски» выше, задаёт единый ритм страницы.</div>
+          <div class="spec-row"><b>Акценты:</b> крупные бледно-серые номера 01–09 внутри карточек — не конкурируют с текстом пункта, но дают ощущение именно чек-листа.</div>
+          <div class="spec-row"><b>Визуал:</b> отдельной иллюстрации нет — сама сетка карточек уже визуальный элемент.</div>
+          <div class="spec-row"><b>Сканирование:</b> сначала считывается верхний ряд из 3 всегда видимых пунктов как «достаточно, чтобы понять суть»; раскрытие остальных 6 — осознанное действие вовлечённого пользователя.</div>
+          <div class="spec-row"><b>Связь со следующим блоком:</b> CTA — пик первой половины воронки; следующий блок (сравнение) работает на аргументацию, а не на действие, поэтому CTA там не дублируется.</div>
+        </div>
+      </details>
+      <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto; text-align:center;">Бесплатно проверим сайт<br>по 9 ключевым требованиям РКН</h2>
+      <p class="body-txt" style="max-width:none; white-space:nowrap; margin-left:auto; margin-right:auto; text-align:center;">Специалист вручную проверит сайт и пришлёт отчёт: что в порядке, а что нужно исправить.</p>
+
+      <div class="req-grid">
+        <div class="req-card"><div class="rn">01</div><p>Согласие на обработку персональных данных на всех формах</p></div>
+        <div class="req-card"><div class="rn">02</div><p>Опубликованная политика обработки персональных данных</p></div>
+        <div class="req-card"><div class="rn">03</div><p>Отсутствие на сайте Google Analytics и других систем трансграничной передачи данных</p></div>
+      </div>
+
+      <div class="req-more" id="reqMore">
+        <div class="req-card"><div class="rn">04</div><p>Хранение и обработка данных россиян на серверах в РФ</p></div>
+        <div class="req-card"><div class="rn">05</div><p>Согласие на использование cookie и корректный cookie-баннер</p></div>
+        <div class="req-card"><div class="rn">06</div><p>Возможность отозвать согласие на обработку данных</p></div>
+        <div class="req-card"><div class="rn">07</div><p>Отсутствие на сайте логотипов сервисов, признанных экстремистскими в РФ</p></div>
+        <div class="req-card"><div class="rn">08</div><p>Защищённое соединение (SSL) при передаче данных из форм</p></div>
+        <div class="req-card"><div class="rn">09</div><p>На сайте предусмотрена авторизация через разрешённые способы (российский номер телефона, ВК ID, Госуслуги)</p></div>
+      </div>
+
+      <button class="req-toggle" id="reqToggle" aria-expanded="false" aria-controls="reqMore">
+        <span id="reqToggleLabel">Показать ещё 6 пунктов аудита</span><span class="chev">▾</span>
+      </button>
+
+      <div class="req-cta" style="justify-content:center;">
+        <button class="btn" data-open-modal data-modal-title="Прислать сайт на проверку" data-modal-sub="Результат — за 1 рабочий день. PDF-отчёт пришлём в Телеграм или Макс.">Прислать сайт на проверку</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 БЕЗ АУДИТА / С АУДИТОМ -->
+  <section class="sec-pad">
+    <div class="in-1140">
+      <details class="spec"><summary><span class="annot">Сетка: контент 1140px · 2 колонки 5/5 + центр 2 · высота ~460px</span></summary>
+        <div class="spec-body">
+          <div class="spec-row"><b>Текст:</b> минимум — только заголовок и короткие пункты, а не абзацы; формулировки исходные, поэтому пункты специально парные и лаконичные.</div>
+          <div class="spec-row"><b>CTA:</b> отсутствует — блок работает на аргументацию, чтобы не размывать единственный CTA чек-листа выше.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> 2 колонки-«весы» + узкая колонка стрелок между ними — не таблица, а визуальная оппозиция.</div>
+          <div class="spec-row"><b>Акценты:</b> правая колонка визуально тяжелее (тёмная обводка, тень, заливка у «✓») — это и есть акцент, без цвета.</div>
+          <div class="spec-row"><b>Визуал:</b> сами карточки — визуальный элемент, отдельная иллюстрация не нужна.</div>
+          <div class="spec-row"><b>Сканирование:</b> взгляд прыгает по горизонтали пара за парой («было → стало»), а не читает колонку целиком сверху вниз.</div>
+          <div class="spec-row"><b>Связь со следующим блоком:</b> правая колонка заканчивается на позитивном сценарии — «Что дальше» естественно продолжает «а как я туда попаду».</div>
+        </div>
+      </details>
+      <h2 class="h-title" style="max-width:none; white-space:nowrap; margin-left:auto; margin-right:auto; text-align:center;">Что будет, если оставить как есть</h2>
+      <div class="cmp-wrap">
+        <div class="cmp-col was">
+          <div class="cmp-head">Без аудита</div>
+          <div class="cmp-row"><span class="cmp-mark">✕</span><span>Проверка находит нарушения → штраф<br>от 30&nbsp;000 до 6&nbsp;000&nbsp;000 ₽</span></div>
+          <div class="cmp-row"><span class="cmp-mark">✕</span><span>Репутационные риски и объяснения перед клиентами</span></div>
+          <div class="cmp-row"><span class="cmp-mark">✕</span><span>Время уходит на разбирательства,<br>а не на бизнес</span></div>
+        </div>
+        <div class="cmp-arrows"><span>→</span><span>→</span><span>→</span></div>
+        <div class="cmp-col now">
+          <div class="cmp-head">С аудитом Редстар</div>
+          <div class="cmp-row"><span class="cmp-mark">✓</span><span>Знаете список нарушений до проверки</span></div>
+          <div class="cmp-row"><span class="cmp-mark">✓</span><span>Успеваете устранить нарушения и избежать репутационных и финансовых потерь</span></div>
+          <div class="cmp-row"><span class="cmp-mark">✓</span><span>Сайт продолжает генерировать заявки, а не штрафы</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 ЧТО ДАЛЬШЕ -->
+  <section class="sec-pad tint">
+    <div class="in-1140">
+      <details class="spec"><summary><span class="annot">Сетка: контент 1140px · только текст, на всю ширину · высота ~320px</span></summary>
+        <div class="spec-body">
+          <div class="spec-row"><b>Текст:</b> 2 исходных абзаца на всю ширину контейнера — блок нарочно лёгкий, переходный, без дополнительных визуальных элементов.</div>
+          <div class="spec-row"><b>CTA:</b> намеренно нет — задача блока снять ощущение «дожима», кнопка здесь противоречила бы этой цели.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> без карточек и диаграмм — просто два абзаца; лишняя структура здесь отвлекала от текста, а не помогала.</div>
+          <div class="spec-row"><b>Акценты:</b> нет — блок специально нейтральный, без визуального нажима в сторону какого-либо варианта действий.</div>
+          <div class="spec-row"><b>Визуал:</b> отсутствует — после плотных блоков выше это осознанная пауза для чтения.</div>
+          <div class="spec-row"><b>Сканирование:</b> сверху вниз, линейное чтение двух абзацев.</div>
+          <div class="spec-row"><b>Связь со следующим блоком:</b> второй абзац заканчивается на «техническую поддержку» — именно эту тему разворачивает следующий блок.</div>
+        </div>
+      </details>
+      <p class="body-txt" style="max-width:none;">По итогам аудита вы получите отчёт с результатами проверки. Можете использовать его как готовый чек-лист и устранить всё самостоятельно, а можете передать задачи нам.</p>
+      <p class="body-txt" style="max-width:none;">Мы не только приведём сайт в соответствие с требованиями РКН, но и возьмём на себя его техническую поддержку целиком: от небольших правок до регулярного сопровождения и развития.</p>
+    </div>
+  </section>
+
+  <!-- 06 ЧТО ВХОДИТ В ПОДДЕРЖКУ -->
+  <section class="sec-pad">
+    <div class="in-1320">
+      <details class="spec"><summary><span class="annot">Сетка: контент 1320px · 3 карточки-направления 1/1/1 · высота ~760px</span></summary>
+        <div class="spec-body">
+          <div class="spec-row"><b>Текст:</b> заголовок-вопрос сверху, дальше сразу карточки — задаёт тон «вот конкретика, а не расплывчато».</div>
+          <div class="spec-row"><b>CTA:</b> одна кнопка-ссылка на прайс внизу, после всех трёх карточек — переход к тарифам только после того, как виден полный охват услуг.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> 3 равные карточки — по числу направлений, без выделения «главного».</div>
+          <div class="spec-row"><b>Акценты:</b> заголовок-плашка направления (заливка) сверху каждой карточки — отделяет название направления от списка задач внутри.</div>
+          <div class="spec-row"><b>Визуал:</b> отдельной иллюстрации нет — блок и так плотный по контенту, доп. визуал перегрузил бы его.</div>
+          <div class="spec-row"><b>Сканирование:</b> сначала 3 заголовка направлений (быстрый скан), затем произвольное чтение списка внутри интересующей карточки.</div>
+          <div class="spec-row"><b>Связь со следующим блоком:</b> от «что мы умеем» — к «а кто мы вообще»: следующий блок «О компании».</div>
+        </div>
+      </details>
+      <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto; margin-bottom:14px; text-align:center;">Что мы умеем как техподдержка?</h2>
+      <p class="body-txt" style="max-width:none; white-space:nowrap; margin-left:auto; margin-right:auto; text-align:center; font-size:22px;">Решать задачи любой сложности, например:</p>
+
+      <div class="sup-grid">
+        <details class="sup-card" open>
+          <summary class="sh">Защита от взлома</summary>
+          <ul>
+            <li>Мониторинг доступности сайта 24/7</li>
+            <li>Восстановление сайта после «падения»</li>
+            <li>Проверка на вирусы и чистка</li>
+            <li>Обновление 1С-Битрикс</li>
+            <li>Настройка резервного копирования</li>
+            <li>Проверка места на хостинге</li>
+            <li>Проверка оплаты домена и хостинга</li>
+            <li>Общение со специалистами хостинга</li>
+            <li>Установка ssl-сертификата</li>
+            <li>Обновление PHP до версии 8+</li>
+            <li>Защита сайта от взломов и DDOS-атак</li>
+            <li>Перенос сайта на другой хостинг</li>
+          </ul>
+        </details>
+        <details class="sup-card">
+          <summary class="sh">Улучшение сайта</summary>
+          <ul>
+            <li>Исправление технических ошибок</li>
+            <li>Интеграции с любыми системами</li>
+            <li>Создание нового функционала</li>
+            <li>Размещение контента</li>
+            <li>Интеграции с платёжными системами</li>
+            <li>Оптимизация скорости загрузки сайта</li>
+            <li>Технический аудит сайта</li>
+            <li>Разработка сложных фильтров</li>
+            <li>Интеграция со сторонними API</li>
+            <li>Интеграция со службами доставки</li>
+            <li>Выгрузка фида на маркетплейс</li>
+            <li>Изменение функционала сайта</li>
+            <li>Парсинг данных от поставщиков</li>
+          </ul>
+        </details>
+        <details class="sup-card">
+          <summary class="sh">Дизайн</summary>
+          <ul>
+            <li>Отрисовка отдельных страниц разделов</li>
+            <li>Редизайн сайта</li>
+            <li>Изображения для товарных категорий</li>
+            <li>Создание баннеров</li>
+            <li>Подготовка прототипов страниц</li>
+            <li>Отрисовка иконок</li>
+            <li>Создание писем для рассылки</li>
+          </ul>
+        </details>
+      </div>
+
+      <div class="sup-cta" style="text-align:center;">
+        <a class="btn btn-outline" href="https://redstar-support.ru/#price" target="_blank" rel="noopener">Узнать тарифы на услуги техподдержки</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 О КОМПАНИИ -->
+  <section class="sec-pad tint">
+    <div class="in-1140">
+      <details class="spec"><summary><span class="annot">Сетка: контент 1140px, центр · факты — бейджи в ряд · фото ниже, по центру · высота ~440px</span></summary>
+        <div class="spec-body">
+          <div class="spec-row"><b>Текст:</b> 5 фактов теперь не строки, а бейджи-«пилюли» в ряд — читаются как единый блок доверия, а не список для построчного чтения.</div>
+          <div class="spec-row"><b>CTA:</b> отсутствует — задача блока имиджевая (доверие), а не конверсионная; лишний CTA обесценил бы кейсы ниже, где доверие подкрепляется цифрами.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> без колонок — заголовок, ряд бейджей и фото друг под другом по центру.</div>
+          <div class="spec-row"><b>Акценты:</b> все 5 фактов равнозначны по форме (единый стиль бейджа) — ни один не выделен сильнее другого.</div>
+          <div class="spec-row"><b>Визуал:</b> плейсхолдер фото — единственное место на странице под «человеческое» изображение (команда/офис), не стоковое, а именно этой компании; стоит под бейджами, а не рядом с ними.</div>
+          <div class="spec-row"><b>Сканирование:</b> заголовок → горизонтальный проход по бейджам → фото как подтверждение.</div>
+          <div class="spec-row"><b>Связь со следующим блоком:</b> «мы существуем и заслуживаем доверия» → кейсы ниже подтверждают это уже цифрами результатов.</div>
+        </div>
+      </details>
+      <div style="text-align:center;">
+        <h2 class="h-title" style="margin-bottom:26px; margin-left:auto; margin-right:auto;">О Редстар</h2>
+        <div class="trust-panel" style="margin-top:0;">
+          <div class="hero-trust">
+            <span class="trust-chip">Работаем с 2010 года</span>
+            <span class="trust-chip">Офис в центре Ярославля</span>
+            <span class="trust-chip">Все сотрудники в штате</span>
+            <span class="trust-chip">ИТ-компания, аккредитованная Минцифры</span>
+            <span class="trust-chip">Сертифицированный партнёр 1С-Битрикс</span>
+          </div>
+        </div>
+        <div class="placeholder" style="margin:36px auto 0; max-width:560px; aspect-ratio:4/3;">ФОТО<br>Команда / офис Редстар в Ярославле</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 КЕЙСЫ -->
+  <section class="sec-pad">
+    <div class="in-1240">
+      <details class="spec"><summary><span class="annot">Сетка: контент 1240px · 4 карточки, сетка 2×2 · акцент на цифре внизу карточки · высота ~740px</span></summary>
+        <div class="spec-body">
+          <div class="spec-row"><b>Текст:</b> короткая шапка (имя + срок) + абзац задачи — абзацы короче, чем в блоке «Риски», поскольку часть внимания уже на цифре снизу карточки.</div>
+          <div class="spec-row"><b>CTA:</b> нет — это последний блок доказательств перед FAQ, отдельный CTA здесь избыточен на фоне финального CTA в конце страницы.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> сетка 2×2 — 4 карточки одинакового размера, ни одна не «главная»: все клиенты равнозначны как доказательство.</div>
+          <div class="spec-row"><b>Акценты:</b> крупная цифра снизу каждой карточки (94%, 200+ и т.д.) — самый крупный текст на странице после заголовка hero, контрастирует с плотным абзацем над ней.</div>
+          <div class="spec-row"><b>Визуал:</b> сама цифра работает как визуальный якорь; отдельные фото/иллюстрации по брифу не нужны.</div>
+          <div class="spec-row"><b>Сканирование:</b> взгляд сначала скользит по 4 крупным цифрам, и только затем возвращается читать конкретный кейс, если цифра зацепила.</div>
+          <div class="spec-row"><b>Связь со следующим блоком:</b> доказательства закрывают рациональные возражения — FAQ ниже закрывает оставшиеся конкретные вопросы.</div>
+        </div>
+      </details>
+      <h2 class="h-title" style="max-width:none;">Нам уже доверяют бизнесы,<br><span style="font-size:30px;">для которых сайт — ключевой инструмент</span></h2>
+      <div class="case-grid">
+        <div class="case-card">
+          <div class="case-top"><span class="case-name">Театр им. Волкова</span><span class="case-term">11 лет вместе</span></div>
+          <p class="case-desc">Обеспечиваем регулярную техподдержку сайта на 1С-Битрикс: развитие и улучшение сайта, защиту от внешних угроз, постоянное развитие мобильной версии и запуск десятка доп-проектов — от сайта московских гастролей до «Волковской энциклопедии». Доля онлайн-продаж за годы сотрудничества выросла с 8% до 94%.</p>
+          <div class="case-stat"><b>94%</b><span>онлайн-продаж<br>от общего объёма</span></div>
+        </div>
+        <div class="case-card">
+          <div class="case-top"><span class="case-name">Типография CMYK</span><span class="case-term">5 лет вместе</span></div>
+          <p class="case-desc">Поддерживаем и развиваем сложную ERP-систему на базе 1С-Битрикс, которая управляет производственными процессами типографии, обеспечивая стабильность выполнения тысяч заказов и безопасность данных. Помимо технической поддержки, выполняем доработки функционала и ведём SEO-продвижение сайта.</p>
+          <div class="case-stat"><b>5</b><span>лет непрерывной<br>поддержки ERP</span></div>
+        </div>
+        <div class="case-card">
+          <div class="case-top"><span class="case-name">Стоматология «Подмосковье»</span><span class="case-term">2 года вместе</span></div>
+          <p class="case-desc">В рамках техподдержки системно улучшаем сайт: поэтапный редизайн разделов, оптимизация конверсии, техническая стабильность и скорость загрузки. Дополнительно ведём SEO и контекстную рекламу — цифровой канал стабильно приводит пациентов, а сайт не теряет заявки из-за технических проблем.</p>
+          <div class="case-stat"><b>0</b><span>потерянных заявок<br>из-за техпроблем</span></div>
+        </div>
+        <div class="case-card">
+          <div class="case-top"><span class="case-name">РусТехника</span><span class="case-term">3 года вместе</span></div>
+          <p class="case-desc">За это время в рамках техподдержки на 1С-Битрикс выполнили 200+ задач: от доработок каталога и интеграции с 1С до оптимизации скорости работы сайта и развития функционала. В поддержке одновременно 5 клиентских сайтов, один из которых мы разработали с нуля.</p>
+          <div class="case-stat"><b>200+</b><span>задач · 5 сайтов<br>в поддержке одновременно</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 FAQ -->
+  <section class="sec-pad tint">
+    <div class="in-900">
+      <details class="spec"><summary><span class="annot">Сетка: контент 900px, узкая колонка для чтения · аккордеон, 2 вопроса открыты · высота ~560px</span></summary>
+        <div class="spec-body">
+          <div class="spec-row"><b>Текст:</b> вопрос-ответ в узкой колонке 900px — специально уже остальных блоков, это чисто читательский раздел без визуальной композиции.</div>
+          <div class="spec-row"><b>CTA:</b> нет — FAQ не должен спорить за внимание с финальным CTA сразу под ним.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> без карточек, плоский список с разделителями — карточки создавали бы лишний шум перед финальным конверсионным блоком.</div>
+          <div class="spec-row"><b>Акценты:</b> значок +/– справа от вопроса — единственный интерактивный индикатор блока.</div>
+          <div class="spec-row"><b>Визуал:</b> отсутствует намеренно — блок должен быть максимально «тихим» перед финальным CTA.</div>
+          <div class="spec-row"><b>Сканирование:</b> пользователь считывает только заголовки вопросов (жирный текст) и открывает выборочно то, что волнует лично его; 2 вопроса открыты заранее как демонстрация ответа на самые частые возражения.</div>
+          <div class="spec-row"><b>Связь со следующим блоком:</b> последний закрытый вопрос снимает гео-возражение — сразу за ним финальный CTA не оставляет повода «уйти подумать».</div>
+        </div>
+      </details>
+      <h2 class="h-title" style="margin-bottom:6px;">Часто задаваемые вопросы</h2>
+      <div style="margin-top:24px;">
+        <details class="faq" open>
+          <summary>Это точно бесплатно?</summary>
+          <p class="a">Да. Аудит — это способ показать, как мы работаем, до того как вы заплатите хоть рубль.</p>
+        </details>
+        <details class="faq" open>
+          <summary>Какие сайты вы берёте на проверку и обслуживание?</summary>
+          <p class="a">Любые. Требования 152-ФЗ не зависят от движка сайта, а мы умеем работать со всеми типами сайтов.</p>
+        </details>
+        <details class="faq">
+          <summary>Что если после аудита я никуда не обращусь?</summary>
+          <p class="a">Отчёт останется у вас. Хоть сами исправляйте, хоть с текущим подрядчиком.</p>
+        </details>
+        <details class="faq">
+          <summary>Сколько времени займёт аудит?</summary>
+          <p class="a">1 рабочий день с момента, как получим ссылку на сайт.</p>
+        </details>
+        <details class="faq">
+          <summary>Гарантируете, что штрафа не будет?</summary>
+          <p class="a">Наш аудит показывает наличие или отсутствие нарушений основных требований РКН к сайтам. Гарантировать отсутствие штрафов мы не можем, поскольку ответственность за обработку персональных данных по закону остаётся на вашей компании как операторе.</p>
+        </details>
+        <details class="faq">
+          <summary>Работаете только с компаниями из Ярославля?</summary>
+          <p class="a">Нет, у нас проекты по всей России. К клиентам из Ярославской, Костромской, Ивановской и Владимирской областей можем приехать лично.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 ФИНАЛЬНЫЙ CTA -->
+  <section class="sec-pad">
+    <div class="in-1240">
+      <details class="spec"><summary><span class="annot">Сетка: контент 1240px · текст 7 / форма-карточка 5 · высота ~600px</span></summary>
+        <div class="spec-body">
+          <div class="spec-row"><b>Текст:</b> заголовок здесь единственный в блоках страницы (кроме hero), который намеренно перекликается по весу с hero — замыкает композицию страницы.</div>
+          <div class="spec-row"><b>CTA:</b> не кнопка, а целая форма — весь блок по сути один большой CTA.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> 7/5 — текст слева, форма-карточка справа с собственной тенью/обводкой; форма физически выделена как «остров», к которому вела вся страница.</div>
+          <div class="spec-row"><b>Акценты:</b> форма — единственный элемент страницы с тенью (elevation), подчёркивает, что это конечная точка сценария.</div>
+          <div class="spec-row"><b>Визуал:</b> специально нет иллюстрации/иконки — серьёзность передаётся типографикой и композицией, а не образами.</div>
+          <div class="spec-row"><b>Сканирование:</b> текст повторяет структуру hero (крупный тезис → короткое пояснение), затем взгляд уходит вправо на форму — зеркальная композиция, замыкающая страницу.</div>
+          <div class="spec-row"><b>Связь со следующим блоком:</b> это последний содержательный блок — дальше только футер с контактами как запасной канал для тех, кто пока не готов оставить заявку.</div>
+        </div>
+      </details>
+      <div class="final-grid">
+        <div>
+          <h2>Пока вы читаете это, форма на вашем сайте продолжает собирать данные клиентов.</h2>
+          <p class="body-txt">Проверить, законно ли это, — 5 минут вашего времени и 1 рабочий день нашего.</p>
+        </div>
+        <div class="final-card">
+          <form class="form-grid" id="finalForm">
+            <div class="field"><label for="f-site">Ссылка на сайт</label><input id="f-site" type="text" placeholder="example.ru" required></div>
+            <div class="field"><label for="f-phone">Номер телефона</label><input id="f-phone" type="tel" placeholder="+7 900 000-00-00" required></div>
+            <label class="consent"><input type="checkbox" required><span>Согласен(на) на обработку персональных данных</span></label>
+            <button type="submit" class="btn no-arrow" style="margin-top:6px; justify-content:center;">Отправить</button>
+            <div class="form-status" id="finalFormStatus">Заявка отправлена — свяжемся в течение 1 рабочего дня.</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site">
+    <div class="foot-in">
+      <div>
+        <h3>Нужна техподдержка? Остались вопросы?</h3>
+        <p class="foot-sub">Отвечаем быстро — в среднем за 9 минут в рабочее время.</p>
+      </div>
+      <div class="foot-contacts">
+        <div class="foot-item"><div class="l">Телефон</div><div class="v">8 (4852) 31-94-04</div></div>
+        <div class="foot-item"><div class="l">Мессенджеры</div><div class="icon-row"><span class="icon-wf" title="Telegram">TG</span><span class="icon-wf" title="Max">M</span></div></div>
+        <div class="foot-item"><div class="l">Адрес</div><div class="v">Ярославль, Октябрьский пер. 3</div></div>
+      </div>
+      <button class="btn" data-open-modal data-modal-title="Написать нам" data-modal-sub="Оставьте контакты — ответим в Telegram, Макс или по телефону.">Написать нам</button>
+    </div>
+  </footer>
+
+</div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Закрыть">✕</button>
+    <h3 id="modalTitle">Оставить заявку</h3>
+    <p class="modal-sub" id="modalSub"></p>
+    <form class="form-grid" id="modalForm">
+      <div class="field"><label for="m-site">Ссылка на сайт</label><input id="m-site" type="text" placeholder="example.ru" required></div>
+      <div class="field"><label for="m-phone">Номер телефона</label><input id="m-phone" type="tel" placeholder="+7 900 000-00-00" required></div>
+      <label class="consent"><input type="checkbox" required><span>Согласен(на) на обработку персональных данных</span></label>
+      <button type="submit" class="btn no-arrow" style="margin-top:6px; justify-content:center;">Отправить</button>
+      <div class="form-status" id="modalFormStatus">Заявка отправлена — свяжемся в течение 1 рабочего дня.</div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  var toggleBtn = document.getElementById('reqToggle');
+  var moreBox = document.getElementById('reqMore');
+  var label = document.getElementById('reqToggleLabel');
+  toggleBtn.addEventListener('click', function(){
+    var isOpen = moreBox.classList.toggle('open');
+    toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    label.textContent = isOpen ? 'Скрыть' : 'Показать ещё 6 пунктов аудита';
+  });
+
+  var overlay = document.getElementById('modalOverlay');
+  var modalTitle = document.getElementById('modalTitle');
+  var modalSub = document.getElementById('modalSub');
+  var modalClose = document.getElementById('modalClose');
+  var lastFocused = null;
+
+  function openModal(title, sub){
+    modalTitle.textContent = title || 'Оставить заявку';
+    modalSub.textContent = sub || '';
+    lastFocused = document.activeElement;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    var firstInput = overlay.querySelector('input');
+    if(firstInput){ setTimeout(function(){ firstInput.focus(); }, 50); }
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    if(lastFocused){ lastFocused.focus(); }
+  }
+
+  document.querySelectorAll('[data-open-modal]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      openModal(btn.getAttribute('data-modal-title'), btn.getAttribute('data-modal-sub'));
+    });
+  });
+  modalClose.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay){ closeModal(); } });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay.classList.contains('open')){ closeModal(); } });
+
+  document.getElementById('modalForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('modalFormStatus').classList.add('show');
+    setTimeout(closeModal, 1400);
+  });
+  document.getElementById('finalForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('finalFormStatus').classList.add('show');
+  });
+})();
+</script>
