@@ -68,6 +68,7 @@
   .icon-row{ display:flex; align-items:center; gap:8px; }
 
   /* hero */
+  .hero{ background:var(--tint); }
   .hero-in{ width:1200px; margin:0 auto; padding:132px 0 140px; text-align:center; }
   .hero-copy{ max-width:1200px; margin:0 auto; }
   .hero h1{ font-size:92px; line-height:1.06; letter-spacing:-.02em; margin:0 auto 44px; }
@@ -75,9 +76,9 @@
   .hero .lede:last-of-type{ margin-bottom:64px; }
   .hero-cta-row{ display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap; }
   .hero .micro{ font-size:15.5px; color:var(--ink-3); margin-top:24px; }
-  .trust-panel{ display:inline-flex; margin-top:56px; background:var(--tint); border-radius:14px; padding:22px 28px; }
+  .trust-panel{ display:inline-flex; max-width:1140px; margin-top:56px; background:var(--tint); border-radius:18px; padding:26px 30px; }
   .hero-trust{ display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; }
-  .trust-chip{ display:inline-flex; align-items:center; gap:8px; font-size:14.5px; font-weight:600; color:var(--ink-2); background:#fff; border:1px solid var(--border-2); border-radius:999px; padding:10px 18px; }
+  .trust-chip{ display:inline-flex; align-items:center; gap:9px; font-size:18px; font-weight:600; color:var(--ink-2); background:#fff; border:1px solid var(--border-2); border-radius:999px; padding:14px 22px; white-space:nowrap; }
   .trust-chip::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--ink); flex:none; }
 
   /* risks */
@@ -98,7 +99,7 @@
   .req-card p{ font-size:18px; color:var(--ink); font-weight:500; line-height:1.5; }
   .req-more{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; overflow:hidden; max-height:0; transition:max-height .4s ease; }
   .req-more.open{ max-height:900px; margin-top:26px; }
-  .req-toggle{ margin-top:40px; background:none; border:1px dashed var(--border-2); border-radius:8px; padding:16px 22px; font-size:16px; font-weight:700; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:8px; }
+  .req-toggle{ margin-top:40px; background:none; border:1px dashed var(--border-2); border-radius:8px; padding:16px 22px; font-size:16px; font-weight:700; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:8px; text-decoration:none; }
   .req-toggle:hover{ background:#F0F0F0; }
   .req-toggle .chev{ transition:transform .25s ease; }
   .req-toggle[aria-expanded="true"] .chev{ transform:rotate(180deg); }
@@ -156,14 +157,21 @@
 
   /* cases */
   .case-grid{ display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:52px; }
-  .case-card{ border:1px solid var(--border); border-radius:10px; background:#fff; padding:34px 34px 30px; display:flex; flex-direction:column; gap:22px; }
-  .case-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
-  .case-name{ font-weight:800; font-size:21px; }
+  .case-card{ border:1px solid var(--border); border-radius:10px; background:#fff; overflow:hidden; }
+  .case-top{ cursor:pointer; display:flex; align-items:center; gap:12px; padding:34px 34px 0; }
+  .case-name{ font-weight:800; font-size:21px; flex:1; }
   .case-term{ font-size:13.5px; font-weight:700; color:var(--ink-3); background:var(--tint); border-radius:999px; padding:7px 14px; white-space:nowrap; }
-  .case-desc{ font-size:17.5px; color:var(--ink-2); line-height:1.6; }
-  .case-stat{ margin-top:auto; padding-top:22px; border-top:1px dashed var(--border); display:flex; align-items:baseline; gap:14px; }
+  .case-chev{ flex:none; width:30px; height:30px; border-radius:50%; border:1.5px solid var(--border-2); display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--ink-3); transition:transform .25s ease; }
+  .case-card.open .case-chev{ transform:rotate(180deg); }
+  .case-desc{ font-size:17.5px; color:var(--ink-2); line-height:1.6; max-height:0; overflow:hidden; padding:0 34px; transition:max-height .35s ease, padding .35s ease; }
+  .case-card.open .case-desc{ max-height:420px; padding:18px 34px 0; }
+  .case-stat{ margin-top:20px; padding:20px 34px 30px; border-top:1px dashed var(--border); display:flex; align-items:baseline; gap:14px; }
   .case-stat b{ font-size:38px; font-weight:800; }
   .case-stat span{ font-size:14px; color:var(--ink-3); font-weight:600; }
+  .case-stat-pair{ margin-top:20px; padding:20px 34px 30px; border-top:1px dashed var(--border); display:flex; gap:36px; }
+  .case-stat-pair .cs-item{ display:flex; align-items:baseline; gap:14px; }
+  .case-stat-pair .cs-item b{ font-size:38px; font-weight:800; }
+  .case-stat-pair .cs-item span{ font-size:14px; color:var(--ink-3); font-weight:600; }
 
   /* faq */
   .in-900{ width:900px; margin:0 auto; }
@@ -205,6 +213,10 @@
   .modal-close{ position:absolute; top:16px; right:16px; width:30px; height:30px; border-radius:50%; border:1px solid var(--border-2); background:#F4F4F4; color:var(--ink-2); cursor:pointer; font-size:16px; line-height:1; }
   .modal-box h3{ font-size:23px; margin-bottom:8px; padding-right:24px; }
   .modal-box .modal-sub{ font-size:16px; color:var(--ink-2); margin-bottom:6px; font-weight:400; line-height:1.5; }
+  .msg-links{ display:grid; gap:12px; margin-top:22px; }
+  .msg-link{ display:flex; align-items:center; gap:14px; padding:16px 18px; border:1.5px solid var(--border-2); border-radius:10px; text-decoration:none; color:var(--ink); font-weight:700; font-size:16px; }
+  .msg-link:hover{ background:#F4F4F4; border-color:var(--ink); }
+  .msg-link .icon-wf{ width:36px; height:36px; font-size:12px; border-color:var(--ink); color:var(--ink); }
 </style>
 
 <div class="proto-tag">UX-прототип · wireframe · 1440px</div>
@@ -440,15 +452,15 @@
       </div>
 
       <div class="sup-cta" style="text-align:center;">
-        <a class="btn btn-outline" href="https://redstar-support.ru/#price" target="_blank" rel="noopener">Узнать тарифы на услуги техподдержки</a>
+        <a class="req-toggle" href="https://redstar-support.ru/#price" target="_blank" rel="noopener" style="display:inline-flex; margin-top:0;">Узнать тарифы на услуги техподдержки</a>
       </div>
     </div>
   </section>
 
   <!-- 07 О КОМПАНИИ -->
   <section class="sec-pad tint">
-    <div class="in-1140">
-      <details class="spec"><summary><span class="annot">Сетка: контент 1140px, центр · факты — бейджи в ряд · фото ниже, по центру · высота ~440px</span></summary>
+    <div class="in-1320">
+      <details class="spec"><summary><span class="annot">Сетка: контент 1320px, центр · факты — бейджи в ряд · фото ниже, по центру · высота ~440px</span></summary>
         <div class="spec-body">
           <div class="spec-row"><b>Текст:</b> 5 фактов теперь не строки, а бейджи-«пилюли» в ряд — читаются как единый блок доверия, а не список для построчного чтения.</div>
           <div class="spec-row"><b>CTA:</b> отсутствует — задача блока имиджевая (доверие), а не конверсионная; лишний CTA обесценил бы кейсы ниже, где доверие подкрепляется цифрами.</div>
@@ -478,38 +490,42 @@
   <!-- 08 КЕЙСЫ -->
   <section class="sec-pad">
     <div class="in-1240">
-      <details class="spec"><summary><span class="annot">Сетка: контент 1240px · 4 карточки, сетка 2×2 · акцент на цифре внизу карточки · высота ~740px</span></summary>
+      <details class="spec"><summary><span class="annot">Сетка: контент 1240px · 4 карточки-аккордеона, сетка 2×2 · в свёрнутом виде видны имя + результат · высота ~360–740px</span></summary>
         <div class="spec-body">
-          <div class="spec-row"><b>Текст:</b> короткая шапка (имя + срок) + абзац задачи — абзацы короче, чем в блоке «Риски», поскольку часть внимания уже на цифре снизу карточки.</div>
+          <div class="spec-row"><b>Текст:</b> свёрнуто видно только имя клиента, срок и главный результат; при раскрытии описание задачи вставляется между шапкой и результатом, а не добавляется в конец — результат всегда остаётся визуальным «низом» карточки.</div>
+          <div class="spec-row"><b>Индикатор:</b> возможность раскрытия показана визуально — кружок-шеврон справа от срока сотрудничества, разворачивается на 180° при открытии; никакого текста вроде «подробнее».</div>
           <div class="spec-row"><b>CTA:</b> нет — это последний блок доказательств перед FAQ, отдельный CTA здесь избыточен на фоне финального CTA в конце страницы.</div>
-          <div class="spec-row"><b>Колонки/карточки:</b> сетка 2×2 — 4 карточки одинакового размера, ни одна не «главная»: все клиенты равнозначны как доказательство.</div>
-          <div class="spec-row"><b>Акценты:</b> крупная цифра снизу каждой карточки (94%, 200+ и т.д.) — самый крупный текст на странице после заголовка hero, контрастирует с плотным абзацем над ней.</div>
+          <div class="spec-row"><b>Колонки/карточки:</b> сетка 2×2 — 4 карточки-аккордеона одинакового размера, ни одна не «главная»: все клиенты равнозначны как доказательство.</div>
+          <div class="spec-row"><b>Акценты:</b> крупная цифра результата видна уже в свёрнутом состоянии — самый крупный текст на странице после заголовка hero.</div>
           <div class="spec-row"><b>Визуал:</b> сама цифра работает как визуальный якорь; отдельные фото/иллюстрации по брифу не нужны.</div>
-          <div class="spec-row"><b>Сканирование:</b> взгляд сначала скользит по 4 крупным цифрам, и только затем возвращается читать конкретный кейс, если цифра зацепила.</div>
+          <div class="spec-row"><b>Сканирование:</b> взгляд скользит по 4 крупным цифрам в свёрнутом ряду карточек, разворачивает только тот кейс, который зацепил.</div>
           <div class="spec-row"><b>Связь со следующим блоком:</b> доказательства закрывают рациональные возражения — FAQ ниже закрывает оставшиеся конкретные вопросы.</div>
         </div>
       </details>
-      <h2 class="h-title" style="max-width:none;">Нам уже доверяют бизнесы,<br><span style="font-size:30px;">для которых сайт — ключевой инструмент</span></h2>
+      <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto; text-align:center;">Нам уже доверяют бизнесы,<br><span style="font-size:30px;">для которых сайт — ключевой инструмент</span></h2>
       <div class="case-grid">
-        <div class="case-card">
-          <div class="case-top"><span class="case-name">Театр им. Волкова</span><span class="case-term">11 лет вместе</span></div>
+        <div class="case-card open">
+          <div class="case-top" data-case-toggle><span class="case-name">Театр им. Волкова</span><span class="case-term">11 лет вместе</span><span class="case-chev">▾</span></div>
           <p class="case-desc">Обеспечиваем регулярную техподдержку сайта на 1С-Битрикс: развитие и улучшение сайта, защиту от внешних угроз, постоянное развитие мобильной версии и запуск десятка доп-проектов — от сайта московских гастролей до «Волковской энциклопедии». Доля онлайн-продаж за годы сотрудничества выросла с 8% до 94%.</p>
           <div class="case-stat"><b>94%</b><span>онлайн-продаж<br>от общего объёма</span></div>
         </div>
         <div class="case-card">
-          <div class="case-top"><span class="case-name">Типография CMYK</span><span class="case-term">5 лет вместе</span></div>
+          <div class="case-top" data-case-toggle><span class="case-name">Типография CMYK</span><span class="case-term">5 лет вместе</span><span class="case-chev">▾</span></div>
           <p class="case-desc">Поддерживаем и развиваем сложную ERP-систему на базе 1С-Битрикс, которая управляет производственными процессами типографии, обеспечивая стабильность выполнения тысяч заказов и безопасность данных. Помимо технической поддержки, выполняем доработки функционала и ведём SEO-продвижение сайта.</p>
           <div class="case-stat"><b>5</b><span>лет непрерывной<br>поддержки ERP</span></div>
         </div>
         <div class="case-card">
-          <div class="case-top"><span class="case-name">Стоматология «Подмосковье»</span><span class="case-term">2 года вместе</span></div>
+          <div class="case-top" data-case-toggle><span class="case-name">Стоматология «Подмосковье»</span><span class="case-term">2 года вместе</span><span class="case-chev">▾</span></div>
           <p class="case-desc">В рамках техподдержки системно улучшаем сайт: поэтапный редизайн разделов, оптимизация конверсии, техническая стабильность и скорость загрузки. Дополнительно ведём SEO и контекстную рекламу — цифровой канал стабильно приводит пациентов, а сайт не теряет заявки из-за технических проблем.</p>
           <div class="case-stat"><b>0</b><span>потерянных заявок<br>из-за техпроблем</span></div>
         </div>
         <div class="case-card">
-          <div class="case-top"><span class="case-name">РусТехника</span><span class="case-term">3 года вместе</span></div>
+          <div class="case-top" data-case-toggle><span class="case-name">РусТехника</span><span class="case-term">3 года вместе</span><span class="case-chev">▾</span></div>
           <p class="case-desc">За это время в рамках техподдержки на 1С-Битрикс выполнили 200+ задач: от доработок каталога и интеграции с 1С до оптимизации скорости работы сайта и развития функционала. В поддержке одновременно 5 клиентских сайтов, один из которых мы разработали с нуля.</p>
-          <div class="case-stat"><b>200+</b><span>задач · 5 сайтов<br>в поддержке одновременно</span></div>
+          <div class="case-stat-pair">
+            <div class="cs-item"><b>200+</b><span>задач<br>выполнено</span></div>
+            <div class="cs-item"><b>5</b><span>сайтов в поддержке<br>одновременно</span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -576,7 +592,7 @@
       <div class="final-grid">
         <div>
           <h2>Пока вы читаете это, форма на вашем сайте продолжает собирать данные клиентов.</h2>
-          <p class="body-txt">Проверить, законно ли это, — 5 минут вашего времени и 1 рабочий день нашего.</p>
+          <p class="body-txt">Проверить, законно ли это, — 5 минут вашего времени<br>и 1 рабочий день нашего.</p>
         </div>
         <div class="final-card">
           <form class="form-grid" id="finalForm">
@@ -602,7 +618,7 @@
         <div class="foot-item"><div class="l">Мессенджеры</div><div class="icon-row"><span class="icon-wf" title="Telegram">TG</span><span class="icon-wf" title="Max">M</span></div></div>
         <div class="foot-item"><div class="l">Адрес</div><div class="v">Ярославль, Октябрьский пер. 3</div></div>
       </div>
-      <button class="btn" data-open-modal data-modal-title="Написать нам" data-modal-sub="Оставьте контакты — ответим в Telegram, Макс или по телефону.">Написать нам</button>
+      <button class="btn" id="openMsgChoice">Написать нам</button>
     </div>
   </footer>
 
@@ -624,6 +640,18 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="msgOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="msgTitle">
+    <button class="modal-close" id="msgClose" aria-label="Закрыть">✕</button>
+    <h3 id="msgTitle">Написать нам</h3>
+    <p class="modal-sub">Выберите мессенджер — ответим быстро.</p>
+    <div class="msg-links">
+      <a class="msg-link" href="https://t.me/redstar_support" target="_blank" rel="noopener"><span class="icon-wf">TG</span>Написать в Telegram</a>
+      <a class="msg-link" href="https://max.ru/redstar_support" target="_blank" rel="noopener"><span class="icon-wf">M</span>Написать в Max</a>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
   var toggleBtn = document.getElementById('reqToggle');
@@ -633,6 +661,12 @@
     var isOpen = moreBox.classList.toggle('open');
     toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     label.textContent = isOpen ? 'Скрыть' : 'Показать ещё 6 пунктов аудита';
+  });
+
+  document.querySelectorAll('[data-case-toggle]').forEach(function(top){
+    top.addEventListener('click', function(){
+      top.closest('.case-card').classList.toggle('open');
+    });
   });
 
   var overlay = document.getElementById('modalOverlay');
@@ -663,7 +697,28 @@
   });
   modalClose.addEventListener('click', closeModal);
   overlay.addEventListener('click', function(e){ if(e.target === overlay){ closeModal(); } });
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay.classList.contains('open')){ closeModal(); } });
+
+  var msgOverlay = document.getElementById('msgOverlay');
+  var msgClose = document.getElementById('msgClose');
+  var openMsgBtn = document.getElementById('openMsgChoice');
+  function openMsg(){
+    msgOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMsg(){
+    msgOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  if(openMsgBtn){ openMsgBtn.addEventListener('click', openMsg); }
+  msgClose.addEventListener('click', closeMsg);
+  msgOverlay.addEventListener('click', function(e){ if(e.target === msgOverlay){ closeMsg(); } });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      if(overlay.classList.contains('open')){ closeModal(); }
+      if(msgOverlay.classList.contains('open')){ closeMsg(); }
+    }
+  });
 
   document.getElementById('modalForm').addEventListener('submit', function(e){
     e.preventDefault();
