@@ -1,0 +1,733 @@
+<title>Прототип v4: другая компоновка</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<style>
+  :root{
+    --page:#EAEAEA; --canvas:#FFFFFF; --tint:#F4F4F4;
+    --ink:#171717; --ink-2:#4D4D4D; --ink-3:#8C8C8C;
+    --border:#DCDCDC; --border-2:#C2C2C2;
+    --cta:#171717; --cta-hover:#000000;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--page); color:var(--ink); font-family:'Inter','Segoe UI',Arial,sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3{ margin:0; font-weight:800; }
+  p{ margin:0; }
+  a{ color:inherit; }
+  ::selection{ background:#171717; color:#fff; }
+
+  .proto-tag{ position:fixed; top:12px; left:12px; z-index:200; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:#171717; color:#fff; padding:5px 10px; border-radius:4px; opacity:.85; }
+
+  .canvas-scroll{ width:100%; overflow-x:auto; }
+  .canvas{ width:1440px; min-width:1440px; margin:0 auto; background:var(--canvas); box-shadow:0 0 0 1px var(--border-2); }
+
+  section{ padding:0; }
+  .tint{ background:var(--tint); }
+  .sec-pad{ padding:120px 0; }
+
+  details.spec{ margin-bottom:32px; }
+  details.spec summary{ list-style:none; cursor:pointer; display:inline-block; }
+  details.spec summary::-webkit-details-marker{ display:none; }
+  .annot{ display:inline-flex; align-items:center; gap:7px; font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--ink-3); background:#F0F0F0; border:1px dashed var(--border-2); border-radius:5px; padding:6px 11px; }
+  .annot::before{ content:'▦'; font-size:11px; }
+  .annot::after{ content:'  ·  показать UX-детали ▾'; opacity:.75; }
+  details.spec[open] .annot::after{ content:'  ·  скрыть ▴'; }
+  .spec-body{ margin-top:14px; border:1px solid var(--border-2); border-radius:8px; padding:18px 22px; background:#FAFAFA; display:grid; gap:11px; max-width:920px; }
+  .spec-row{ font-size:13.5px; color:var(--ink-2); line-height:1.6; }
+  .spec-row b{ color:var(--ink); font-weight:700; }
+
+  .eyebrow{ font-size:14px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-bottom:18px; }
+  h2.h-title{ font-size:46px; letter-spacing:-.015em; margin-bottom:28px; max-width:20ch; line-height:1.14; }
+  .body-txt{ font-size:20px; color:var(--ink-2); max-width:66ch; line-height:1.6; }
+  .body-txt + .body-txt{ margin-top:26px; }
+  .fine{ font-size:14.5px; color:var(--ink-3); max-width:66ch; margin-top:14px; }
+
+  .btn{ font-weight:700; font-size:19px; border:none; border-radius:9px; padding:22px 36px; cursor:pointer; display:inline-flex; align-items:center; gap:10px; text-decoration:none; background:var(--cta); color:#fff; transition:background .12s ease, transform .12s ease; }
+  .btn:hover{ background:var(--cta-hover); transform:translateY(-1px); }
+  .btn:active{ transform:translateY(0); }
+  .btn:focus-visible{ outline:2px solid #171717; outline-offset:2px; }
+  .btn::after{ content:'→'; }
+  .btn.no-arrow::after{ content:''; }
+  .btn-outline{ background:transparent; color:var(--ink); border:1.5px solid var(--ink); }
+  .btn-outline:hover{ background:var(--ink); color:#fff; }
+  .btn-ghost{ background:transparent; color:var(--ink-2); border:1px solid var(--border-2); padding:13px 20px; font-size:15px; }
+  .btn-ghost:hover{ background:#F0F0F0; }
+  .req-toggle{ background:none; border:1px dashed var(--border-2); border-radius:8px; padding:15px 20px; font-size:15px; font-weight:700; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:8px; text-decoration:none; }
+  .req-toggle:hover{ background:#F0F0F0; }
+  .req-toggle .chev{ transition:transform .25s ease; }
+  .req-toggle[aria-expanded="true"] .chev{ transform:rotate(180deg); }
+
+  .placeholder{ background:repeating-linear-gradient(135deg,#EFEFEF,#EFEFEF 9px,#E3E3E3 9px,#E3E3E3 18px); border:1.5px dashed var(--border-2); border-radius:8px; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--ink-3); font-size:15px; font-weight:600; line-height:1.5; padding:24px; }
+
+  /* header */
+  header.site{ height:88px; display:flex; align-items:center; border-bottom:1px solid var(--border); }
+  header.site .in{ width:1320px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; }
+  .logo-wf{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:21px; }
+  .logo-wf .sq{ width:16px; height:16px; border:2px solid var(--ink); flex:none; }
+  .head-right{ display:flex; align-items:center; gap:24px; }
+  .head-phone{ font-size:16px; font-weight:600; color:var(--ink-2); }
+  .icon-wf{ display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; border:1.5px solid var(--border-2); font-size:10.5px; font-weight:700; color:var(--ink-2); flex:none; }
+  .icon-row{ display:flex; align-items:center; gap:8px; }
+
+  /* page-flex: rail + main */
+  .page-flex{ display:flex; align-items:flex-start; }
+  .rail{ width:64px; flex:none; position:sticky; top:0; height:100vh; border-right:1px solid var(--border); display:flex; flex-direction:column; align-items:center; padding:28px 0 20px; background:var(--canvas); z-index:40; }
+  .rail-dots{ display:flex; flex-direction:column; gap:14px; }
+  .rail-dot{ width:30px; height:30px; border-radius:50%; border:1.5px solid var(--border-2); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:var(--ink-3); text-decoration:none; flex:none; }
+  .rail-dot:hover{ border-color:var(--ink); color:var(--ink); }
+  .rail-word{ writing-mode:vertical-rl; transform:rotate(180deg); font-size:10.5px; font-weight:700; letter-spacing:.14em; color:var(--ink-3); text-transform:uppercase; margin-top:auto; }
+  .main-col{ flex:1; min-width:0; }
+
+  /* hero — оставлена как в v1 */
+  .hero{ background:var(--tint); }
+  .hero-in{ width:1140px; margin:0 auto; padding:110px 0 120px; text-align:center; }
+  .hero h1{ font-size:78px; line-height:1.08; letter-spacing:-.02em; margin:0 auto 38px; max-width:18ch; }
+  .hero .lede{ font-size:22px; color:var(--ink-2); max-width:660px; margin:0 auto 16px; line-height:1.5; }
+  .hero .lede:last-of-type{ margin-bottom:52px; }
+  .hero-cta-row{ display:flex; align-items:center; justify-content:center; gap:18px; flex-wrap:wrap; }
+  .hero .micro{ font-size:14.5px; color:var(--ink-3); margin-top:22px; }
+
+  .in-1140{ width:1100px; margin:0 auto; }
+  .in-1240{ width:1180px; margin:0 auto; }
+  .in-1320{ width:1260px; margin:0 auto; }
+  .in-900{ width:860px; margin:0 auto; }
+  .sec-center{ text-align:center; }
+  .sec-center details.spec{ text-align:left; }
+
+  /* 02 РИСКИ — горизонтальная лента */
+  .timeline{ position:relative; display:flex; justify-content:space-between; margin-top:56px; }
+  .timeline::before{ content:''; position:absolute; top:27px; left:9%; right:9%; height:2px; background:var(--border-2); z-index:0; }
+  .tl-node{ position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 22px; }
+  .tl-dot{ width:54px; height:54px; border-radius:50%; border:2px solid var(--ink); background:var(--canvas); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; margin-bottom:24px; }
+  .tl-text{ font-size:17px; color:var(--ink); font-weight:500; line-height:1.5; }
+  .risk-label{ font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-3); margin-top:52px; }
+
+  /* 03 ЧЕК-ЛИСТ — ведомость */
+  .ledger{ margin-top:44px; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .ledger-row{ display:flex; align-items:center; gap:22px; padding:22px 28px; border-bottom:1px solid var(--border); background:var(--canvas); }
+  .ledger-row:last-child{ border-bottom:none; }
+  .ledger-more{ max-height:0; overflow:hidden; transition:max-height .4s ease; }
+  .ledger-more.open{ max-height:900px; }
+  .ledger-more .ledger-row:last-child{ border-bottom:none; }
+  .lr-n{ font-weight:800; font-size:14px; color:var(--ink-3); flex:none; width:34px; }
+  .lr-text{ flex:1; font-size:17px; color:var(--ink); font-weight:500; text-align:left; }
+  .lr-status{ flex:none; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-3); border:1px solid var(--border-2); border-radius:999px; padding:6px 14px; white-space:nowrap; }
+  .req-cta{ margin-top:44px; }
+
+  /* 04 СРАВНЕНИЕ — вертикальная трансформация */
+  .tf-legend{ display:flex; align-items:center; justify-content:center; gap:16px; margin-top:44px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-3); }
+  .tf-legend span:nth-child(2){ font-size:16px; }
+  .transform-flow{ max-width:880px; margin:36px auto 0; display:grid; gap:22px; }
+  .tf-pair{ display:flex; align-items:center; gap:18px; }
+  .tf-before{ flex:1; display:flex; align-items:center; gap:10px; background:var(--tint); border:1px dashed var(--border-2); border-radius:10px; padding:16px 20px; font-size:15.5px; color:var(--ink-3); text-align:left; }
+  .tf-before::before{ content:'✕'; flex:none; font-weight:800; color:var(--border-2); }
+  .tf-arrow{ flex:none; font-size:18px; color:var(--ink-3); }
+  .tf-after{ flex:1; display:flex; align-items:center; gap:10px; background:var(--ink); border-radius:10px; padding:16px 20px; font-size:16px; color:#fff; font-weight:700; text-align:left; box-shadow:0 10px 22px -14px rgba(0,0,0,.4); }
+  .tf-after::before{ content:'✓'; flex:none; font-weight:800; }
+
+  /* 06 ПОДДЕРЖКА — табы */
+  .tabs{ display:flex; gap:8px; margin-top:44px; border-bottom:1px solid var(--border); justify-content:center; }
+  .tab-btn{ background:none; border:none; border-bottom:3px solid transparent; padding:16px 26px; font-family:inherit; font-size:17px; font-weight:700; color:var(--ink-3); cursor:pointer; margin-bottom:-1px; }
+  .tab-btn.active{ color:var(--ink); border-bottom-color:var(--ink); }
+  .tab-btn:hover{ color:var(--ink); }
+  .tab-panel{ display:none; margin-top:40px; }
+  .tab-panel.active{ display:block; }
+  .tab-panel ul{ list-style:none; margin:0; padding:0; columns:2; column-gap:40px; }
+  .tab-panel li{ font-size:16.5px; color:var(--ink-2); padding-left:18px; position:relative; line-height:1.5; margin-bottom:12px; break-inside:avoid; }
+  .tab-panel li::before{ content:'—'; position:absolute; left:0; color:var(--ink-3); }
+  .sup-cta{ margin-top:48px; }
+
+  /* 07 О КОМПАНИИ — асимметричный сплит */
+  .co-split{ display:grid; grid-template-columns:5fr 7fr; gap:60px; align-items:center; margin-top:8px; }
+  .co-photo{ aspect-ratio:4/5; }
+  .co-badges{ display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
+  .co-badge{ display:inline-flex; align-items:center; gap:10px; font-size:17px; font-weight:600; color:var(--ink); }
+  .co-badge::before{ content:''; width:9px; height:9px; border-radius:50%; background:var(--ink); flex:none; }
+
+  /* 08 КЕЙСЫ — карусель */
+  .case-viewer{ margin-top:48px; max-width:840px; margin-left:auto; margin-right:auto; }
+  .cv-slide{ display:none; border:1px solid var(--border); border-radius:12px; background:#fff; padding:44px 48px; text-align:left; }
+  .cv-slide.active{ display:block; }
+  .cv-top{ display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+  .cv-name{ font-weight:800; font-size:23px; flex:1; }
+  .cv-term{ font-size:13.5px; font-weight:700; color:var(--ink-3); background:var(--tint); border-radius:999px; padding:7px 15px; white-space:nowrap; }
+  .cv-desc{ font-size:17px; color:var(--ink-2); line-height:1.6; }
+  .cv-stat{ margin-top:26px; padding-top:22px; border-top:1px dashed var(--border); display:flex; align-items:baseline; gap:14px; }
+  .cv-stat b{ font-size:38px; font-weight:800; }
+  .cv-stat span{ font-size:13.5px; color:var(--ink-3); font-weight:600; }
+  .cv-stat-pair{ margin-top:26px; padding-top:22px; border-top:1px dashed var(--border); display:flex; gap:36px; }
+  .cv-stat-pair .cs-item{ display:flex; align-items:baseline; gap:12px; }
+  .cv-stat-pair .cs-item b{ font-size:38px; font-weight:800; }
+  .cv-stat-pair .cs-item span{ font-size:13.5px; color:var(--ink-3); font-weight:600; }
+  .cv-nav{ display:flex; align-items:center; justify-content:center; gap:22px; margin-top:28px; }
+  .cv-arrow{ width:42px; height:42px; border-radius:50%; border:1.5px solid var(--border-2); background:#fff; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; }
+  .cv-arrow:hover{ border-color:var(--ink); }
+  .cv-dots{ display:flex; gap:10px; }
+  .cv-dot{ width:9px; height:9px; border-radius:50%; background:var(--border-2); cursor:pointer; border:none; padding:0; }
+  .cv-dot.active{ background:var(--ink); width:22px; border-radius:5px; }
+
+  /* 09 FAQ — список + деталь */
+  .faq-split{ display:grid; grid-template-columns:1fr 1.3fr; gap:48px; margin-top:44px; text-align:left; }
+  .faq-list{ display:flex; flex-direction:column; }
+  .faq-item-btn{ background:none; border:none; border-left:3px solid transparent; text-align:left; padding:16px 0 16px 18px; font-family:inherit; font-size:16px; font-weight:600; color:var(--ink-3); cursor:pointer; }
+  .faq-item-btn.active{ color:var(--ink); border-left-color:var(--ink); font-weight:800; }
+  .faq-item-btn:hover{ color:var(--ink); }
+  .faq-detail{ border-left:1px solid var(--border); padding-left:48px; }
+  .faq-detail-panel{ display:none; }
+  .faq-detail-panel.active{ display:block; }
+  .fd-q{ font-size:22px; font-weight:800; margin-bottom:16px; }
+  .fd-a{ font-size:17px; color:var(--ink-2); line-height:1.6; }
+
+  /* 10 ФИНАЛЬНЫЙ CTA — по центру, в столбик */
+  .final-stack{ max-width:760px; margin:0 auto; text-align:center; }
+  .final-stack h2{ font-size:42px; line-height:1.2; margin-bottom:22px; }
+  .final-card{ margin:44px auto 0; max-width:460px; text-align:left; border:1px solid var(--border-2); border-radius:12px; background:#fff; padding:40px; box-shadow:0 20px 48px -28px rgba(0,0,0,.25); }
+  .form-grid{ display:grid; gap:20px; }
+  .field{ display:flex; flex-direction:column; gap:8px; }
+  .field label{ font-size:12.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
+  .field input{ font-family:'Inter',sans-serif; font-size:17px; padding:16px 17px; border-radius:7px; border:1.5px solid var(--border-2); background:#fff; color:var(--ink); }
+  .field input:focus{ outline:none; border-color:var(--ink); }
+  .consent{ display:flex; gap:11px; align-items:flex-start; font-size:13.5px; color:var(--ink-3); margin-top:4px; }
+  .consent input{ margin-top:2px; }
+  .form-status{ font-size:14px; color:var(--ink); margin-top:14px; display:none; font-weight:600; }
+  .form-status.show{ display:block; }
+
+  footer.site{ border-top:1px solid var(--border); }
+  .foot-in{ width:1320px; margin:0 auto; padding:52px 0 60px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:28px; }
+  footer.site h3{ font-size:22px; margin-bottom:10px; }
+  .foot-sub{ font-size:16px; color:var(--ink-3); }
+  .foot-contacts{ display:flex; gap:36px; }
+  .foot-item .l{ font-size:12px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:7px; }
+  .foot-item .v{ font-size:17px; font-weight:700; }
+
+  .modal-overlay{ position:fixed; inset:0; background:rgba(20,20,20,.5); display:flex; align-items:center; justify-content:center; padding:20px; z-index:300; opacity:0; pointer-events:none; transition:opacity .2s ease; }
+  .modal-overlay.open{ opacity:1; pointer-events:auto; }
+  .modal-box{ background:#fff; border-radius:12px; padding:36px 34px; max-width:450px; width:100%; box-shadow:0 30px 70px -20px rgba(0,0,0,.4); position:relative; }
+  .modal-close{ position:absolute; top:15px; right:15px; width:29px; height:29px; border-radius:50%; border:1px solid var(--border-2); background:#F4F4F4; color:var(--ink-2); cursor:pointer; font-size:15px; line-height:1; }
+  .modal-box h3{ font-size:22px; margin-bottom:8px; padding-right:24px; }
+  .modal-box .modal-sub{ font-size:15.5px; color:var(--ink-2); margin-bottom:6px; font-weight:400; line-height:1.5; }
+  .msg-links{ display:grid; gap:12px; margin-top:22px; }
+  .msg-link{ display:flex; align-items:center; gap:14px; padding:16px 18px; border:1.5px solid var(--border-2); border-radius:10px; text-decoration:none; color:var(--ink); font-weight:700; font-size:15.5px; }
+  .msg-link:hover{ background:#F4F4F4; border-color:var(--ink); }
+  .msg-link .icon-wf{ width:36px; height:36px; font-size:12px; border-color:var(--ink); color:var(--ink); }
+</style>
+
+<div class="proto-tag">UX-прототип v4 · другая компоновка · 1440px</div>
+
+<div class="canvas-scroll">
+<div class="canvas">
+
+  <header class="site">
+    <div class="in">
+      <div class="logo-wf"><span class="sq"></span>Редстар</div>
+      <div class="head-right">
+        <span class="head-phone">8 (4852) 31-94-04</span>
+        <div class="icon-row">
+          <span class="icon-wf" title="Telegram">TG</span>
+          <span class="icon-wf" title="Max">M</span>
+        </div>
+        <button class="btn-ghost" data-open-modal data-modal-title="Оставить заявку" data-modal-sub="Ответим в среднем за 9 минут в рабочее время.">Оставить заявку</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-flex">
+    <nav class="rail">
+      <div class="rail-dots">
+        <a class="rail-dot" href="#s-hero" title="Hero">01</a>
+        <a class="rail-dot" href="#s-risks" title="Риски">02</a>
+        <a class="rail-dot" href="#s-check" title="Чек-лист">03</a>
+        <a class="rail-dot" href="#s-cmp" title="Сравнение">04</a>
+        <a class="rail-dot" href="#s-next" title="Что дальше">05</a>
+        <a class="rail-dot" href="#s-sup" title="Поддержка">06</a>
+        <a class="rail-dot" href="#s-co" title="О компании">07</a>
+        <a class="rail-dot" href="#s-cases" title="Кейсы">08</a>
+        <a class="rail-dot" href="#s-faq" title="FAQ">09</a>
+        <a class="rail-dot" href="#s-final" title="Заявка">10</a>
+      </div>
+      <div class="rail-word">Редстар · РКН-аудит</div>
+    </nav>
+
+    <div class="main-col">
+
+      <!-- 01 HERO -->
+      <section class="hero" id="s-hero">
+        <div class="hero-in">
+          <details class="spec"><summary><span class="annot">Композиция v4: та же вертикальная центровка hero — точка отсчёта не меняется, различия начинаются с блока «Риски»</span></summary>
+            <div class="spec-body">
+              <div class="spec-row"><b>Почему hero не менялся:</b> это уже проверенная и одобренная композиция (текст → CTA, без визуала, по центру). Задача v4 — показать вариативность в остальных блоках, а не пересобирать то, что уже работает.</div>
+              <div class="spec-row"><b>Что новое на странице:</b> слева появилась вертикальная рейл-навигация — sticky-колонка с номерами разделов; это меняет макро-композицию всей страницы, а не только отдельных блоков.</div>
+            </div>
+          </details>
+          <h1>Штраф до 6&nbsp;000&nbsp;000&nbsp;₽ грозит даже одностраничному сайту</h1>
+          <p class="lede">Если на сайте есть форма заявки, обратного звонка или установлена Яндекс.Метрика — вы уже обрабатываете персональные данные.</p>
+          <p class="lede" style="white-space:nowrap; max-width:none;">Бесплатно оценим готовность вашего сайта к проверке Роскомнадзора.</p>
+          <div class="hero-cta-row">
+            <button class="btn" data-open-modal data-modal-title="Получить бесплатный аудит" data-modal-sub="Аудит по основным требованиям 152-ФЗ. Пришлём список нарушений и как их закрыть.">Получить бесплатный аудит за 1 день</button>
+          </div>
+          <p class="micro">Аудит по основным требованиям 152-ФЗ. Пришлем список нарушений и как их закрыть.</p>
+        </div>
+      </section>
+
+      <!-- 02 РИСКИ — лента -->
+      <section class="sec-pad" id="s-risks">
+        <div class="in-1140 sec-center">
+          <details class="spec"><summary><span class="annot">Было: 3 карточки в сетке. Стало: горизонтальная лента с соединительной линией — читается как последовательность, а не как независимые блоки</span></summary>
+            <div class="spec-body">
+              <div class="spec-row"><b>Почему по-другому:</b> карточки в v1 читались как три равнозначных, но не связанных факта. Лента с общей линией визуально говорит «это стадии одной картины», хотя по смыслу порядок между причинами по-прежнему не важен.</div>
+              <div class="spec-row"><b>Сканирование:</b> слева направо вдоль линии, как хронология или чек-лист по шагам — привычный паттерн для «этапов».</div>
+            </div>
+          </details>
+          <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto;">РКН не смотрит,<br>большой у вас бизнес или маленький</h2>
+          <p class="body-txt" style="margin-left:auto; margin-right:auto;">С 30 мая 2025 года штрафы за нарушение закона о персональных данных выросли в разы. Даже если на сайте нет ни одной формы, а стоит только Яндекс.Метрика — вы уже собираете персональные данные посетителей и попадаете в зону риска получить штраф до 6 млн рублей<sup>*</sup>.</p>
+          <p class="fine" style="margin-left:auto; margin-right:auto;">*по КоАП РФ, ст. 13.11 (первое нарушение) — рекомендуем сверить актуальную сумму с юристом.</p>
+          <div class="risk-label">Риски</div>
+          <div class="timeline">
+            <div class="tl-node"><div class="tl-dot">01</div><p class="tl-text">Сайт сделан давно, и с тех пор опубликованные юридические документы не обновлялись</p></div>
+            <div class="tl-node"><div class="tl-dot">02</div><p class="tl-text">Техподдержка занимается только технической стороной сайта, не касаясь законодательства</p></div>
+            <div class="tl-node"><div class="tl-dot">03</div><p class="tl-text">В компании нет ответственного за соответствие сайта требованиям 152-ФЗ</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 ЧЕК-ЛИСТ — ведомость -->
+      <section class="sec-pad tint" id="s-check">
+        <div class="in-1240 sec-center">
+          <details class="spec"><summary><span class="annot">Было: сетка 3×3 карточек. Стало: ведомость-таблица строками — вертикальный список, ближе к реальному чек-листу/бланку проверки</span></summary>
+            <div class="spec-body">
+              <div class="spec-row"><b>Почему по-другому:</b> строки таблицы читаются последовательно сверху вниз — это больше похоже на настоящий чек-лист/бланк, чем сетка карточек, и логично продолжает метафору «проверка по пунктам».</div>
+              <div class="spec-row"><b>Прогрессивное раскрытие:</b> то же поведение, что в v1 — первые 3 строки видны всегда, остальные 6 разворачиваются по кнопке.</div>
+            </div>
+          </details>
+          <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto;">Бесплатно проверим сайт<br>по 9 ключевым требованиям РКН</h2>
+          <p class="body-txt" style="max-width:none; margin-left:auto; margin-right:auto;">Специалист вручную проверит сайт и пришлёт отчёт: что в порядке, а что нужно исправить.</p>
+
+          <div class="ledger" style="text-align:left;">
+            <div class="ledger-row"><span class="lr-n">01</span><span class="lr-text">Согласие на обработку персональных данных на всех формах</span><span class="lr-status">Проверяем</span></div>
+            <div class="ledger-row"><span class="lr-n">02</span><span class="lr-text">Опубликованная политика обработки персональных данных</span><span class="lr-status">Проверяем</span></div>
+            <div class="ledger-row"><span class="lr-n">03</span><span class="lr-text">Отсутствие на сайте Google Analytics и других систем трансграничной передачи данных</span><span class="lr-status">Проверяем</span></div>
+            <div class="ledger-more" id="ledgerMore">
+              <div class="ledger-row"><span class="lr-n">04</span><span class="lr-text">Хранение и обработка данных россиян на серверах в РФ</span><span class="lr-status">Проверяем</span></div>
+              <div class="ledger-row"><span class="lr-n">05</span><span class="lr-text">Согласие на использование cookie и корректный cookie-баннер</span><span class="lr-status">Проверяем</span></div>
+              <div class="ledger-row"><span class="lr-n">06</span><span class="lr-text">Возможность отозвать согласие на обработку данных</span><span class="lr-status">Проверяем</span></div>
+              <div class="ledger-row"><span class="lr-n">07</span><span class="lr-text">Отсутствие на сайте логотипов сервисов, признанных экстремистскими в РФ</span><span class="lr-status">Проверяем</span></div>
+              <div class="ledger-row"><span class="lr-n">08</span><span class="lr-text">Защищённое соединение (SSL) при передаче данных из форм</span><span class="lr-status">Проверяем</span></div>
+              <div class="ledger-row"><span class="lr-n">09</span><span class="lr-text">На сайте предусмотрена авторизация через разрешённые способы (российский номер телефона, ВК ID, Госуслуги)</span><span class="lr-status">Проверяем</span></div>
+            </div>
+          </div>
+
+          <div style="margin-top:26px;">
+            <button class="req-toggle" id="reqToggle" aria-expanded="false" aria-controls="ledgerMore">
+              <span id="reqToggleLabel">Показать ещё 6 пунктов аудита</span><span class="chev">▾</span>
+            </button>
+          </div>
+
+          <div class="req-cta">
+            <button class="btn" data-open-modal data-modal-title="Прислать сайт на проверку" data-modal-sub="Результат — за 1 рабочий день. PDF-отчёт пришлём в Телеграм или Макс.">Прислать сайт на проверку</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 СРАВНЕНИЕ — вертикальная трансформация -->
+      <section class="sec-pad" id="s-cmp">
+        <div class="in-1140 sec-center">
+          <details class="spec"><summary><span class="annot">Было: 2 колонки бок о бок. Стало: 3 самостоятельные пары «плохо → хорошо» друг под другом, каждая — свой контрастный кадр</span></summary>
+            <div class="spec-body">
+              <div class="spec-row"><b>Почему по-другому:</b> в 2-колоночной версии приходилось сравнивать взглядом по горизонтали построчно между двумя длинными списками. Здесь каждая пара — самостоятельный «кадр»: слева блёклая зачёркнутая капсула с ✕, справа — тёмная капсула с ✓, контраст задаётся не позицией на странице, а формой и цветом внутри одной строки.</div>
+            </div>
+          </details>
+          <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto;">Что будет, если оставить как есть</h2>
+          <div class="tf-legend"><span>Без аудита</span><span>→</span><span>С аудитом Редстар</span></div>
+          <div class="transform-flow">
+            <div class="tf-pair">
+              <div class="tf-before"><span>Проверка находит нарушения → штраф от 30 000 до 6 000 000 ₽</span></div>
+              <div class="tf-arrow">→</div>
+              <div class="tf-after"><span>Знаете список нарушений до проверки</span></div>
+            </div>
+            <div class="tf-pair">
+              <div class="tf-before"><span>Репутационные риски и объяснения перед клиентами</span></div>
+              <div class="tf-arrow">→</div>
+              <div class="tf-after"><span>Успеваете устранить нарушения и избежать репутационных и финансовых потерь</span></div>
+            </div>
+            <div class="tf-pair">
+              <div class="tf-before"><span>Время уходит на разбирательства, а не на бизнес</span></div>
+              <div class="tf-arrow">→</div>
+              <div class="tf-after"><span>Сайт продолжает генерировать заявки, а не штрафы</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 ЧТО ДАЛЬШЕ -->
+      <section class="sec-pad tint" id="s-next">
+        <div class="in-1140">
+          <details class="spec"><summary><span class="annot">Без изменений — блок и так минимальный, компоновывать нечего</span></summary>
+            <div class="spec-body">
+              <div class="spec-row"><b>Почему без изменений:</b> это осознанная пауза из двух абзацев без структуры — любая новая композиция (карточки, колонки) добавила бы то, от чего мы сознательно отказались раньше.</div>
+            </div>
+          </details>
+          <p class="body-txt" style="max-width:none;">По итогам аудита вы получите отчёт с результатами проверки. Можете использовать его как готовый чек-лист и устранить всё самостоятельно, а можете передать задачи нам.</p>
+          <p class="body-txt" style="max-width:none;">Мы не только приведём сайт в соответствие с требованиями РКН, но и возьмём на себя его техническую поддержку целиком: от небольших правок до регулярного сопровождения и развития.</p>
+        </div>
+      </section>
+
+      <!-- 06 ПОДДЕРЖКА — табы -->
+      <section class="sec-pad" id="s-sup">
+        <div class="in-1320 sec-center">
+          <details class="spec"><summary><span class="annot">Было: 3 параллельные карточки. Стало: табы — один список виден за раз, переключение кликом</span></summary>
+            <div class="spec-body">
+              <div class="spec-row"><b>Почему по-другому:</b> три параллельные карточки конкурируют за внимание сразу. Табы заставляют выбрать направление осознанно — и дают куда больше места одному списку (задачи разложены в 2 колонки внутри таба, а не сжаты в узкую карточку).</div>
+              <div class="spec-row"><b>Компромисс:</b> в отличие от v1, здесь не видно все три направления одновременно — это сознательный трейд-офф ради читаемости длинных списков.</div>
+            </div>
+          </details>
+          <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto; margin-bottom:14px;">Что мы умеем как техподдержка?</h2>
+          <p class="body-txt" style="max-width:none; margin-left:auto; margin-right:auto;">Решать задачи любой сложности, например:</p>
+
+          <div class="tabs">
+            <button class="tab-btn active" data-tab-btn="0">Защита от взлома</button>
+            <button class="tab-btn" data-tab-btn="1">Улучшение сайта</button>
+            <button class="tab-btn" data-tab-btn="2">Дизайн</button>
+          </div>
+
+          <div class="tab-panel active" data-tab-panel="0">
+            <ul style="text-align:left;">
+              <li>Мониторинг доступности сайта 24/7</li>
+              <li>Восстановление сайта после «падения»</li>
+              <li>Проверка на вирусы и чистка</li>
+              <li>Обновление 1С-Битрикс</li>
+              <li>Настройка резервного копирования</li>
+              <li>Проверка места на хостинге</li>
+              <li>Проверка оплаты домена и хостинга</li>
+              <li>Общение со специалистами хостинга</li>
+              <li>Установка ssl-сертификата</li>
+              <li>Обновление PHP до версии 8+</li>
+              <li>Защита сайта от взломов и DDOS-атак</li>
+              <li>Перенос сайта на другой хостинг</li>
+            </ul>
+          </div>
+          <div class="tab-panel" data-tab-panel="1">
+            <ul style="text-align:left;">
+              <li>Исправление технических ошибок</li>
+              <li>Интеграции с любыми системами</li>
+              <li>Создание нового функционала</li>
+              <li>Размещение контента</li>
+              <li>Интеграции с платёжными системами</li>
+              <li>Оптимизация скорости загрузки сайта</li>
+              <li>Технический аудит сайта</li>
+              <li>Разработка сложных фильтров</li>
+              <li>Интеграция со сторонними API</li>
+              <li>Интеграция со службами доставки</li>
+              <li>Выгрузка фида на маркетплейс</li>
+              <li>Изменение функционала сайта</li>
+              <li>Парсинг данных от поставщиков</li>
+            </ul>
+          </div>
+          <div class="tab-panel" data-tab-panel="2">
+            <ul style="text-align:left;">
+              <li>Отрисовка отдельных страниц разделов</li>
+              <li>Редизайн сайта</li>
+              <li>Изображения для товарных категорий</li>
+              <li>Создание баннеров</li>
+              <li>Подготовка прототипов страниц</li>
+              <li>Отрисовка иконок</li>
+              <li>Создание писем для рассылки</li>
+            </ul>
+          </div>
+
+          <div class="sup-cta">
+            <a class="req-toggle" href="https://redstar-support.ru/#price" target="_blank" rel="noopener" style="display:inline-flex;">Узнать тарифы на услуги техподдержки</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 О КОМПАНИИ — асимметричный сплит -->
+      <section class="sec-pad tint" id="s-co">
+        <div class="in-1140">
+          <details class="spec"><summary><span class="annot">Было: центрированный столбик (заголовок → бейджи в ряд → фото). Стало: асимметричный сплит 5/7 — фото слева, факты вертикальным списком справа</span></summary>
+            <div class="spec-body">
+              <div class="spec-row"><b>Почему по-другому:</b> центрированная версия хороша для компактного «доверительного» блока, но не даёт фото весомого места. Сплит возвращает фото полноценную роль — оно占имает всю левую половину, а не жмётся под текстом.</div>
+            </div>
+          </details>
+          <h2 class="h-title">О Редстар</h2>
+          <div class="co-split">
+            <div class="placeholder co-photo">Фото<br>Команда / офис Редстар в Ярославле</div>
+            <div class="co-badges">
+              <span class="co-badge">Работаем с 2010 года</span>
+              <span class="co-badge">Офис в центре Ярославля</span>
+              <span class="co-badge">Все сотрудники в штате</span>
+              <span class="co-badge">ИТ-компания, аккредитованная Минцифры</span>
+              <span class="co-badge">Сертифицированный партнёр 1С-Битрикс</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 08 КЕЙСЫ — карусель -->
+      <section class="sec-pad" id="s-cases">
+        <div class="in-1240 sec-center">
+          <details class="spec"><summary><span class="annot">Было: сетка 2×2 аккордеонов. Стало: карусель — один кейс крупно, переключение стрелками/точками</span></summary>
+            <div class="spec-body">
+              <div class="spec-row"><b>Почему по-другому:</b> сетка 2×2 показывает всё сразу, но каждая карточка маленькая. Карусель отдаёт кейсу всю ширину блока — крупнее текст, крупнее цифра результата, но за один раз виден только один клиент.</div>
+              <div class="spec-row"><b>Навигация:</b> стрелки по бокам + точки-индикатор снизу; активная точка вытягивается в полоску.</div>
+            </div>
+          </details>
+          <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto;">Нам уже доверяют бизнесы,<br><span style="font-size:28px;">для которых сайт — ключевой инструмент</span></h2>
+
+          <div class="case-viewer">
+            <div class="cv-slide active" data-slide="0">
+              <div class="cv-top"><span class="cv-name">Театр им. Волкова</span><span class="cv-term">11 лет вместе</span></div>
+              <p class="cv-desc">Обеспечиваем регулярную техподдержку сайта на 1С-Битрикс: развитие и улучшение сайта, защиту от внешних угроз, постоянное развитие мобильной версии и запуск десятка доп-проектов — от сайта московских гастролей до «Волковской энциклопедии». Доля онлайн-продаж за годы сотрудничества выросла с 8% до 94%.</p>
+              <div class="cv-stat"><b>94%</b><span>онлайн-продаж<br>от общего объёма</span></div>
+            </div>
+            <div class="cv-slide" data-slide="1">
+              <div class="cv-top"><span class="cv-name">Типография CMYK</span><span class="cv-term">5 лет вместе</span></div>
+              <p class="cv-desc">Поддерживаем и развиваем сложную ERP-систему на базе 1С-Битрикс, которая управляет производственными процессами типографии, обеспечивая стабильность выполнения тысяч заказов и безопасность данных. Помимо технической поддержки, выполняем доработки функционала и ведём SEO-продвижение сайта.</p>
+              <div class="cv-stat"><b>5</b><span>лет непрерывной<br>поддержки ERP</span></div>
+            </div>
+            <div class="cv-slide" data-slide="2">
+              <div class="cv-top"><span class="cv-name">Стоматология «Подмосковье»</span><span class="cv-term">2 года вместе</span></div>
+              <p class="cv-desc">В рамках техподдержки системно улучшаем сайт: поэтапный редизайн разделов, оптимизация конверсии, техническая стабильность и скорость загрузки. Дополнительно ведём SEO и контекстную рекламу — цифровой канал стабильно приводит пациентов, а сайт не теряет заявки из-за технических проблем.</p>
+              <div class="cv-stat"><b>0</b><span>потерянных заявок<br>из-за техпроблем</span></div>
+            </div>
+            <div class="cv-slide" data-slide="3">
+              <div class="cv-top"><span class="cv-name">РусТехника</span><span class="cv-term">3 года вместе</span></div>
+              <p class="cv-desc">За это время в рамках техподдержки на 1С-Битрикс выполнили 200+ задач: от доработок каталога и интеграции с 1С до оптимизации скорости работы сайта и развития функционала. В поддержке одновременно 5 клиентских сайтов, один из которых мы разработали с нуля.</p>
+              <div class="cv-stat-pair">
+                <div class="cs-item"><b>200+</b><span>задач<br>выполнено</span></div>
+                <div class="cs-item"><b>5</b><span>сайтов в поддержке<br>одновременно</span></div>
+              </div>
+            </div>
+
+            <div class="cv-nav">
+              <button class="cv-arrow" id="cvPrev" aria-label="Предыдущий кейс">←</button>
+              <div class="cv-dots" id="cvDots">
+                <button class="cv-dot active" data-goto="0" aria-label="Кейс 1"></button>
+                <button class="cv-dot" data-goto="1" aria-label="Кейс 2"></button>
+                <button class="cv-dot" data-goto="2" aria-label="Кейс 3"></button>
+                <button class="cv-dot" data-goto="3" aria-label="Кейс 4"></button>
+              </div>
+              <button class="cv-arrow" id="cvNext" aria-label="Следующий кейс">→</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 09 FAQ — список + деталь -->
+      <section class="sec-pad tint" id="s-faq">
+        <div class="in-900">
+          <details class="spec"><summary><span class="annot">Было: вертикальный аккордеон, все вопросы стопкой. Стало: список слева, ответ справа — как в разделе поддержки/базе знаний</span></summary>
+            <div class="spec-body">
+              <div class="spec-row"><b>Почему по-другому:</b> аккордеон растягивает страницу, когда открыто несколько вопросов сразу. Список+деталь держит высоту блока постоянной — меняется только правая панель.</div>
+            </div>
+          </details>
+          <h2 class="h-title" style="margin-bottom:6px;">Часто задаваемые вопросы</h2>
+          <div class="faq-split">
+            <div class="faq-list">
+              <button class="faq-item-btn active" data-faq-btn="0">Это точно бесплатно?</button>
+              <button class="faq-item-btn" data-faq-btn="1">Какие сайты вы берёте на проверку и обслуживание?</button>
+              <button class="faq-item-btn" data-faq-btn="2">Что если после аудита я никуда не обращусь?</button>
+              <button class="faq-item-btn" data-faq-btn="3">Сколько времени займёт аудит?</button>
+              <button class="faq-item-btn" data-faq-btn="4">Гарантируете, что штрафа не будет?</button>
+              <button class="faq-item-btn" data-faq-btn="5">Работаете только с компаниями из Ярославля?</button>
+            </div>
+            <div class="faq-detail">
+              <div class="faq-detail-panel active" data-faq-panel="0">
+                <p class="fd-q">Это точно бесплатно?</p>
+                <p class="fd-a">Да. Аудит — это способ показать, как мы работаем, до того как вы заплатите хоть рубль.</p>
+              </div>
+              <div class="faq-detail-panel" data-faq-panel="1">
+                <p class="fd-q">Какие сайты вы берёте на проверку и обслуживание?</p>
+                <p class="fd-a">Любые. Требования 152-ФЗ не зависят от движка сайта, а мы умеем работать со всеми типами сайтов.</p>
+              </div>
+              <div class="faq-detail-panel" data-faq-panel="2">
+                <p class="fd-q">Что если после аудита я никуда не обращусь?</p>
+                <p class="fd-a">Отчёт останется у вас. Хоть сами исправляйте, хоть с текущим подрядчиком.</p>
+              </div>
+              <div class="faq-detail-panel" data-faq-panel="3">
+                <p class="fd-q">Сколько времени займёт аудит?</p>
+                <p class="fd-a">1 рабочий день с момента, как получим ссылку на сайт.</p>
+              </div>
+              <div class="faq-detail-panel" data-faq-panel="4">
+                <p class="fd-q">Гарантируете, что штрафа не будет?</p>
+                <p class="fd-a">Наш аудит показывает наличие или отсутствие нарушений основных требований РКН к сайтам. Гарантировать отсутствие штрафов мы не можем, поскольку ответственность за обработку персональных данных по закону остаётся на вашей компании как операторе.</p>
+              </div>
+              <div class="faq-detail-panel" data-faq-panel="5">
+                <p class="fd-q">Работаете только с компаниями из Ярославля?</p>
+                <p class="fd-a">Нет, у нас проекты по всей России. К клиентам из Ярославской, Костромской, Ивановской и Владимирской областей можем приехать лично.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 ФИНАЛЬНЫЙ CTA — в столбик, по центру -->
+      <section class="sec-pad" id="s-final">
+        <div class="in-1240">
+          <details class="spec"><summary><span class="annot">Было: 7/5 текст+форма бок о бок. Стало: всё по центру в столбик — текст сверху, форма-остров под ним</span></summary>
+            <div class="spec-body">
+              <div class="spec-row"><b>Почему по-другому:</b> раньше форма стояла рядом с текстом на одной высоте. Здесь взгляд идёт линейно вниз: тезис → форма — это зеркалит структуру hero (тоже центр, тоже вертикаль), замыкая страницу тем же ритмом, с которого она началась.</div>
+            </div>
+          </details>
+          <div class="final-stack">
+            <h2>Пока вы читаете это,<br>форма на вашем сайте<br>продолжает собирать данные клиентов.</h2>
+            <p class="body-txt" style="margin:0 auto;">Проверить, законно ли это, — 5 минут вашего времени<br>и 1 рабочий день нашего.</p>
+            <div class="final-card">
+              <form class="form-grid" id="finalForm">
+                <div class="field"><label for="f-site">Ссылка на сайт</label><input id="f-site" type="text" placeholder="example.ru" required></div>
+                <div class="field"><label for="f-phone">Номер телефона</label><input id="f-phone" type="tel" placeholder="+7 900 000-00-00" required></div>
+                <label class="consent"><input type="checkbox" required><span>Согласен(на) на обработку персональных данных</span></label>
+                <button type="submit" class="btn no-arrow" style="margin-top:6px; justify-content:center;">Отправить</button>
+                <div class="form-status" id="finalFormStatus">Заявка отправлена — свяжемся в течение 1 рабочего дня.</div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="site">
+        <div class="foot-in">
+          <div>
+            <h3>Нужна техподдержка? Остались вопросы?</h3>
+            <p class="foot-sub">Отвечаем быстро — в среднем за 9 минут в рабочее время.</p>
+          </div>
+          <div class="foot-contacts">
+            <div class="foot-item"><div class="l">Телефон</div><div class="v">8 (4852) 31-94-04</div></div>
+            <div class="foot-item"><div class="l">Мессенджеры</div><div class="icon-row"><span class="icon-wf" title="Telegram">TG</span><span class="icon-wf" title="Max">M</span></div></div>
+            <div class="foot-item"><div class="l">Адрес</div><div class="v">Ярославль, Октябрьский пер. 3</div></div>
+          </div>
+          <button class="btn" id="openMsgChoice">Написать нам</button>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Закрыть">✕</button>
+    <h3 id="modalTitle">Оставить заявку</h3>
+    <p class="modal-sub" id="modalSub"></p>
+    <form class="form-grid" id="modalForm">
+      <div class="field"><label for="m-site">Ссылка на сайт</label><input id="m-site" type="text" placeholder="example.ru" required></div>
+      <div class="field"><label for="m-phone">Номер телефона</label><input id="m-phone" type="tel" placeholder="+7 900 000-00-00" required></div>
+      <label class="consent"><input type="checkbox" required><span>Согласен(на) на обработку персональных данных</span></label>
+      <button type="submit" class="btn no-arrow" style="margin-top:6px; justify-content:center;">Отправить</button>
+      <div class="form-status" id="modalFormStatus">Заявка отправлена — свяжемся в течение 1 рабочего дня.</div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="msgOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="msgTitle">
+    <button class="modal-close" id="msgClose" aria-label="Закрыть">✕</button>
+    <h3 id="msgTitle">Написать нам</h3>
+    <p class="modal-sub">Выберите мессенджер — ответим быстро.</p>
+    <div class="msg-links">
+      <a class="msg-link" href="https://t.me/redstar_support" target="_blank" rel="noopener"><span class="icon-wf">TG</span>Написать в Telegram</a>
+      <a class="msg-link" href="https://max.ru/redstar_support" target="_blank" rel="noopener"><span class="icon-wf">M</span>Написать в Max</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var toggleBtn = document.getElementById('reqToggle');
+  var moreBox = document.getElementById('ledgerMore');
+  var label = document.getElementById('reqToggleLabel');
+  toggleBtn.addEventListener('click', function(){
+    var isOpen = moreBox.classList.toggle('open');
+    toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    label.textContent = isOpen ? 'Скрыть' : 'Показать ещё 6 пунктов аудита';
+  });
+
+  document.querySelectorAll('[data-tab-btn]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var idx = btn.getAttribute('data-tab-btn');
+      document.querySelectorAll('[data-tab-btn]').forEach(function(b){ b.classList.toggle('active', b === btn); });
+      document.querySelectorAll('[data-tab-panel]').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-tab-panel') === idx); });
+    });
+  });
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll('[data-slide]'));
+  var dots = Array.prototype.slice.call(document.querySelectorAll('.cv-dot'));
+  var cvIndex = 0;
+  function goToSlide(i){
+    cvIndex = (i + slides.length) % slides.length;
+    slides.forEach(function(s, si){ s.classList.toggle('active', si === cvIndex); });
+    dots.forEach(function(d, di){ d.classList.toggle('active', di === cvIndex); });
+  }
+  document.getElementById('cvPrev').addEventListener('click', function(){ goToSlide(cvIndex - 1); });
+  document.getElementById('cvNext').addEventListener('click', function(){ goToSlide(cvIndex + 1); });
+  dots.forEach(function(d){ d.addEventListener('click', function(){ goToSlide(parseInt(d.getAttribute('data-goto'), 10)); }); });
+
+  document.querySelectorAll('[data-faq-btn]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var idx = btn.getAttribute('data-faq-btn');
+      document.querySelectorAll('[data-faq-btn]').forEach(function(b){ b.classList.toggle('active', b === btn); });
+      document.querySelectorAll('[data-faq-panel]').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-faq-panel') === idx); });
+    });
+  });
+
+  var overlay = document.getElementById('modalOverlay');
+  var modalTitle = document.getElementById('modalTitle');
+  var modalSub = document.getElementById('modalSub');
+  var modalClose = document.getElementById('modalClose');
+  var lastFocused = null;
+
+  function openModal(title, sub){
+    modalTitle.textContent = title || 'Оставить заявку';
+    modalSub.textContent = sub || '';
+    lastFocused = document.activeElement;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    var firstInput = overlay.querySelector('input');
+    if(firstInput){ setTimeout(function(){ firstInput.focus(); }, 50); }
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    if(lastFocused){ lastFocused.focus(); }
+  }
+
+  document.querySelectorAll('[data-open-modal]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      openModal(btn.getAttribute('data-modal-title'), btn.getAttribute('data-modal-sub'));
+    });
+  });
+  modalClose.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay){ closeModal(); } });
+
+  var msgOverlay = document.getElementById('msgOverlay');
+  var msgClose = document.getElementById('msgClose');
+  var openMsgBtn = document.getElementById('openMsgChoice');
+  function openMsg(){
+    msgOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMsg(){
+    msgOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  if(openMsgBtn){ openMsgBtn.addEventListener('click', openMsg); }
+  msgClose.addEventListener('click', closeMsg);
+  msgOverlay.addEventListener('click', function(e){ if(e.target === msgOverlay){ closeMsg(); } });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      if(overlay.classList.contains('open')){ closeModal(); }
+      if(msgOverlay.classList.contains('open')){ closeMsg(); }
+    }
+  });
+
+  document.getElementById('modalForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('modalFormStatus').classList.add('show');
+    setTimeout(closeModal, 1400);
+  });
+  document.getElementById('finalForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('finalFormStatus').classList.add('show');
+  });
+})();
+</script>
