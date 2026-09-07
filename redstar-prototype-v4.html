@@ -1,6 +1,4 @@
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Прототип v4: другая компоновка</title>
+﻿<title>Прототип v4: другая компоновка</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
 <style>
   :root{
@@ -80,9 +78,9 @@
   /* 02 РИСКИ — горизонтальная лента */
   .timeline{ position:relative; display:flex; justify-content:space-between; margin-top:56px; }
   .timeline::before{ content:''; position:absolute; top:27px; left:9%; right:9%; height:2px; background:var(--border-2); z-index:0; }
-  .tl-node{ position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 22px; }
+  .tl-node{ position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:flex-start; text-align:left; padding:0 22px; }
   .tl-dot{ width:54px; height:54px; border-radius:50%; border:2px solid var(--ink); background:var(--canvas); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; margin-bottom:24px; }
-  .tl-text{ font-size:17px; color:var(--ink); font-weight:500; line-height:1.5; }
+  .tl-text{ font-size:17px; color:var(--ink); font-weight:500; line-height:1.5; width:100%; }
   .risk-label{ font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-3); margin-top:52px; }
 
   /* 03 ЧЕК-ЛИСТ — ведомость */
@@ -98,9 +96,9 @@
   .req-cta{ margin-top:44px; }
 
   /* 04 СРАВНЕНИЕ — вертикальная трансформация */
-  .tf-legend{ display:flex; align-items:center; justify-content:center; gap:16px; margin-top:44px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-3); }
+  .tf-legend{ display:flex; align-items:center; justify-content:flex-start; gap:16px; margin-top:44px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-3); }
   .tf-legend span:nth-child(2){ font-size:16px; }
-  .transform-flow{ max-width:880px; margin:36px auto 0; display:grid; gap:22px; }
+  .transform-flow{ max-width:880px; margin:36px 0 0; display:grid; gap:22px; }
   .tf-pair{ display:flex; align-items:center; gap:18px; }
   .tf-before{ flex:1; display:flex; align-items:center; gap:10px; background:var(--tint); border:1px dashed var(--border-2); border-radius:10px; padding:16px 20px; font-size:15.5px; color:var(--ink-3); text-align:left; }
   .tf-before::before{ content:'✕'; flex:none; font-weight:800; color:var(--border-2); }
@@ -119,7 +117,7 @@
   .sup-cta{ margin-top:48px; }
 
   /* 07 О КОМПАНИИ — бейджи над горизонтальным фото */
-  .co-badges{ display:flex; flex-wrap:wrap; gap:14px 32px; align-items:center; justify-content:center; margin:8px 0 36px; }
+  .co-badges{ display:flex; flex-wrap:wrap; gap:14px 32px; align-items:center; justify-content:flex-start; margin:8px 0 36px; }
   .co-photo{ aspect-ratio:21/8; width:100%; }
   .co-badge{ display:inline-flex; align-items:center; gap:10px; font-size:17px; font-weight:600; color:var(--ink); }
   .co-badge::before{ content:''; width:9px; height:9px; border-radius:50%; background:var(--ink); flex:none; }
@@ -154,9 +152,9 @@
   .faq-acc-a p{ font-size:16.5px; color:var(--ink-2); line-height:1.6; padding:0 2px 26px; max-width:70ch; }
 
   /* 10 ФИНАЛЬНЫЙ CTA — по центру, в столбик */
-  .final-stack{ max-width:760px; margin:0 auto; text-align:center; }
+  .final-stack{ max-width:760px; margin:0; text-align:left; }
   .final-stack h2{ font-size:42px; line-height:1.2; margin-bottom:22px; }
-  .final-card{ margin:44px auto 0; max-width:460px; text-align:left; border:1px solid var(--border-2); border-radius:12px; background:#fff; padding:40px; box-shadow:0 20px 48px -28px rgba(0,0,0,.25); }
+  .final-card{ margin:44px 0 0; max-width:460px; text-align:left; border:1px solid var(--border-2); border-radius:12px; background:#fff; padding:40px; box-shadow:0 20px 48px -28px rgba(0,0,0,.25); }
   .form-grid{ display:grid; gap:20px; }
   .field{ display:flex; flex-direction:column; gap:8px; }
   .field label{ font-size:12.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
@@ -294,10 +292,10 @@
 
       <!-- 02 РИСКИ — лента -->
       <section class="sec-pad" id="s-risks">
-        <div class="in-1140 sec-center">
-          <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto;">Роскомнадзор не смотрит,<br>большой у вас бизнес или маленький</h2>
-          <p class="body-txt" style="margin-left:auto; margin-right:auto;">С 30 мая 2025 года штрафы за нарушение закона о персональных данных выросли в разы. Даже если на сайте нет ни одной формы, а стоит только Яндекс.Метрика — вы уже собираете персональные данные посетителей и рискуете получить штраф до 6 млн рублей<sup>*</sup>.</p>
-          <p class="fine" style="margin-left:auto; margin-right:auto;">*по КоАП РФ, ст. 13.11 (первое нарушение) — рекомендуем проконсультироваться с юристом.</p>
+        <div class="in-1140">
+          <h2 class="h-title" style="max-width:none;">Роскомнадзор не смотрит,<br>большой у вас бизнес или маленький</h2>
+          <p class="body-txt">С 30 мая 2025 года штрафы за нарушение закона о персональных данных выросли в разы. Даже если на сайте нет ни одной формы, а стоит только Яндекс.Метрика — вы уже собираете персональные данные посетителей и рискуете получить штраф до 6 млн рублей<sup>*</sup>.</p>
+          <p class="fine" style="white-space:nowrap; max-width:none;">*по КоАП РФ, ст. 13.11 (первое нарушение) — рекомендуем проконсультироваться с юристом.</p>
           <div class="risk-label">Риски</div>
           <div class="timeline">
             <div class="tl-node"><div class="tl-dot">01</div><p class="tl-text">Сайт сделан давно, и с тех пор опубликованные юридические документы не обновлялись</p></div>
@@ -309,13 +307,13 @@
 
       <!-- 03 ЧЕК-ЛИСТ — ведомость -->
       <section class="sec-pad tint" id="s-check">
-        <div class="in-1240 sec-center">
-          <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto;">Бесплатно проверим сайт<br>по 9 ключевым требованиям РКН</h2>
-          <p class="body-txt" style="max-width:none; margin-left:auto; margin-right:auto;">Специалист вручную проверит сайт и пришлёт отчёт: что в порядке, а что нужно исправить.</p>
+        <div class="in-1240">
+          <h2 class="h-title" style="max-width:none;">Бесплатно проверим сайт<br>по 9 ключевым требованиям РКН</h2>
+          <p class="body-txt" style="max-width:none;">Специалист вручную проверит сайт и пришлёт отчёт: что в порядке, а что нужно исправить.</p>
 
           <div class="ledger" style="text-align:left;">
             <div class="ledger-row"><span class="lr-n">01</span><span class="lr-text">Согласие на обработку персональных данных на всех формах обратной связи</span><span class="lr-status">Проверяем</span></div>
-            <div class="ledger-row"><span class="lr-n">02</span><span class="lr-text">Наличие согласия на обработку персональных данных и политики конфиденциальности</span><span class="lr-status">Проверяем</span></div>
+            <div class="ledger-row"><span class="lr-n">02</span><span class="lr-text">Наличие на сайте согласия на обработку персональных данных и политики конфиденциальности</span><span class="lr-status">Проверяем</span></div>
             <div class="ledger-row"><span class="lr-n">03</span><span class="lr-text">Отсутствие на сайте Google Analytics и других систем трансграничной передачи данных</span><span class="lr-status">Проверяем</span></div>
             <div class="ledger-more" id="ledgerMore">
               <div class="ledger-row"><span class="lr-n">04</span><span class="lr-text">Хранение и обработка данных россиян на серверах в РФ</span><span class="lr-status">Проверяем</span></div>
@@ -341,8 +339,8 @@
 
       <!-- 04 СРАВНЕНИЕ — вертикальная трансформация -->
       <section class="sec-pad" id="s-cmp">
-        <div class="in-1140 sec-center">
-          <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto;">Что будет, если оставить как есть</h2>
+        <div class="in-1140">
+          <h2 class="h-title" style="max-width:none;">Что будет, если оставить как есть</h2>
           <div class="tf-legend"><span>Без аудита</span><span>→</span><span>С аудитом Редстар</span></div>
           <div class="transform-flow">
             <div class="tf-pair">
@@ -367,7 +365,7 @@
       <!-- 05 ЧТО ДАЛЬШЕ -->
       <section class="sec-pad tint" id="s-next">
         <div class="in-1140">
-          <h2 class="h-title sec-center" style="max-width:none;">Что дальше</h2>
+          <h2 class="h-title" style="max-width:none;">Что дальше</h2>
           <p class="body-txt" style="max-width:none;">По итогам аудита вы получите отчёт с результатами проверки. Можете использовать его как готовый чек-лист и устранить всё самостоятельно, а можете передать задачи нам.</p>
           <p class="body-txt" style="max-width:none;">Мы не только приведём сайт в соответствие с требованиями РКН, но и возьмём на себя его техническую поддержку целиком: от небольших правок до регулярного сопровождения и развития.</p>
         </div>
@@ -375,9 +373,9 @@
 
       <!-- 06 ПОДДЕРЖКА — группы задач пилюлями, как на redstar-support.ru -->
       <section class="sec-pad" id="s-sup">
-        <div class="in-1320 sec-center">
-          <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto; margin-bottom:14px;">Что мы умеем как техподдержка?</h2>
-          <p class="body-txt" style="max-width:none; margin-left:auto; margin-right:auto;">Решать задачи любой сложности, например:</p>
+        <div class="in-1320">
+          <h2 class="h-title" style="max-width:none; margin-bottom:14px;">Что мы умеем как техподдержка?</h2>
+          <p class="body-txt" style="max-width:none;">Решать задачи любой сложности, например:</p>
 
           <div class="sup-groups">
             <div class="sup-group">
@@ -427,7 +425,7 @@
                 <span class="sup-pill">Отрисовка отдельных страниц разделов</span>
                 <span class="sup-pill">Редизайн сайта</span>
                 <span class="sup-pill">Изображения для товарных категорий</span>
-                <span class="sup-pill sup-extra" data-sup-extra="2">Создание баннеров</span>
+                <span class="sup-pill">Создание баннеров</span>
                 <span class="sup-pill sup-extra" data-sup-extra="2">Подготовка прототипов страниц</span>
                 <span class="sup-pill sup-extra" data-sup-extra="2">Отрисовка иконок</span>
                 <span class="sup-pill sup-extra" data-sup-extra="2">Создание писем для рассылки</span>
@@ -447,7 +445,7 @@
       <!-- 07 О КОМПАНИИ — асимметричный сплит -->
       <section class="sec-pad tint" id="s-co">
         <div class="in-1140">
-          <h2 class="h-title sec-center" style="max-width:none; margin-left:auto; margin-right:auto;">О Редстар</h2>
+          <h2 class="h-title" style="max-width:none;">О Редстар</h2>
           <div class="co-badges">
             <span class="co-badge">Работаем с 2010 года</span>
             <span class="co-badge">Офис в центре Ярославля</span>
@@ -461,8 +459,8 @@
 
       <!-- 08 КЕЙСЫ — компоновка с redstar-support.ru: текст + скриншот в ряд, кейсы друг под другом -->
       <section class="sec-pad" id="s-cases">
-        <div class="in-1240 sec-center">
-          <h2 class="h-title" style="max-width:none; margin-left:auto; margin-right:auto;">Нам уже доверяют бизнесы,<br><span style="font-size:28px;">для которых сайт — ключевой инструмент</span></h2>
+        <div class="in-1240">
+          <h2 class="h-title" style="max-width:none;">Нам уже доверяют бизнесы,<br><span style="font-size:28px;">для которых сайт — ключевой инструмент</span></h2>
 
           <div class="case-list">
             <div class="case-row">
@@ -513,7 +511,7 @@
               <button class="faq-acc-q" data-faq-acc aria-expanded="true" aria-controls="faqA0">
                 <span>Это точно бесплатно?</span><span class="faq-plus">+</span>
               </button>
-              <div class="faq-acc-a" id="faqA0"><p>Да. Аудит — это способ показать, как мы работаем, до того как вы заплатите хоть рубль.</p></div>
+              <div class="faq-acc-a" id="faqA0"><p style="white-space:nowrap; max-width:none;">Да. Аудит — это способ показать, как мы работаем, до того как вы заплатите хоть рубль.</p></div>
             </div>
             <div class="faq-acc-item">
               <button class="faq-acc-q" data-faq-acc aria-expanded="false" aria-controls="faqA1">
@@ -525,7 +523,7 @@
               <button class="faq-acc-q" data-faq-acc aria-expanded="false" aria-controls="faqA2">
                 <span>Что если после аудита я никуда не обращусь?</span><span class="faq-plus">+</span>
               </button>
-              <div class="faq-acc-a" id="faqA2"><p>Отчёт останется у вас. Хоть сами исправляйте, хоть с текущим подрядчиком.</p></div>
+              <div class="faq-acc-a" id="faqA2"><p>Отчёт останется у вас. Можете исправить все сами или с вашим текущим подрядчиком.</p></div>
             </div>
             <div class="faq-acc-item">
               <button class="faq-acc-q" data-faq-acc aria-expanded="false" aria-controls="faqA3">
@@ -537,7 +535,7 @@
               <button class="faq-acc-q" data-faq-acc aria-expanded="false" aria-controls="faqA4">
                 <span>Гарантируете, что штрафа не будет?</span><span class="faq-plus">+</span>
               </button>
-              <div class="faq-acc-a" id="faqA4"><p>Наш аудит показывает наличие или отсутствие нарушений основных требований РКН к сайтам. Гарантировать отсутствие штрафов мы не можем, поскольку ответственность за обработку персональных данных по закону остаётся на вашей компании как операторе.</p></div>
+              <div class="faq-acc-a" id="faqA4"><p style="max-width:none;">Наш аудит показывает наличие или отсутствие нарушений основных требований РКН к сайтам. Гарантировать отсутствие штрафов мы не можем, поскольку ответственность за обработку персональных данных по закону остаётся на вашей компании как операторе.</p></div>
             </div>
             <div class="faq-acc-item">
               <button class="faq-acc-q" data-faq-acc aria-expanded="false" aria-controls="faqA5">
@@ -553,8 +551,8 @@
       <section class="sec-pad" id="s-final">
         <div class="in-1240">
           <div class="final-stack">
-            <h2>Пока вы это читаете,<br>форма на вашем сайте<br>продолжает собирать данные клиентов.</h2>
-            <p class="body-txt" style="margin:0 auto;">Проверить, законно ли это, — 5 минут вашего времени<br>и 1 рабочий день нашего.</p>
+            <h2>Пока вы это читаете,<br>ваш сайт продолжает собирать<br>данные клиентов.</h2>
+            <p class="body-txt">Проверить, законно ли это, — 5 минут вашего времени<br>и 1 рабочий день нашего.</p>
             <div class="final-card">
               <form class="form-grid" id="finalForm">
                 <div class="field"><label for="f-site">Ссылка на сайт</label><input id="f-site" type="text" placeholder="example.ru" required></div>
@@ -708,3 +706,4 @@
   });
 })();
 </script>
+
