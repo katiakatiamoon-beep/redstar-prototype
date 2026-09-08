@@ -13,7 +13,7 @@
   --red:#D92C04; --red-lift:#EF4116;
   --blue:#2B5FD9; --blue-deep:#1E4BB8; --navy:#10275C;
   --font:'Manrope',-apple-system,'Segoe UI',Arial,sans-serif;
-  --wrap:1180px; --gutter:clamp(20px,5vw,72px); --sec:clamp(76px,11vw,164px);
+  --wrap:1180px; --gutter:clamp(20px,5vw,72px); --sec:clamp(50px,6.8vw,100px);
   --r:28px; --r-sm:16px; --e:cubic-bezier(.16,1,.3,1);
 }
 *{ box-sizing:border-box; }
@@ -93,6 +93,7 @@ html.js .rv.in{ opacity:1; transform:none; }
 @keyframes pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.28); } }
 .hdr-act{ display:flex; align-items:center; gap:10px; }
 .hdr-phone{ font-weight:700; font-size:15px; color:rgba(255,255,255,.9); transition:color .4s; }
+.ph-ic{ display:none; }
 .hdr.is-stuck .hdr-phone{ color:var(--text); }
 .soc{ display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; flex:none;
       transition:transform .45s var(--e); }
@@ -110,6 +111,27 @@ html.js .rv.in{ opacity:1; transform:none; }
 .grain{ position:absolute; inset:0; pointer-events:none; opacity:.5; mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E"); }
 
+/* ===== ДЕКОР (общий набор) ===== */
+.dec{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+.dec > *{ position:absolute; display:block; }
+.d-grid{ inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.11) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.11) 1px,transparent 1px);
+  background-size:clamp(44px,5vw,72px) clamp(44px,5vw,72px);
+  -webkit-mask-image:radial-gradient(90% 85% at 50% 42%,#000 35%,transparent 92%);
+          mask-image:radial-gradient(90% 85% at 50% 42%,#000 35%,transparent 92%); }
+.d-dots{ background-image:radial-gradient(rgba(255,255,255,.26) 1.3px,transparent 1.3px);
+         background-size:24px 24px;
+  -webkit-mask-image:linear-gradient(180deg,#000,transparent 72%);
+          mask-image:linear-gradient(180deg,#000,transparent 72%); }
+.d-glow{ border-radius:50%; filter:blur(70px);
+         background:radial-gradient(circle,rgba(217,44,4,.6),transparent 66%); }
+.d-glow.cool{ background:radial-gradient(circle,rgba(255,255,255,.4),transparent 68%); }
+.d-ring{ border-radius:50%; border:1px solid rgba(255,255,255,.16); }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+@keyframes spinBack{ to{ transform:rotate(-360deg); } }
+@keyframes drift{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-18px); } }
+
 /* ===== HERO ===== */
 .hero{ background:linear-gradient(160deg,var(--blue) 0%,var(--blue-deep) 100%); color:#fff;
        padding:clamp(120px,17vw,180px) 0 clamp(40px,5vw,64px); position:relative; overflow:hidden; }
@@ -117,7 +139,24 @@ html.js .rv.in{ opacity:1; transform:none; }
   background:radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,.26), rgba(255,255,255,.06) 55%, transparent 74%); pointer-events:none;
   animation:breathe 7s ease-in-out infinite; }
 @keyframes breathe{ 0%,100%{ opacity:.75; transform:translateX(-50%) scale(1); } 50%{ opacity:1; transform:translateX(-50%) scale(1.06); } }
-.hero-in{ position:relative; z-index:2; }
+.hero-in{ position:relative; z-index:3; }
+.hero .dec{ z-index:2; }
+.hero-orbit{ right:clamp(-180px,-8vw,-40px); top:clamp(8px,2vw,40px);
+             width:clamp(340px,44vw,660px); aspect-ratio:1; opacity:.9; }
+.hero-orbit .r{ fill:none; stroke:rgba(255,255,255,.3); stroke-width:1.4; }
+.hero-orbit .r.dash{ stroke-dasharray:3 9; stroke:rgba(255,255,255,.45); }
+.hero-orbit .sat{ transform-origin:300px 300px; animation:spin 22s linear infinite; }
+.hero-orbit .sat2{ transform-origin:300px 300px; animation:spinBack 34s linear infinite; }
+.hero-orbit .dot{ fill:var(--red); stroke:rgba(255,255,255,.85); stroke-width:2; }
+.hero-orbit .halo{ fill:var(--red); opacity:.35; }
+.hero-orbit .dot.w{ fill:#fff; opacity:.8; stroke:none; }
+.hero-glow{ right:-120px; top:-60px; width:min(520px,52vw); aspect-ratio:1; opacity:.75; }
+.hero-tick{ left:0; bottom:clamp(26px,3.4vw,46px); width:clamp(120px,16vw,240px); height:2px;
+            background:linear-gradient(90deg,var(--red),transparent); }
+.hero-cnr{ width:clamp(26px,2.6vw,42px); height:clamp(26px,2.6vw,42px); border:0 solid rgba(255,255,255,.4); }
+.hero-cnr.tl{ left:var(--gutter); top:clamp(96px,12vw,148px); border-left-width:2px; border-top-width:2px; }
+.hero-cnr.br{ right:var(--gutter); bottom:clamp(26px,3.4vw,46px); border-right-width:2px; border-bottom-width:2px;
+              border-color:var(--red); }
 .hero h1{ font-size:clamp(30px,4.4vw,58px); line-height:1.02; letter-spacing:-.03em; font-weight:700; }
 .rub{ font-size:.5em; vertical-align:top; line-height:1; margin-left:.1em; position:relative; top:.14em; }
 .hero-num{ display:block; margin-top:.1em; color:#fff; font-weight:800; line-height:.86;
@@ -147,6 +186,9 @@ html.js .hero-sep.in{ transform:none; }
 
 /* ===== РИСКИ ===== */
 .risk-note{ display:grid; gap:14px; }
+#s-risks .shead{ grid-template-columns:minmax(0,1fr) minmax(0,1.28fr); gap:clamp(24px,3vw,42px); }
+#s-risks .shead .lead{ max-width:none; font-size:clamp(13.5px,1.05vw,15px); }
+#s-risks .shead h2{ font-size:clamp(30px,3.5vw,50px); }
 .risk-fine{ font-size:13px; color:var(--text-3); line-height:1.5; }
 .risk-list{ border-top:1px solid var(--line); }
 .risk-row{ display:grid; grid-template-columns:clamp(64px,7vw,110px) minmax(0,1fr); gap:clamp(18px,4vw,56px);
@@ -154,8 +196,8 @@ html.js .hero-sep.in{ transform:none; }
            transition:padding-left .5s var(--e); }
 .risk-row:hover{ padding-left:16px; }
 .risk-i{ font-size:clamp(30px,4vw,56px); font-weight:800; line-height:.9; color:transparent; -webkit-text-stroke:1.5px var(--red);
-         transition:color .5s var(--e), transform .6s var(--e); }
-.risk-row:hover .risk-i{ color:var(--red); transform:translateY(-4px) rotate(-4deg); }
+         transition:color .5s var(--e); }
+.risk-row:hover .risk-i{ color:var(--red); }
 .risk-row p{ font-size:clamp(19px,2vw,30px); line-height:1.28; letter-spacing:-.025em; font-weight:600; max-width:34ch; text-wrap:balance; }
 
 /* ===== ЧЕК-ЛИСТ ===== */
@@ -171,8 +213,23 @@ html.js .hero-sep.in{ transform:none; }
 .ledger-more{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .6s var(--e); grid-column:1 / -1; }
 .ledger-more.open{ grid-template-rows:1fr; }
 .ledger-more > div{ overflow:hidden; display:grid; grid-template-columns:repeat(3,1fr); column-gap:clamp(24px,3.4vw,52px); }
-.chk-act{ display:flex; flex-direction:column; align-items:center; gap:clamp(22px,2.8vw,32px);
+.chk-act{ display:flex; flex-direction:column; align-items:center; gap:clamp(38px,5.5vw,68px);
           margin-top:clamp(32px,4vw,52px); text-align:center; }
+#s-check .dec{ z-index:1; }
+.chk-dots{ inset:auto 0 0 0; height:60%; opacity:.5;
+  -webkit-mask-image:linear-gradient(0deg,#000,transparent 78%);
+          mask-image:linear-gradient(0deg,#000,transparent 78%); }
+.chk-dial{ right:clamp(-70px,-3vw,-18px); bottom:clamp(-60px,-3vw,-16px);
+           width:clamp(170px,19vw,272px); aspect-ratio:1; opacity:.6; }
+.chk-dial circle{ fill:none; transform:rotate(-90deg); transform-origin:100px 100px; }
+.chk-dial .track{ stroke:rgba(255,255,255,.14); stroke-width:10; stroke-dasharray:56.5 6.3; }
+.chk-dial .seg{ stroke:var(--red); stroke-width:10; stroke-dasharray:56.5 6.3;
+                stroke-dashoffset:565.5; transition:stroke-dashoffset 2.2s var(--e) .2s; }
+.chk-dial.in .seg{ stroke-dashoffset:0; }
+.chk-dial .core{ stroke:rgba(255,255,255,.22); stroke-width:1; stroke-dasharray:2 7; }
+.chk-glow{ right:-160px; bottom:-180px; width:min(460px,46vw); aspect-ratio:1; opacity:.45; }
+.chk-bar{ left:0; top:0; width:100%; height:1px;
+          background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent); }
 
 /* ===== СРАВНЕНИЕ ===== */
 .cmp-legend{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,5vw,80px); font-size:12px; font-weight:800;
@@ -180,7 +237,7 @@ html.js .hero-sep.in{ transform:none; }
              border-bottom:1px solid var(--line); }
 .cmp-legend span{ padding-left:36px; }
 .cmp-legend span:last-child{ color:var(--red); }
-.cmp-row{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,5vw,80px);
+.cmp-row{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(20px,5vw,80px);
           padding:clamp(22px,2.8vw,34px) 0; border-bottom:1px solid var(--line); transition:background .5s var(--e); }
 .cmp-row:hover{ background:var(--bg-soft); }
 .cmp-cell{ display:flex; gap:14px; align-items:flex-start; }
@@ -189,7 +246,8 @@ html.js .hero-sep.in{ transform:none; }
 .cmp-row:hover .cmp-mk{ transform:scale(1.18) rotate(10deg); }
 .cmp-no .cmp-mk{ box-shadow:inset 0 0 0 1.5px var(--red); color:var(--red); }
 .cmp-yes .cmp-mk{ background:var(--text); color:#fff; }
-.cmp-no p{ color:var(--text-3); font-size:clamp(15px,1.2vw,18px); line-height:1.45; }
+.cmp-no p{ color:var(--text-3); font-size:clamp(14px,1.1vw,16px); line-height:1.45; }
+.cmp-no p.one-line{ white-space:nowrap; }
 .cmp-yes p{ font-size:clamp(16px,1.35vw,20px); line-height:1.4; font-weight:700; letter-spacing:-.015em; }
 
 /* ===== ПАУЗА / РАЗВИЛКА ===== */
@@ -197,40 +255,40 @@ html.js .hero-sep.in{ transform:none; }
 .pause-grid p{ font-size:clamp(19px,1.85vw,26px); line-height:1.34; letter-spacing:-.022em; font-weight:600; }
 .pause-grid p + p{ font-weight:500; color:var(--text-2); }
 
-.fork{ margin-top:clamp(8px,2vw,20px); }
-.fork-start{ position:relative; display:flex; align-items:center; gap:clamp(16px,2vw,24px);
-             max-width:640px; margin:0 auto; padding:clamp(20px,2.4vw,28px) clamp(22px,2.6vw,32px);
-             background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
-             box-shadow:0 24px 60px -46px rgba(16,39,92,.55); }
-.fork-start .ic{ flex:none; width:48px; height:48px; border-radius:14px; background:var(--red);
-                 display:grid; place-items:center; box-shadow:0 12px 26px -14px rgba(217,44,4,.7); }
-.fork-start .ic svg{ width:23px; height:23px; }
-.fork-start p{ font-size:clamp(17px,1.5vw,21px); line-height:1.32; letter-spacing:-.02em; font-weight:700; }
+/* горизонтальный путь: отчёт → развилка на две дорожки */
+.path{ display:grid; grid-template-columns:minmax(0,.86fr) clamp(56px,7vw,110px) minmax(0,1.14fr);
+       align-items:center; margin-top:clamp(10px,2vw,24px); }
 
-.fork-split{ display:block; width:100%; height:clamp(48px,6vw,84px); overflow:visible; }
-.fork-split path{ fill:none; stroke:var(--line); stroke-width:2; vector-effect:non-scaling-stroke;
-                  stroke-dasharray:400; stroke-dashoffset:400; transition:stroke-dashoffset 1.4s var(--e) .15s; }
-.fork-split.in path{ stroke-dashoffset:0; }
+.path-src{ position:relative; padding:clamp(24px,2.8vw,36px); border-radius:var(--r);
+           background:var(--surface); border:1px solid var(--line);
+           box-shadow:0 26px 64px -48px rgba(16,39,92,.5); }
+.path-src .ic{ width:44px; height:44px; border-radius:13px; background:var(--red);
+               display:grid; place-items:center; margin-bottom:18px;
+               box-shadow:0 12px 26px -14px rgba(217,44,4,.65); }
+.path-src .ic svg{ width:21px; height:21px; }
+.path-src p{ font-size:clamp(16px,1.35vw,20px); line-height:1.38; letter-spacing:-.02em; font-weight:600; }
 
-.fork-b{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(16px,2vw,26px); align-items:stretch; }
-.fork-c{ position:relative; padding:clamp(26px,3vw,40px); border-radius:var(--r);
-         border:1px solid var(--line); background:var(--surface); overflow:hidden;
-         transition:transform .55s var(--e), box-shadow .55s var(--e); }
-.fork-c .tag{ display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:800;
-              letter-spacing:.16em; text-transform:uppercase; color:var(--text-3); margin-bottom:18px; }
-.fork-c .tag b{ display:grid; place-items:center; width:22px; height:22px; border-radius:50%;
-                background:var(--line); color:var(--text-2); font-size:11px; font-weight:800; letter-spacing:0; }
-.fork-c p{ font-size:clamp(17px,1.5vw,22px); line-height:1.35; letter-spacing:-.022em; font-weight:600; }
-.fork-c p + p{ margin-top:14px; font-size:clamp(15px,1.15vw,17px); line-height:1.5;
-               font-weight:500; color:var(--text-2); letter-spacing:-.01em; }
-.fork-c.is-us{ background:var(--navy); border-color:transparent; color:#fff; }
-.fork-c.is-us::after{ content:''; position:absolute; right:-190px; bottom:-210px; width:400px; height:400px;
-                      background:radial-gradient(circle,rgba(217,44,4,.42),transparent 66%); filter:blur(34px); pointer-events:none; }
-.fork-c.is-us .tag{ color:rgba(255,255,255,.62); }
-.fork-c.is-us .tag b{ background:var(--red); color:#fff; }
-.fork-c.is-us p{ position:relative; z-index:1; }
-.fork-c.is-us p + p{ color:rgba(255,255,255,.78); }
-@media (hover:hover){ .fork-c:hover{ transform:translateY(-6px); box-shadow:0 34px 70px -46px rgba(16,39,92,.6); } }
+.path-join{ align-self:stretch; }
+.path-join svg{ width:100%; height:100%; display:block; overflow:visible; }
+.path-join path{ fill:none; stroke-width:2; vector-effect:non-scaling-stroke;
+                 stroke-dasharray:520; stroke-dashoffset:520; transition:stroke-dashoffset 1.3s var(--e) .2s; }
+.path-join .l1{ stroke:var(--line); }
+.path-join .l2{ stroke:var(--red); transition-delay:.5s; }
+.path-join.in path{ stroke-dashoffset:0; }
+
+.path-outs{ display:grid; gap:clamp(14px,1.8vw,22px); }
+.path-out{ position:relative; padding:clamp(20px,2.3vw,30px) clamp(22px,2.5vw,34px);
+           border-radius:var(--r-sm); background:var(--surface); border:1px solid var(--line);
+           transition:transform .5s var(--e), box-shadow .5s var(--e), border-color .5s var(--e); }
+.path-out .plabel{ display:block; font-size:11px; font-weight:800; letter-spacing:.16em;
+                text-transform:uppercase; color:var(--text-3); margin-bottom:12px; }
+.path-out p{ font-size:clamp(16px,1.35vw,20px); line-height:1.38; letter-spacing:-.02em; font-weight:600; }
+.path-out p + p{ margin-top:12px; font-size:clamp(14.5px,1.1vw,16.5px); line-height:1.5;
+                 font-weight:500; color:var(--text-2); letter-spacing:-.008em; }
+.path-out.is-us{ border-left:3px solid var(--red); }
+.path-out.is-us > p:first-child{ color:var(--red); font-weight:400; }
+@media (hover:hover){ .path-out:hover{ transform:translateX(6px); border-color:#C9D8F0;
+                                       box-shadow:0 26px 56px -44px rgba(16,39,92,.55); } }
 
 /* ===== ПОДДЕРЖКА ===== */
 .svc{ padding:clamp(34px,4vw,56px) 0; border-bottom:1px solid var(--line); display:grid;
@@ -244,9 +302,15 @@ html.js .hero-sep.in{ transform:none; }
 .tag:hover{ box-shadow:inset 0 0 0 1px var(--red); background:var(--red); color:#fff; transform:translateY(-3px) scale(1.03); }
 .tag-x{ display:none; } .tag-x.show{ display:inline-flex; animation:pop .5s var(--e) both; }
 @keyframes pop{ from{ opacity:0; transform:scale(.86) translateY(8px); } to{ opacity:1; transform:none; } }
-.svc-link{ margin-top:clamp(30px,3.6vw,44px); display:inline-flex; align-items:center; gap:10px; font-weight:700; font-size:16px; }
-.svc-link i{ display:block; width:30px; height:1.5px; background:var(--red); transition:width .4s var(--e); }
-.svc-link:hover i{ width:52px; }
+.svc-link{ margin-top:clamp(30px,3.6vw,44px); display:inline-flex; align-items:center; gap:8px;
+           color:var(--text-2); font-weight:500; font-size:15px; letter-spacing:-.01em;
+           padding-bottom:3px; border-bottom:1px solid var(--line);
+           transition:color .4s var(--e), border-color .4s var(--e); }
+.svc-link svg{ width:12px; height:12px; flex:none; opacity:.6; transition:transform .4s var(--e), opacity .4s var(--e); }
+@media (hover:hover){
+  .svc-link:hover{ color:var(--text); border-bottom-color:var(--text-3); }
+  .svc-link:hover svg{ transform:translate(2px,-2px); opacity:1; }
+}
 
 /* ===== О КОМПАНИИ ===== */
 .badges{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:clamp(34px,4vw,54px); }
@@ -301,6 +365,10 @@ html.js .hero-sep.in{ transform:none; }
 .final{ display:grid; grid-template-columns:1.15fr .85fr; gap:clamp(36px,5vw,72px); align-items:center; }
 .final h2{ max-width:none; text-wrap:balance; font-size:clamp(27px,3.1vw,44px); line-height:1.08; }
 .final .lead{ margin-top:22px; max-width:36ch; color:rgba(255,255,255,.85) !important; }
+#s-final .dec{ z-index:1; }
+.fin-grid{ inset:0; opacity:.85; }
+.fin-glow{ left:-160px; bottom:-200px; width:min(560px,56vw); aspect-ratio:1; opacity:.6; }
+.fin-glow-2{ right:-120px; top:-160px; width:min(420px,42vw); aspect-ratio:1; opacity:.45; }
 .form{ background:#fff; color:var(--text); border-radius:var(--r); padding:clamp(24px,2.6vw,34px); display:grid; gap:14px; }
 .fld label{ display:block; font-size:11px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:var(--text-3); margin-bottom:8px; }
 .fld input{ width:100%; font-family:var(--font); font-size:16px; padding:15px 18px; border-radius:14px; border:none;
@@ -345,16 +413,19 @@ html.js .hero-sep.in{ transform:none; }
 .mlink svg{ width:17px; height:17px; }
 
 @media (max-width:1024px){
-  .shead{ grid-template-columns:1fr; gap:22px; align-items:start; }
-  .shead h2,.shead > h2:only-child{ max-width:20ch; }
+  .brand-wrap{ flex-direction:column; align-items:flex-start; gap:2px; }
+  .brand-desc{ font-size:11px; line-height:1.28; padding-left:22px; border-left:none; }
+  .shead,#s-risks .shead{ grid-template-columns:1fr; gap:22px; align-items:start; }
+  .shead h2,.shead > h2:only-child,#s-risks .shead h2{ max-width:20ch; }
+  #s-risks .shead .lead{ font-size:16px; }
   .ledger,.ledger-more > div{ grid-template-columns:1fr 1fr; }
   .pause-grid{ grid-template-columns:1fr; gap:20px; }
-  .fork-b{ grid-template-columns:1fr; }
-  .fork-start{ max-width:none; }
-  .fork-split{ display:none; }
-  .fork-b{ margin-top:16px; position:relative; }
-  .fork-b::before{ content:''; position:absolute; left:50%; top:-32px; width:2px; height:24px;
-                   background:var(--line); transform:translateX(-1px); }
+  .path{ grid-template-columns:1fr; gap:0; }
+  .path-join{ height:52px; }
+  .path-join svg{ display:none; }
+  .path-join::before{ content:''; display:block; width:2px; height:100%; margin:0 auto;
+                      background:linear-gradient(180deg,var(--line),var(--red)); }
+  .path-outs{ gap:14px; }
   .hero-foot{ grid-template-columns:1fr; gap:26px; }
   .risk-row{ grid-template-columns:1fr; gap:12px; }
   .svc{ grid-template-columns:1fr; gap:18px; }
@@ -364,14 +435,28 @@ html.js .hero-sep.in{ transform:none; }
 }
 @media (max-width:640px){
   body{ font-size:16px; }
-  .hdr-row{ height:60px; } .hdr-phone,.hdr .soc,.brand-desc{ display:none; }
-  .hero{ padding-top:104px; }
+  .hdr-row{ height:auto; min-height:62px; padding:9px 0; gap:10px; }
+  .brand{ font-size:17px; gap:8px; }
+  .brand i{ width:11px; height:11px; }
+  .brand-desc{ font-size:10.5px; line-height:1.25; padding-left:19px; }
+  .hero{ padding-top:118px; }
+  .hdr-act{ gap:8px; }
+  .hdr-act .btn-line{ display:none; }
+  .hdr-phone{ width:34px; height:34px; padding:0; border-radius:50%;
+              display:inline-flex; align-items:center; justify-content:center; flex:none; }
+  .hdr.is-stuck .hdr-phone{ color:#fff; }
+  .ph-txt{ display:none; }
+  .ph-ic{ display:block; width:15px; height:15px; }
   .ledger,.ledger-more > div{ grid-template-columns:1fr; }
   .shead h2,.shead > h2:only-child,.hero-foot .lead,.hero-micro,.final h2,.final .lead,.case-desc,.risk-row p{ max-width:none; }
   .cmp-legend{ display:none; }
+  .risk-note br,.cmp-cell br{ display:none; }
+  .hero-orbit,.chk-dial{ opacity:.5; }
+  .chk-dots{ opacity:.35; }
+  .cmp-no p.one-line{ white-space:normal; }
   .cmp-row{ grid-template-columns:1fr; gap:14px; }
   .risk-row{ grid-template-columns:52px minmax(0,1fr); gap:16px; align-items:center; }
-  .chk-act{ gap:20px; }
+  .chk-act{ gap:32px; }
   .chk-act .btn-red,.hero .btn-red{ width:100%; }
 }
 
@@ -390,13 +475,13 @@ html.js .hero-sep.in{ transform:none; }
   <div class="wrap hdr-row">
     <div class="brand-wrap">
       <a class="brand" href="#top"><i aria-hidden="true"></i>Редстар</a>
-      <span class="brand-desc">Агентство интернет-маркетинга<br>из Ярославля</span>
+      <span class="brand-desc">Агентство интернет-маркетинга<br>из Ярославля с 2010 года</span>
     </div>
     <div class="hdr-act">
-      <a class="hdr-phone" href="tel:+74852319404">8 (4852) 31-94-04</a>
+      <a class="hdr-phone" href="tel:+74852319404" aria-label="Позвонить"><svg class="ph-ic" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><span class="ph-txt">8 (4852) 31-94-04</span></a>
       <a class="soc soc-tg" href="https://t.me/redstar_support" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></a>
       <a class="soc soc-max" href="https://max.ru/redstar_support" target="_blank" rel="noopener" aria-label="Max"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
-      <button class="btn btn-line mag" data-modal data-t="Оставить заявку" data-s="Ответим в среднем за 9 минут в рабочее время."><span>Оставить заявку</span></button>
+      <button class="btn btn-line mag" data-modal data-t="Отправить заявку" data-s="Ответим в среднем за 9 минут в рабочее время."><span>Отправить заявку</span></button>
     </div>
   </div>
 </header>
@@ -405,6 +490,23 @@ html.js .hero-sep.in{ transform:none; }
 
   <section class="hero on-dark">
     <div class="hero-halo" aria-hidden="true"></div>
+    <div class="dec" aria-hidden="true">
+      <span class="d-grid"></span>
+      <span class="d-glow hero-glow"></span>
+      <svg class="hero-orbit" viewBox="0 0 600 600">
+        <circle class="r" cx="300" cy="300" r="132"/>
+        <circle class="r dash" cx="300" cy="300" r="196"/>
+        <circle class="r" cx="300" cy="300" r="262"/>
+        <g class="sat">
+          <circle class="halo" cx="300" cy="104" r="21"/>
+          <circle class="dot" cx="300" cy="104" r="9"/>
+        </g>
+        <g class="sat2"><circle class="dot w" cx="300" cy="38" r="5"/></g>
+      </svg>
+      <span class="hero-tick"></span>
+      <span class="hero-cnr tl"></span>
+      <span class="hero-cnr br"></span>
+    </div>
     <div class="grain" aria-hidden="true"></div>
     <div class="wrap hero-in">
       <h1 class="split" data-split>Поможем избежать штрафа до</h1>
@@ -423,8 +525,8 @@ html.js .hero-sep.in{ transform:none; }
   <!-- бегущая строка -->
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track" id="track">
-      <b>Штраф до 6 000 000 ₽</b><i></i><b>9 ключевых требований РКН</b><i></i><b>Аудит за 1 рабочий день</b><i></i><b>Ответим за 9 минут</b><i></i>
-      <b>Штраф до 6 000 000 ₽</b><i></i><b>9 ключевых требований РКН</b><i></i><b>Аудит за 1 рабочий день</b><i></i><b>Ответим за 9 минут</b><i></i>
+      <b>Штраф до 6 000 000 ₽</b><i></i><b>9 ключевых требований РКН</b><i></i><b>Аудит за 1 рабочий день</b><i></i>
+      <b>Штраф до 6 000 000 ₽</b><i></i><b>9 ключевых требований РКН</b><i></i><b>Аудит за 1 рабочий день</b><i></i>
     </div>
   </div>
 
@@ -434,8 +536,8 @@ html.js .hero-sep.in{ transform:none; }
       <div class="shead">
         <h2 class="h2 split" data-split>Роскомнадзор не смотрит, большой у вас бизнес или маленький</h2>
         <div class="risk-note rv" style="--i:1">
-          <p class="lead">С 30 мая 2025 года штрафы за нарушение закона о персональных данных выросли в разы.</p>
-          <p class="lead">Даже если на сайте нет ни одной формы, а стоит только Яндекс.Метрика — вы уже собираете персональные данные посетителей и рискуете получить штраф до 6 млн рублей<sup>*</sup>.</p>
+          <p class="lead">С 30 мая 2025 года штрафы за нарушение<br>закона о персональных данных выросли<br>в разы.</p>
+          <p class="lead">Даже если на сайте нет ни одной формы,<br>а стоит только Яндекс.Метрика — вы уже собираете персональные данные<br>посетителей и рискуете получить штраф до 6 млн рублей<sup>*</sup>.</p>
           <p class="risk-fine">*по КоАП РФ, ст. 13.11 (первое нарушение) — рекомендуем проконсультироваться с юристом.</p>
         </div>
       </div>
@@ -450,6 +552,16 @@ html.js .hero-sep.in{ transform:none; }
 
   <!-- ЧЕК-ЛИСТ -->
   <section class="sec dark on-dark" id="s-check">
+    <div class="dec" aria-hidden="true">
+      <span class="chk-bar"></span>
+      <span class="d-dots chk-dots"></span>
+      <span class="d-glow chk-glow"></span>
+      <svg class="chk-dial" viewBox="0 0 200 200">
+        <circle class="track" cx="100" cy="100" r="90"/>
+        <circle class="seg" cx="100" cy="100" r="90"/>
+        <circle class="core" cx="100" cy="100" r="64"/>
+      </svg>
+    </div>
     <div class="grain" aria-hidden="true"></div>
     <div class="wrap" style="position:relative;z-index:2">
       <div class="shead">
@@ -483,7 +595,7 @@ html.js .hero-sep.in{ transform:none; }
       <div class="cmp-legend rv"><span>Без аудита</span><span>С аудитом Редстар</span></div>
       <div>
         <div class="cmp-row rv">
-          <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p>Проверка находит нарушения → штраф от 30 000 до 6 000 000 ₽</p></div>
+          <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p class="one-line">Проверка находит нарушения → штраф от 30 000 до 6 000 000 ₽</p></div>
           <div class="cmp-cell cmp-yes"><span class="cmp-mk">✓</span><p>Знаете список нарушений до проверки</p></div>
         </div>
         <div class="cmp-row rv" style="--i:1">
@@ -492,7 +604,7 @@ html.js .hero-sep.in{ transform:none; }
         </div>
         <div class="cmp-row rv" style="--i:2">
           <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p>Время уходит на разбирательства, а не на бизнес</p></div>
-          <div class="cmp-cell cmp-yes"><span class="cmp-mk">✓</span><p>Сайт продолжает генерировать заявки, а не штрафы</p></div>
+          <div class="cmp-cell cmp-yes"><span class="cmp-mk">✓</span><p>Сайт продолжает генерировать заявки,<br>а не штрафы</p></div>
         </div>
       </div>
     </div>
@@ -502,26 +614,27 @@ html.js .hero-sep.in{ transform:none; }
   <section class="sec">
     <div class="wrap">
       <div class="shead"><h2 class="h2 split" data-split>Что дальше</h2></div>
-      <div class="fork">
-        <div class="fork-start rv">
+      <div class="path">
+        <div class="path-src rv">
           <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></span>
-          <p>По итогам аудита вы получите отчёт с результатами проверки.</p>
+          <p>По итогам аудита вы получите отчёт с&nbsp;результатами проверки.</p>
         </div>
 
-        <svg class="fork-split" viewBox="0 0 760 84" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M380 0 V26 Q380 42 362 42 H208 Q190 42 190 58 V84"/>
-          <path d="M380 0 V26 Q380 42 398 42 H552 Q570 42 570 58 V84"/>
-        </svg>
+        <div class="path-join" aria-hidden="true">
+          <svg viewBox="0 0 100 300" preserveAspectRatio="none">
+            <path class="l1" d="M-8 150 H44 Q56 150 56 138 V66 Q56 54 68 54 H114"/>
+            <path class="l2" d="M-8 150 H44 Q56 150 56 162 V201 Q56 213 68 213 H114"/>
+          </svg>
+        </div>
 
-        <div class="fork-b">
-          <div class="fork-c rv">
-            <span class="tag"><b>1</b>Самостоятельно</span>
-            <p>Можете использовать его как готовый чек-лист и устранить всё самостоятельно</p>
+        <div class="path-outs">
+          <div class="path-out rv">
+            <span class="plabel">Самостоятельно</span>
+            <p>Можете использовать его как готовый чек-лист и&nbsp;устранить всё самостоятельно</p>
           </div>
-          <div class="fork-c is-us rv" style="--i:1">
-            <span class="tag"><b>2</b>Передать задачи нам</span>
+          <div class="path-out is-us rv" style="--i:1">
             <p>…а можете передать задачи нам.</p>
-            <p>Мы не только приведём сайт в соответствие с требованиями РКН, но и возьмём на себя его техническую поддержку целиком: от небольших правок до регулярного сопровождения и развития.</p>
+            <p>Мы не только приведём сайт в&nbsp;соответствие с&nbsp;требованиями РКН, но&nbsp;и&nbsp;возьмём на себя его техническую поддержку целиком: от&nbsp;небольших правок до&nbsp;регулярного сопровождения и&nbsp;развития.</p>
           </div>
         </div>
       </div>
@@ -580,7 +693,7 @@ html.js .hero-sep.in{ transform:none; }
         </div>
       </div>
 
-      <a class="svc-link rv" href="https://redstar-support.ru/#price" target="_blank" rel="noopener"><i aria-hidden="true"></i>Узнать тарифы на услуги техподдержки</a>
+      <a class="svc-link rv" href="https://redstar-support.ru/#price" target="_blank" rel="noopener">Узнать тарифы на услуги техподдержки<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
     </div>
   </section>
 
@@ -596,7 +709,7 @@ html.js .hero-sep.in{ transform:none; }
         <span class="badge"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg></i>ИТ-компания, аккредитованная Минцифры</span>
         <span class="badge"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></i>Сертифицированный партнёр 1С-Битрикс</span>
       </div>
-      <div class="photo rv" style="--i:1"><img src="team-photo.png" alt="Команда Редстар" data-par="0.05"></div>
+      <div class="photo rv" style="--i:1"><img src="team-photo.jpg" alt="Команда Редстар" data-par="0.05"></div>
     </div>
   </section>
 
@@ -611,7 +724,7 @@ html.js .hero-sep.in{ transform:none; }
           <p class="case-desc">Обеспечиваем регулярную техподдержку сайта на 1С-Битрикс: развитие и улучшение сайта, защиту от внешних угроз, постоянное развитие мобильной версии и запуск десятка доп-проектов — от сайта московских гастролей до «Волковской энциклопедии». Доля онлайн-продаж за годы сотрудничества выросла с 8% до 94%.</p>
           <div class="case-kpi"><div><b class="num cnt" data-to="94" data-suf="%">94%</b><span>онлайн-продаж от общего объёма</span></div></div>
         </div>
-        <div class="tilt"><div class="case-img"><img src="case-teatr-volkova.png" alt="Сайт Театра им. Волкова"></div></div>
+        <div class="tilt"><div class="case-img"><img src="case-teatr-volkova.jpg" alt="Сайт Театра им. Волкова"></div></div>
       </div>
 
       <div class="case rv">
@@ -620,7 +733,7 @@ html.js .hero-sep.in{ transform:none; }
           <p class="case-desc">Поддерживаем и развиваем сложную ERP-систему на базе 1С-Битрикс, которая управляет производственными процессами типографии, обеспечивая стабильность выполнения тысяч заказов и безопасность данных. Помимо технической поддержки, выполняем доработки функционала и ведём SEO-продвижение сайта.</p>
           <div class="case-kpi"><div><b class="num cnt" data-to="5">5</b><span>лет непрерывной поддержки ERP</span></div></div>
         </div>
-        <div class="tilt"><div class="case-img"><img src="case-cmyk.png" alt="Сайт типографии CMYK"></div></div>
+        <div class="tilt"><div class="case-img"><img src="case-cmyk.jpg" alt="Сайт типографии CMYK"></div></div>
       </div>
 
       <div class="case rv">
@@ -629,7 +742,7 @@ html.js .hero-sep.in{ transform:none; }
           <p class="case-desc">В рамках техподдержки системно улучшаем сайт: поэтапный редизайн разделов, оптимизация конверсии, техническая стабильность и скорость загрузки. Дополнительно ведём SEO и контекстную рекламу — цифровой канал стабильно приводит пациентов, а сайт не теряет заявки из-за технических проблем.</p>
           <div class="case-kpi"><div><b class="num">0</b><span>потерянных заявок из-за техпроблем</span></div></div>
         </div>
-        <div class="tilt"><div class="case-img"><img src="case-podmoskovie.png" alt="Сайт стоматологии «Подмосковье»"></div></div>
+        <div class="tilt"><div class="case-img"><img src="case-podmoskovie.jpg" alt="Сайт стоматологии «Подмосковье»"></div></div>
       </div>
 
       <div class="case rv">
@@ -641,7 +754,7 @@ html.js .hero-sep.in{ transform:none; }
             <div><b class="num cnt" data-to="5">5</b><span>сайтов в поддержке одновременно</span></div>
           </div>
         </div>
-        <div class="tilt"><div class="case-img"><img src="case-rustehnika.png" alt="Сайт РусТехника"></div></div>
+        <div class="tilt"><div class="case-img"><img src="case-rustehnika.jpg" alt="Сайт РусТехника"></div></div>
       </div>
     </div>
   </section>
@@ -669,6 +782,11 @@ html.js .hero-sep.in{ transform:none; }
 
   <!-- ФИНАЛ -->
   <section class="sec dark on-dark" id="s-final">
+    <div class="dec" aria-hidden="true">
+      <span class="d-grid fin-grid"></span>
+      <span class="d-glow fin-glow"></span>
+      <span class="d-glow cool fin-glow-2"></span>
+    </div>
     <div class="grain" aria-hidden="true"></div>
     <div class="wrap final" style="position:relative;z-index:2">
       <div>
@@ -747,7 +865,7 @@ html.js .hero-sep.in{ transform:none; }
     var io = new IntersectionObserver(function(e){
       e.forEach(function(x){ if(x.isIntersecting){ x.target.classList.add('in'); io.unobserve(x.target); } });
     }, { threshold:.12, rootMargin:'0px 0px -60px 0px' });
-    document.querySelectorAll('.rv, .split, #sep, .fork-split').forEach(function(el){ io.observe(el); });
+    document.querySelectorAll('.rv, .split, #sep, .path-join, .chk-dial').forEach(function(el){ io.observe(el); });
   }
 
   /* ---- счётчики ---- */
