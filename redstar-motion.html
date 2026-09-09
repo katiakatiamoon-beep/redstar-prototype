@@ -141,15 +141,18 @@ html.js .rv.in{ opacity:1; transform:none; }
 @keyframes breathe{ 0%,100%{ opacity:.75; transform:translateX(-50%) scale(1); } 50%{ opacity:1; transform:translateX(-50%) scale(1.06); } }
 .hero-in{ position:relative; z-index:3; }
 .hero .dec{ z-index:2; }
-.hero-orbit{ right:clamp(-180px,-8vw,-40px); top:clamp(8px,2vw,40px);
-             width:clamp(340px,44vw,660px); aspect-ratio:1; opacity:.9; }
+.hero-orbit{ right:clamp(8px,2.2vw,32px); top:clamp(60px,7.2vw,96px);
+             width:clamp(190px,30vw,430px); aspect-ratio:1; opacity:.9; }
 .hero-orbit .r{ fill:none; stroke:rgba(255,255,255,.3); stroke-width:1.4; }
 .hero-orbit .r.dash{ stroke-dasharray:3 9; stroke:rgba(255,255,255,.45); }
-.hero-orbit .sat{ transform-origin:300px 300px; animation:spin 22s linear infinite; }
-.hero-orbit .sat2{ transform-origin:300px 300px; animation:spinBack 34s linear infinite; }
-.hero-orbit .dot{ fill:var(--red); stroke:rgba(255,255,255,.85); stroke-width:2; }
-.hero-orbit .halo{ fill:var(--red); opacity:.35; }
-.hero-orbit .dot.w{ fill:#fff; opacity:.8; stroke:none; }
+.hero-orbit .cross{ stroke:rgba(255,255,255,.22); stroke-width:1; stroke-dasharray:4 10; }
+.hero-orbit .sweep{ transform-origin:300px 300px; animation:spin 6s linear infinite; }
+.hero-orbit .sweep .beam{ fill:url(#radarBeam); }
+.hero-orbit .sweep .edge{ stroke:rgba(255,255,255,.8); stroke-width:1.6; fill:none; }
+.hero-orbit .blip{ transform-origin:300px 300px; animation:spin 6s linear infinite; }
+.hero-orbit .blip .halo{ fill:var(--red); opacity:.3; animation:ping 6s ease-out infinite; transform-origin:300px 104px; }
+.hero-orbit .blip .dot{ fill:var(--red); stroke:rgba(255,255,255,.9); stroke-width:2.6; }
+@keyframes ping{ 0%{ transform:scale(.5); opacity:.55; } 45%{ transform:scale(1.5); opacity:0; } 100%{ transform:scale(.5); opacity:0; } }
 .hero-glow{ right:-120px; top:-60px; width:min(520px,52vw); aspect-ratio:1; opacity:.75; }
 .hero-tick{ left:0; bottom:clamp(26px,3.4vw,46px); width:clamp(120px,16vw,240px); height:2px;
             background:linear-gradient(90deg,var(--red),transparent); }
@@ -198,7 +201,7 @@ html.js .hero-sep.in{ transform:none; }
 .risk-i{ font-size:clamp(30px,4vw,56px); font-weight:800; line-height:.9; color:transparent; -webkit-text-stroke:1.5px var(--red);
          transition:color .5s var(--e); }
 .risk-row:hover .risk-i{ color:var(--red); }
-.risk-row p{ font-size:clamp(19px,2vw,30px); line-height:1.28; letter-spacing:-.025em; font-weight:600; max-width:34ch; text-wrap:balance; }
+.risk-row p{ font-size:clamp(15.5px,1.15vw,17.5px); line-height:1.45; font-weight:500; max-width:62ch; }
 
 /* ===== ЧЕК-ЛИСТ ===== */
 .ledger{ display:grid; grid-template-columns:repeat(3,1fr); column-gap:clamp(24px,3.4vw,52px); }
@@ -384,11 +387,27 @@ html.js .hero-sep.in{ transform:none; }
 .foot{ background:var(--ink); color:#fff; padding:clamp(56px,6vw,84px) 0 clamp(34px,4vw,48px); border-top:1px solid var(--line-dk); }
 .foot-top{ display:flex; justify-content:space-between; align-items:flex-end; gap:32px; flex-wrap:wrap;
            padding-bottom:clamp(32px,4vw,48px); border-bottom:1px solid var(--line-dk); }
-.foot-top h3{ font-size:clamp(22px,2.4vw,32px); letter-spacing:-.028em; line-height:1.15; max-width:16ch; }
+.foot-top h3{ font-size:clamp(22px,2.4vw,32px); letter-spacing:-.028em; line-height:1.15; max-width:none; }
 .foot-top p{ margin-top:10px; font-size:15px; color:rgba(255,255,255,.5); }
 .foot-grid{ display:flex; flex-wrap:wrap; gap:clamp(24px,4vw,56px); padding-top:clamp(28px,3vw,40px); }
 .fitem .l{ font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:9px; }
 .fitem .v{ font-size:17px; font-weight:700; }
+.foot-legal{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end;
+             gap:clamp(20px,4vw,48px); margin-top:clamp(30px,4vw,46px);
+             padding-top:clamp(22px,3vw,32px); border-top:1px solid var(--line-dk); }
+.legal-co .l{ font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+              color:rgba(255,255,255,.35); margin-bottom:10px; }
+.legal-co .co-name{ font-size:14.5px; font-weight:700; color:rgba(255,255,255,.9); margin-bottom:6px; }
+.legal-co p{ font-size:13px; line-height:1.55; color:rgba(255,255,255,.5); }
+.legal-links{ display:flex; flex-direction:column; align-items:flex-end; gap:12px; text-align:right; }
+.policy-link{ display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:600;
+              color:rgba(255,255,255,.85); padding-bottom:3px;
+              border-bottom:1px solid rgba(255,255,255,.28);
+              transition:color .35s var(--e), border-color .35s var(--e); }
+.policy-link svg{ width:11px; height:11px; flex:none; transition:transform .35s var(--e); }
+@media (hover:hover){ .policy-link:hover{ color:#fff; border-bottom-color:var(--red); }
+                      .policy-link:hover svg{ transform:translate(2px,-2px); } }
+.copy{ font-size:12.5px; color:rgba(255,255,255,.35); }
 .fitem a.v:hover{ color:var(--red); }
 .fsoc{ display:flex; gap:8px; }
 
@@ -428,13 +447,18 @@ html.js .hero-sep.in{ transform:none; }
   .path-outs{ gap:14px; }
   .hero-foot{ grid-template-columns:1fr; gap:26px; }
   .risk-row{ grid-template-columns:1fr; gap:12px; }
-  .svc{ grid-template-columns:1fr; gap:18px; }
+  .hero-orbit{ display:none; }
+  .svc{ grid-template-columns:1fr; gap:12px; }
+  #s-sup .shead{ margin-bottom:20px; }
+  #s-sup .svc{ padding-top:26px; }
   .case{ grid-template-columns:1fr; gap:24px; }
   .tilt{ order:-1; }
   .final{ grid-template-columns:1fr; }
 }
 @media (max-width:640px){
   body{ font-size:16px; }
+  .foot-legal{ flex-direction:column; align-items:flex-start; gap:24px; }
+  .legal-links{ align-items:flex-start; text-align:left; }
   .hdr-row{ height:auto; min-height:62px; padding:9px 0; gap:10px; }
   .brand{ font-size:17px; gap:8px; }
   .brand i{ width:11px; height:11px; }
@@ -451,7 +475,7 @@ html.js .hero-sep.in{ transform:none; }
   .shead h2,.shead > h2:only-child,.hero-foot .lead,.hero-micro,.final h2,.final .lead,.case-desc,.risk-row p{ max-width:none; }
   .cmp-legend{ display:none; }
   .risk-note br,.cmp-cell br{ display:none; }
-  .hero-orbit,.chk-dial{ opacity:.5; }
+  .chk-dial{ opacity:.5; }
   .chk-dots{ opacity:.35; }
   .cmp-no p.one-line{ white-space:normal; }
   .cmp-row{ grid-template-columns:1fr; gap:14px; }
@@ -475,13 +499,13 @@ html.js .hero-sep.in{ transform:none; }
   <div class="wrap hdr-row">
     <div class="brand-wrap">
       <a class="brand" href="#top"><i aria-hidden="true"></i>Редстар</a>
-      <span class="brand-desc">Агентство интернет-маркетинга<br>из Ярославля с 2010 года</span>
+      <span class="brand-desc">Агентство интернет-маркетинга<br>из&nbsp;Ярославля с&nbsp;2010 года</span>
     </div>
     <div class="hdr-act">
       <a class="hdr-phone" href="tel:+74852319404" aria-label="Позвонить"><svg class="ph-ic" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><span class="ph-txt">8 (4852) 31-94-04</span></a>
       <a class="soc soc-tg" href="https://t.me/redstar_support" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></a>
       <a class="soc soc-max" href="https://max.ru/redstar_support" target="_blank" rel="noopener" aria-label="Max"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
-      <button class="btn btn-line mag" data-modal data-t="Отправить заявку" data-s="Ответим в среднем за 9 минут в рабочее время."><span>Отправить заявку</span></button>
+      <button class="btn btn-line mag" data-modal data-t="Отправить заявку" data-s="Ответим в&nbsp;среднем за 9 минут в&nbsp;рабочее время."><span>Отправить заявку</span></button>
     </div>
   </div>
 </header>
@@ -494,14 +518,26 @@ html.js .hero-sep.in{ transform:none; }
       <span class="d-grid"></span>
       <span class="d-glow hero-glow"></span>
       <svg class="hero-orbit" viewBox="0 0 600 600">
+        <defs>
+          <radialGradient id="radarBeam" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FFFFFF" stop-opacity=".5"/>
+            <stop offset="65%" stop-color="#FFFFFF" stop-opacity=".16"/>
+            <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
         <circle class="r" cx="300" cy="300" r="132"/>
         <circle class="r dash" cx="300" cy="300" r="196"/>
         <circle class="r" cx="300" cy="300" r="262"/>
-        <g class="sat">
-          <circle class="halo" cx="300" cy="104" r="21"/>
-          <circle class="dot" cx="300" cy="104" r="9"/>
+        <line class="cross" x1="38" y1="300" x2="562" y2="300"/>
+        <line class="cross" x1="300" y1="38" x2="300" y2="562"/>
+        <g class="sweep">
+          <path class="beam" d="M300 300 L300 38 A262 262 0 0 1 485 115 Z"/>
+          <line class="edge" x1="300" y1="300" x2="300" y2="38"/>
         </g>
-        <g class="sat2"><circle class="dot w" cx="300" cy="38" r="5"/></g>
+        <g class="blip">
+          <circle class="halo" cx="300" cy="104" r="30"/>
+          <circle class="dot" cx="300" cy="104" r="13"/>
+        </g>
       </svg>
       <span class="hero-tick"></span>
       <span class="hero-cnr tl"></span>
@@ -513,10 +549,10 @@ html.js .hero-sep.in{ transform:none; }
       <span class="hero-num num"><span id="counter" data-to="6000000">6 000 000</span><span class="rub">₽</span></span>
       <div class="hero-sep" id="sep"></div>
       <div class="hero-foot">
-        <p class="lead rv" style="--i:1">Бесплатно оценим готовность вашего сайта к проверке Роскомнадзора.</p>
-        <p class="hero-micro rv" style="--i:2">Аудит по основным требованиям 152-ФЗ. Пришлем список нарушений и как их закрыть.</p>
+        <p class="lead rv" style="--i:1">Бесплатно оценим готовность вашего сайта к&nbsp;проверке Роскомнадзора.</p>
+        <p class="hero-micro rv" style="--i:2">Аудит по&nbsp;основным требованиям 152-ФЗ. Пришлем список нарушений и&nbsp;как их закрыть.</p>
         <div class="rv" style="--i:3">
-          <button class="btn btn-red mag" data-modal data-t="Получить бесплатный аудит" data-s="Аудит по основным требованиям 152-ФЗ. Пришлём список нарушений и как их закрыть."><span>Получить бесплатный аудит за 1 день</span></button>
+          <button class="btn btn-red mag" data-modal data-t="Получить бесплатный аудит" data-s="Аудит по основным требованиям 152-ФЗ. Пришлём список нарушений и&nbsp;как их закрыть."><span>Получить бесплатный аудит за&nbsp;1 день</span></button>
         </div>
       </div>
     </div>
@@ -525,8 +561,8 @@ html.js .hero-sep.in{ transform:none; }
   <!-- бегущая строка -->
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track" id="track">
-      <b>Штраф до 6 000 000 ₽</b><i></i><b>9 ключевых требований РКН</b><i></i><b>Аудит за 1 рабочий день</b><i></i>
-      <b>Штраф до 6 000 000 ₽</b><i></i><b>9 ключевых требований РКН</b><i></i><b>Аудит за 1 рабочий день</b><i></i>
+      <b>Штраф до&nbsp;6&nbsp;000&nbsp;000&nbsp;₽</b><i></i><b>9 ключевых требований РКН</b><i></i><b>Аудит за&nbsp;1 рабочий день</b><i></i>
+      <b>Штраф до&nbsp;6&nbsp;000&nbsp;000&nbsp;₽</b><i></i><b>9 ключевых требований РКН</b><i></i><b>Аудит за&nbsp;1 рабочий день</b><i></i>
     </div>
   </div>
 
@@ -534,18 +570,18 @@ html.js .hero-sep.in{ transform:none; }
   <section class="sec" id="s-risks">
     <div class="wrap">
       <div class="shead">
-        <h2 class="h2 split" data-split>Роскомнадзор не смотрит, большой у вас бизнес или маленький</h2>
+        <h2 class="h2 split" data-split>Роскомнадзор не&nbsp;смотрит, большой у&nbsp;вас бизнес или маленький</h2>
         <div class="risk-note rv" style="--i:1">
-          <p class="lead">С 30 мая 2025 года штрафы за нарушение<br>закона о персональных данных выросли<br>в разы.</p>
-          <p class="lead">Даже если на сайте нет ни одной формы,<br>а стоит только Яндекс.Метрика — вы уже собираете персональные данные<br>посетителей и рискуете получить штраф до 6 млн рублей<sup>*</sup>.</p>
-          <p class="risk-fine">*по КоАП РФ, ст. 13.11 (первое нарушение) — рекомендуем проконсультироваться с юристом.</p>
+          <p class="lead">С&nbsp;30 мая 2025 года штрафы за&nbsp;нарушение закона<br>о&nbsp;персональных данных выросли в&nbsp;разы.</p>
+          <p class="lead">Даже если на&nbsp;сайте нет ни&nbsp;одной формы, а&nbsp;стоит только Яндекс.Метрика,<br>вы уже собираете персональные данные посетителей<br>и&nbsp;рискуете получить штраф до&nbsp;6&nbsp;млн рублей<sup>*</sup>.</p>
+          <p class="risk-fine">*по&nbsp;КоАП РФ, ст. 13.11 (первое нарушение)&nbsp;— рекомендуем проконсультироваться с&nbsp;юристом.</p>
         </div>
       </div>
       <p class="kicker rv" style="display:block; margin-bottom:20px;">Риски</p>
       <div class="risk-list">
-        <div class="risk-row rv"><div class="risk-i num">01</div><p>Сайт сделан давно, и с тех пор опубликованные юридические документы не обновлялись</p></div>
-        <div class="risk-row rv" style="--i:1"><div class="risk-i num">02</div><p>Техподдержка занимается только технической стороной сайта, не касаясь законодательства</p></div>
-        <div class="risk-row rv" style="--i:2"><div class="risk-i num">03</div><p>Никто в компании не следит за изменениями законов, регулирующих функционирование сайта</p></div>
+        <div class="risk-row rv"><div class="risk-i num">01</div><p>Сайт сделан давно, и&nbsp;с&nbsp;тех пор опубликованные юридические документы не&nbsp;обновлялись</p></div>
+        <div class="risk-row rv" style="--i:1"><div class="risk-i num">02</div><p>Техподдержка занимается только технической стороной сайта, не&nbsp;касаясь законодательства</p></div>
+        <div class="risk-row rv" style="--i:2"><div class="risk-i num">03</div><p>Никто в&nbsp;компании не&nbsp;следит за&nbsp;изменениями законов, регулирующих функционирование сайта</p></div>
       </div>
     </div>
   </section>
@@ -565,25 +601,25 @@ html.js .hero-sep.in{ transform:none; }
     <div class="grain" aria-hidden="true"></div>
     <div class="wrap" style="position:relative;z-index:2">
       <div class="shead">
-        <h2 class="h2 split" data-split>Бесплатно проверим сайт по 9 ключевым требованиям РКН</h2>
-        <p class="lead rv" style="--i:1">Специалист вручную проверит сайт и пришлёт отчёт: что в порядке, а что нужно исправить.</p>
+        <h2 class="h2 split" data-split>Бесплатно проверим сайт по&nbsp;9 ключевым требованиям РКН</h2>
+        <p class="lead rv" style="--i:1">Специалист вручную проверит сайт и&nbsp;пришлёт отчёт: что в&nbsp;порядке, а&nbsp;что нужно исправить.</p>
       </div>
       <div class="ledger">
-        <div class="lrow rv"><span class="n num">01</span><p>Согласие на обработку персональных данных на всех формах обратной связи</p></div>
-        <div class="lrow rv" style="--i:1"><span class="n num">02</span><p>Наличие на сайте согласия на обработку персональных данных и политики конфиденциальности</p></div>
-        <div class="lrow rv" style="--i:2"><span class="n num">03</span><p>Отсутствие на сайте Google Analytics и других систем трансграничной передачи данных</p></div>
+        <div class="lrow rv"><span class="n num">01</span><p>Согласие на&nbsp;обработку персональных данных на&nbsp;всех формах обратной связи</p></div>
+        <div class="lrow rv" style="--i:1"><span class="n num">02</span><p>Наличие на&nbsp;сайте согласия на&nbsp;обработку персональных данных и&nbsp;политики конфиденциальности</p></div>
+        <div class="lrow rv" style="--i:2"><span class="n num">03</span><p>Отсутствие на&nbsp;сайте Google Analytics и&nbsp;других систем трансграничной передачи данных</p></div>
         <div class="ledger-more" id="more"><div>
-          <div class="lrow"><span class="n num">04</span><p>Хранение и обработка данных россиян на серверах в РФ</p></div>
-          <div class="lrow"><span class="n num">05</span><p>Согласие на использование cookie и корректный cookie-баннер</p></div>
-          <div class="lrow"><span class="n num">06</span><p>Возможность отозвать согласие на обработку данных</p></div>
-          <div class="lrow"><span class="n num">07</span><p>Отсутствие на сайте логотипов сервисов, признанных экстремистскими в РФ</p></div>
-          <div class="lrow"><span class="n num">08</span><p>Защищённое соединение (SSL) при передаче данных из форм</p></div>
-          <div class="lrow"><span class="n num">09</span><p>На сайте предусмотрена авторизация через разрешённые способы (российский номер телефона, ВК ID, Госуслуги)</p></div>
+          <div class="lrow"><span class="n num">04</span><p>Хранение и&nbsp;обработка данных россиян на&nbsp;серверах в&nbsp;РФ</p></div>
+          <div class="lrow"><span class="n num">05</span><p>Согласие на&nbsp;использование cookie и&nbsp;корректный cookie-баннер</p></div>
+          <div class="lrow"><span class="n num">06</span><p>Возможность отозвать согласие на&nbsp;обработку данных</p></div>
+          <div class="lrow"><span class="n num">07</span><p>Отсутствие на&nbsp;сайте логотипов сервисов, признанных экстремистскими в&nbsp;РФ</p></div>
+          <div class="lrow"><span class="n num">08</span><p>Защищённое соединение (SSL) при&nbsp;передаче данных из&nbsp;форм</p></div>
+          <div class="lrow"><span class="n num">09</span><p>На&nbsp;сайте предусмотрена авторизация через разрешённые способы (российский номер телефона, ВК ID, Госуслуги)</p></div>
         </div></div>
       </div>
       <div class="chk-act rv">
         <button class="tbtn" id="moreBtn" aria-expanded="false" aria-controls="more"><span class="ln2" aria-hidden="true"></span><span id="moreLbl">Показать ещё 6 пунктов аудита</span></button>
-        <button class="btn btn-red mag" data-modal data-t="Прислать сайт на проверку" data-s="Результат — за 1 рабочий день. PDF-отчёт пришлём в Телеграм или Макс."><span>Прислать сайт на проверку</span></button>
+        <button class="btn btn-red mag" data-modal data-t="Прислать сайт на проверку" data-s="Результат&nbsp;— за 1 рабочий день. PDF-отчёт пришлём в&nbsp;Телеграм или Макс."><span>Прислать сайт на&nbsp;проверку</span></button>
       </div>
     </div>
   </section>
@@ -592,19 +628,19 @@ html.js .hero-sep.in{ transform:none; }
   <section class="sec">
     <div class="wrap">
       <div class="shead"><h2 class="h2 split" data-split>Что будет, если оставить как есть</h2></div>
-      <div class="cmp-legend rv"><span>Без аудита</span><span>С аудитом Редстар</span></div>
+      <div class="cmp-legend rv"><span>Без&nbsp;аудита</span><span>С&nbsp;аудитом Редстар</span></div>
       <div>
         <div class="cmp-row rv">
-          <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p class="one-line">Проверка находит нарушения → штраф от 30 000 до 6 000 000 ₽</p></div>
-          <div class="cmp-cell cmp-yes"><span class="cmp-mk">✓</span><p>Знаете список нарушений до проверки</p></div>
+          <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p class="one-line">Проверка находит нарушения → штраф от&nbsp;30&nbsp;000 до&nbsp;6&nbsp;000&nbsp;000&nbsp;₽</p></div>
+          <div class="cmp-cell cmp-yes"><span class="cmp-mk">✓</span><p>Знаете список нарушений до&nbsp;проверки</p></div>
         </div>
         <div class="cmp-row rv" style="--i:1">
-          <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p>Репутационные риски и объяснения перед клиентами</p></div>
-          <div class="cmp-cell cmp-yes"><span class="cmp-mk">✓</span><p>Успеваете устранить нарушения и избежать репутационных и финансовых потерь</p></div>
+          <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p>Репутационные риски и&nbsp;объяснения перед клиентами</p></div>
+          <div class="cmp-cell cmp-yes"><span class="cmp-mk">✓</span><p>Успеваете устранить нарушения и&nbsp;избежать репутационных и&nbsp;финансовых потерь</p></div>
         </div>
         <div class="cmp-row rv" style="--i:2">
-          <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p>Время уходит на разбирательства, а не на бизнес</p></div>
-          <div class="cmp-cell cmp-yes"><span class="cmp-mk">✓</span><p>Сайт продолжает генерировать заявки,<br>а не штрафы</p></div>
+          <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p>Время уходит на&nbsp;разбирательства, а&nbsp;не&nbsp;на&nbsp;бизнес</p></div>
+          <div class="cmp-cell cmp-yes"><span class="cmp-mk">✓</span><p>Сайт продолжает генерировать заявки,<br>а&nbsp;не&nbsp;штрафы</p></div>
         </div>
       </div>
     </div>
@@ -617,7 +653,7 @@ html.js .hero-sep.in{ transform:none; }
       <div class="path">
         <div class="path-src rv">
           <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></span>
-          <p>По итогам аудита вы получите отчёт с&nbsp;результатами проверки.</p>
+          <p>По&nbsp;итогам аудита вы получите отчёт с&nbsp;результатами проверки.</p>
         </div>
 
         <div class="path-join" aria-hidden="true">
@@ -633,8 +669,8 @@ html.js .hero-sep.in{ transform:none; }
             <p>Можете использовать его как готовый чек-лист и&nbsp;устранить всё самостоятельно</p>
           </div>
           <div class="path-out is-us rv" style="--i:1">
-            <p>…а можете передать задачи нам.</p>
-            <p>Мы не только приведём сайт в&nbsp;соответствие с&nbsp;требованиями РКН, но&nbsp;и&nbsp;возьмём на себя его техническую поддержку целиком: от&nbsp;небольших правок до&nbsp;регулярного сопровождения и&nbsp;развития.</p>
+            <p>…а&nbsp;можете передать задачи нам.</p>
+            <p>Мы не&nbsp;только приведём сайт в&nbsp;соответствие с&nbsp;требованиями РКН, но&nbsp;и&nbsp;возьмём на&nbsp;себя его техническую поддержку целиком: от&nbsp;небольших правок до&nbsp;регулярного сопровождения и&nbsp;развития.</p>
           </div>
         </div>
       </div>
@@ -650,15 +686,15 @@ html.js .hero-sep.in{ transform:none; }
       </div>
 
       <div class="svc rv">
-        <h3 class="h3">Защита от взлома</h3>
+        <h3 class="h3">Защита от&nbsp;взлома</h3>
         <div>
           <div class="tags">
             <span class="tag">Мониторинг доступности сайта 24/7</span><span class="tag">Восстановление сайта после «падения»</span>
-            <span class="tag">Проверка на вирусы и чистка</span><span class="tag">Обновление 1С-Битрикс</span>
-            <span class="tag tag-x" data-x="0">Настройка резервного копирования</span><span class="tag tag-x" data-x="0">Проверка места на хостинге</span>
-            <span class="tag tag-x" data-x="0">Проверка оплаты домена и хостинга</span><span class="tag tag-x" data-x="0">Общение со специалистами хостинга</span>
-            <span class="tag tag-x" data-x="0">Установка ssl-сертификата</span><span class="tag tag-x" data-x="0">Обновление PHP до версии 8+</span>
-            <span class="tag tag-x" data-x="0">Защита сайта от взломов и DDOS-атак</span><span class="tag tag-x" data-x="0">Перенос сайта на другой хостинг</span>
+            <span class="tag">Проверка на&nbsp;вирусы и&nbsp;чистка</span><span class="tag">Обновление 1С-Битрикс</span>
+            <span class="tag tag-x" data-x="0">Настройка резервного копирования</span><span class="tag tag-x" data-x="0">Проверка места на&nbsp;хостинге</span>
+            <span class="tag tag-x" data-x="0">Проверка оплаты домена и&nbsp;хостинга</span><span class="tag tag-x" data-x="0">Общение со&nbsp;специалистами хостинга</span>
+            <span class="tag tag-x" data-x="0">Установка ssl-сертификата</span><span class="tag tag-x" data-x="0">Обновление PHP до&nbsp;версии 8+</span>
+            <span class="tag tag-x" data-x="0">Защита сайта от&nbsp;взломов и&nbsp;DDOS-атак</span><span class="tag tag-x" data-x="0">Перенос сайта на&nbsp;другой хостинг</span>
           </div>
           <button class="tbtn" data-x-btn="0" aria-expanded="false" style="margin-top:20px"><span class="ln2" aria-hidden="true"></span><span class="lbl">Показать полный список задач</span></button>
         </div>
@@ -668,13 +704,13 @@ html.js .hero-sep.in{ transform:none; }
         <h3 class="h3">Улучшение сайта</h3>
         <div>
           <div class="tags">
-            <span class="tag">Исправление технических ошибок</span><span class="tag">Интеграции с любыми системами</span>
+            <span class="tag">Исправление технических ошибок</span><span class="tag">Интеграции с&nbsp;любыми системами</span>
             <span class="tag">Создание нового функционала</span><span class="tag">Размещение контента</span>
-            <span class="tag tag-x" data-x="1">Интеграции с платёжными системами</span><span class="tag tag-x" data-x="1">Оптимизация скорости загрузки сайта</span>
+            <span class="tag tag-x" data-x="1">Интеграции с&nbsp;платёжными системами</span><span class="tag tag-x" data-x="1">Оптимизация скорости загрузки сайта</span>
             <span class="tag tag-x" data-x="1">Технический аудит сайта</span><span class="tag tag-x" data-x="1">Разработка сложных фильтров</span>
-            <span class="tag tag-x" data-x="1">Интеграция со сторонними API</span><span class="tag tag-x" data-x="1">Интеграция со службами доставки</span>
-            <span class="tag tag-x" data-x="1">Выгрузка фида на маркетплейс</span><span class="tag tag-x" data-x="1">Изменение функционала сайта</span>
-            <span class="tag tag-x" data-x="1">Парсинг данных от поставщиков</span>
+            <span class="tag tag-x" data-x="1">Интеграция со&nbsp;сторонними API</span><span class="tag tag-x" data-x="1">Интеграция со&nbsp;службами доставки</span>
+            <span class="tag tag-x" data-x="1">Выгрузка фида на&nbsp;маркетплейс</span><span class="tag tag-x" data-x="1">Изменение функционала сайта</span>
+            <span class="tag tag-x" data-x="1">Парсинг данных от&nbsp;поставщиков</span>
           </div>
           <button class="tbtn" data-x-btn="1" aria-expanded="false" style="margin-top:20px"><span class="ln2" aria-hidden="true"></span><span class="lbl">Показать полный список задач</span></button>
         </div>
@@ -685,26 +721,26 @@ html.js .hero-sep.in{ transform:none; }
         <div>
           <div class="tags">
             <span class="tag">Отрисовка отдельных страниц разделов</span><span class="tag">Редизайн сайта</span>
-            <span class="tag">Изображения для товарных категорий</span><span class="tag">Создание баннеров</span>
+            <span class="tag">Изображения для&nbsp;товарных категорий</span><span class="tag">Создание баннеров</span>
             <span class="tag tag-x" data-x="2">Подготовка прототипов страниц</span><span class="tag tag-x" data-x="2">Отрисовка иконок</span>
-            <span class="tag tag-x" data-x="2">Создание писем для рассылки</span>
+            <span class="tag tag-x" data-x="2">Создание писем для&nbsp;рассылки</span>
           </div>
           <button class="tbtn" data-x-btn="2" aria-expanded="false" style="margin-top:20px"><span class="ln2" aria-hidden="true"></span><span class="lbl">Показать полный список задач</span></button>
         </div>
       </div>
 
-      <a class="svc-link rv" href="https://redstar-support.ru/#price" target="_blank" rel="noopener">Узнать тарифы на услуги техподдержки<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+      <a class="svc-link rv" href="https://redstar-support.ru/#price" target="_blank" rel="noopener">Узнать тарифы на&nbsp;услуги техподдержки<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
     </div>
   </section>
 
   <!-- О КОМПАНИИ -->
   <section class="sec" id="s-co">
     <div class="wrap">
-      <div class="shead"><h2 class="h2 split" data-split>О Редстар</h2></div>
+      <div class="shead"><h2 class="h2 split" data-split>О&nbsp;Редстар</h2></div>
       <div class="badges rv">
-        <span class="badge"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.3L22 9l-5 4.9L18.2 21 12 17.6 5.8 21 7 13.9 2 9l7.1-.7z"/></svg></i>Работаем с 2010 года</span>
-        <span class="badge"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></i>Офис в центре Ярославля</span>
-        <span class="badge"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg></i>Все сотрудники в штате</span>
+        <span class="badge"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.3L22 9l-5 4.9L18.2 21 12 17.6 5.8 21 7 13.9 2 9l7.1-.7z"/></svg></i>Работаем с&nbsp;2010 года</span>
+        <span class="badge"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></i>Офис в&nbsp;центре Ярославля</span>
+        <span class="badge"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg></i>Все сотрудники в&nbsp;штате</span>
         <span class="brk" aria-hidden="true"></span>
         <span class="badge"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg></i>ИТ-компания, аккредитованная Минцифры</span>
         <span class="badge"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></i>Сертифицированный партнёр 1С-Битрикс</span>
@@ -716,13 +752,13 @@ html.js .hero-sep.in{ transform:none; }
   <!-- КЕЙСЫ -->
   <section class="sec" id="s-cases">
     <div class="wrap">
-      <div class="shead"><h2 class="h2 split" data-split>Нам уже доверяют бизнесы, для которых сайт — ключевой инструмент</h2></div>
+      <div class="shead"><h2 class="h2 split" data-split>Нам уже доверяют бизнесы, для&nbsp;которых сайт&nbsp;— ключевой инструмент</h2></div>
 
       <div class="case rv">
         <div>
           <div class="case-name">Театр им. Волкова</div><div class="case-term">11 лет вместе</div>
-          <p class="case-desc">Обеспечиваем регулярную техподдержку сайта на 1С-Битрикс: развитие и улучшение сайта, защиту от внешних угроз, постоянное развитие мобильной версии и запуск десятка доп-проектов — от сайта московских гастролей до «Волковской энциклопедии». Доля онлайн-продаж за годы сотрудничества выросла с 8% до 94%.</p>
-          <div class="case-kpi"><div><b class="num cnt" data-to="94" data-suf="%">94%</b><span>онлайн-продаж от общего объёма</span></div></div>
+          <p class="case-desc">Обеспечиваем регулярную техподдержку сайта на&nbsp;1С-Битрикс: развитие и&nbsp;улучшение сайта, защиту от&nbsp;внешних угроз, постоянное развитие мобильной версии и&nbsp;запуск десятка доп-проектов&nbsp;— от&nbsp;сайта московских гастролей до&nbsp;«Волковской энциклопедии». Доля онлайн-продаж за&nbsp;годы сотрудничества выросла с&nbsp;8% до&nbsp;94%.</p>
+          <div class="case-kpi"><div><b class="num cnt" data-to="94" data-suf="%">94%</b><span>онлайн-продаж от&nbsp;общего объёма</span></div></div>
         </div>
         <div class="tilt"><div class="case-img"><img src="case-teatr-volkova.jpg" alt="Сайт Театра им. Волкова"></div></div>
       </div>
@@ -730,7 +766,7 @@ html.js .hero-sep.in{ transform:none; }
       <div class="case rv">
         <div>
           <div class="case-name">Типография CMYK</div><div class="case-term">5 лет вместе</div>
-          <p class="case-desc">Поддерживаем и развиваем сложную ERP-систему на базе 1С-Битрикс, которая управляет производственными процессами типографии, обеспечивая стабильность выполнения тысяч заказов и безопасность данных. Помимо технической поддержки, выполняем доработки функционала и ведём SEO-продвижение сайта.</p>
+          <p class="case-desc">Поддерживаем и&nbsp;развиваем сложную ERP-систему на&nbsp;базе 1С-Битрикс, которая управляет производственными процессами типографии, обеспечивая стабильность выполнения тысяч заказов и&nbsp;безопасность данных. Помимо технической поддержки, выполняем доработки функционала и&nbsp;ведём SEO-продвижение сайта.</p>
           <div class="case-kpi"><div><b class="num cnt" data-to="5">5</b><span>лет непрерывной поддержки ERP</span></div></div>
         </div>
         <div class="tilt"><div class="case-img"><img src="case-cmyk.jpg" alt="Сайт типографии CMYK"></div></div>
@@ -739,7 +775,7 @@ html.js .hero-sep.in{ transform:none; }
       <div class="case rv">
         <div>
           <div class="case-name">Стоматология «Подмосковье»</div><div class="case-term">2 года вместе</div>
-          <p class="case-desc">В рамках техподдержки системно улучшаем сайт: поэтапный редизайн разделов, оптимизация конверсии, техническая стабильность и скорость загрузки. Дополнительно ведём SEO и контекстную рекламу — цифровой канал стабильно приводит пациентов, а сайт не теряет заявки из-за технических проблем.</p>
+          <p class="case-desc">В&nbsp;рамках техподдержки системно улучшаем сайт: поэтапный редизайн разделов, оптимизация конверсии, техническая стабильность и&nbsp;скорость загрузки. Дополнительно ведём SEO и&nbsp;контекстную рекламу&nbsp;— цифровой канал стабильно приводит пациентов, а&nbsp;сайт не&nbsp;теряет заявки из-за технических проблем.</p>
           <div class="case-kpi"><div><b class="num">0</b><span>потерянных заявок из-за техпроблем</span></div></div>
         </div>
         <div class="tilt"><div class="case-img"><img src="case-podmoskovie.jpg" alt="Сайт стоматологии «Подмосковье»"></div></div>
@@ -748,10 +784,10 @@ html.js .hero-sep.in{ transform:none; }
       <div class="case rv">
         <div>
           <div class="case-name">РусТехника</div><div class="case-term">3 года вместе</div>
-          <p class="case-desc">За это время в рамках техподдержки на 1С-Битрикс выполнили 200+ задач: от доработок каталога и интеграции с 1С до оптимизации скорости работы сайта и развития функционала. В поддержке одновременно 5 клиентских сайтов, один из которых мы разработали с нуля.</p>
+          <p class="case-desc">За&nbsp;это время в&nbsp;рамках техподдержки на&nbsp;1С-Битрикс выполнили 200+ задач: от&nbsp;доработок каталога и&nbsp;интеграции с&nbsp;1С до&nbsp;оптимизации скорости работы сайта и&nbsp;развития функционала. В&nbsp;поддержке одновременно 5 клиентских сайтов, один из&nbsp;которых мы разработали с&nbsp;нуля.</p>
           <div class="case-kpi">
             <div><b class="num cnt" data-to="200" data-suf="+">200+</b><span>задач выполнено</span></div>
-            <div><b class="num cnt" data-to="5">5</b><span>сайтов в поддержке одновременно</span></div>
+            <div><b class="num cnt" data-to="5">5</b><span>сайтов в&nbsp;поддержке одновременно</span></div>
           </div>
         </div>
         <div class="tilt"><div class="case-img"><img src="case-rustehnika.jpg" alt="Сайт РусТехника"></div></div>
@@ -765,17 +801,17 @@ html.js .hero-sep.in{ transform:none; }
       <div class="shead"><h2 class="h2 split" data-split>Часто задаваемые вопросы</h2></div>
       <div class="faq rv">
         <div class="qa open"><button class="q" data-q aria-expanded="true">Это точно бесплатно?<i aria-hidden="true"></i></button>
-          <div class="a"><div><p>Да. Аудит — это способ показать, как мы работаем, до того как вы заплатите хоть рубль.</p></div></div></div>
-        <div class="qa"><button class="q" data-q aria-expanded="false">Какие сайты вы берёте на проверку и обслуживание?<i aria-hidden="true"></i></button>
-          <div class="a"><div><p>Любые. Требования 152-ФЗ не зависят от движка сайта, а мы умеем работать со всеми типами сайтов.</p></div></div></div>
-        <div class="qa"><button class="q" data-q aria-expanded="false">Что если после аудита я никуда не обращусь?<i aria-hidden="true"></i></button>
-          <div class="a"><div><p>Отчёт останется у вас. Можете исправить сами или с текущим подрядчиком.</p></div></div></div>
+          <div class="a"><div><p>Да. Аудит&nbsp;— это способ показать, как мы работаем, до&nbsp;того как вы заплатите хоть рубль.</p></div></div></div>
+        <div class="qa"><button class="q" data-q aria-expanded="false">Какие сайты вы берёте на&nbsp;проверку и&nbsp;обслуживание?<i aria-hidden="true"></i></button>
+          <div class="a"><div><p>Любые. Требования 152-ФЗ не&nbsp;зависят от&nbsp;движка сайта, а&nbsp;мы умеем работать со&nbsp;всеми типами сайтов.</p></div></div></div>
+        <div class="qa"><button class="q" data-q aria-expanded="false">Что если после аудита я&nbsp;никуда не&nbsp;обращусь?<i aria-hidden="true"></i></button>
+          <div class="a"><div><p>Отчёт останется у&nbsp;вас. Можете исправить сами или с&nbsp;текущим подрядчиком.</p></div></div></div>
         <div class="qa"><button class="q" data-q aria-expanded="false">Сколько времени займёт аудит?<i aria-hidden="true"></i></button>
-          <div class="a"><div><p>1 рабочий день с момента, как получим ссылку на сайт.</p></div></div></div>
-        <div class="qa"><button class="q" data-q aria-expanded="false">Гарантируете, что штрафа не будет?<i aria-hidden="true"></i></button>
-          <div class="a"><div><p>Наш аудит показывает наличие или отсутствие нарушений основных требований РКН к сайтам. Гарантировать отсутствие штрафов мы не можем, поскольку ответственность за обработку персональных данных по закону остаётся на вашей компании как операторе.</p></div></div></div>
-        <div class="qa"><button class="q" data-q aria-expanded="false">Работаете только с компаниями из Ярославля?<i aria-hidden="true"></i></button>
-          <div class="a"><div><p>Нет, у нас проекты по всей России. К клиентам из Ярославской, Костромской, Ивановской и Владимирской областей можем приехать лично.</p></div></div></div>
+          <div class="a"><div><p>1 рабочий день с&nbsp;момента, как получим ссылку на&nbsp;сайт.</p></div></div></div>
+        <div class="qa"><button class="q" data-q aria-expanded="false">Гарантируете, что штрафа не&nbsp;будет?<i aria-hidden="true"></i></button>
+          <div class="a"><div><p>Наш аудит показывает наличие или отсутствие нарушений основных требований РКН к&nbsp;сайтам. Гарантировать отсутствие штрафов мы не&nbsp;можем, поскольку ответственность за&nbsp;обработку персональных данных по&nbsp;закону остаётся на&nbsp;вашей компании как операторе.</p></div></div></div>
+        <div class="qa"><button class="q" data-q aria-expanded="false">Работаете только с&nbsp;компаниями из&nbsp;Ярославля?<i aria-hidden="true"></i></button>
+          <div class="a"><div><p>Нет, у&nbsp;нас проекты по&nbsp;всей России. К&nbsp;клиентам из&nbsp;Ярославской, Костромской, Ивановской и&nbsp;Владимирской областей можем приехать лично.</p></div></div></div>
       </div>
     </div>
   </section>
@@ -791,14 +827,14 @@ html.js .hero-sep.in{ transform:none; }
     <div class="wrap final" style="position:relative;z-index:2">
       <div>
         <h2 class="h2 split" data-split>Пока вы это читаете, ваш сайт продолжает собирать данные клиентов.</h2>
-        <p class="lead rv" style="--i:1">Проверить, законно ли это, — 5 минут вашего времени и 1 рабочий день нашего.</p>
+        <p class="lead rv" style="--i:1">Проверить, законно ли&nbsp;это,&nbsp;— 5 минут вашего времени и&nbsp;1 рабочий день нашего.</p>
       </div>
       <form class="form rv" style="--i:2" id="finalForm">
-        <div class="fld"><label for="f-site">Ссылка на сайт</label><input id="f-site" type="text" placeholder="example.ru" required></div>
+        <div class="fld"><label for="f-site">Ссылка на&nbsp;сайт</label><input id="f-site" type="text" placeholder="example.ru" required></div>
         <div class="fld"><label for="f-phone">Номер телефона</label><input id="f-phone" type="tel" placeholder="+7 900 000-00-00" required></div>
-        <label class="consent"><input type="checkbox" required><span>Согласен(на) на обработку персональных данных</span></label>
+        <label class="consent"><input type="checkbox" required><span>Согласен(на) на&nbsp;обработку персональных данных</span></label>
         <button type="submit" class="btn btn-red"><span>Отправить</span></button>
-        <div class="status" id="finalStatus">Заявка отправлена — свяжемся в течение 1 рабочего дня.</div>
+        <div class="status" id="finalStatus">Заявка отправлена&nbsp;— свяжемся в&nbsp;течение 1 рабочего дня.</div>
       </form>
     </div>
   </section>
@@ -807,7 +843,7 @@ html.js .hero-sep.in{ transform:none; }
 <footer class="foot on-dark">
   <div class="wrap">
     <div class="foot-top">
-      <div><h3>Нужна техподдержка? Остались вопросы?</h3><p>Отвечаем быстро — в среднем за 9 минут в рабочее время.</p></div>
+      <div><h3>Нужна техподдержка?<br>Остались вопросы?</h3><p>Отвечаем быстро&nbsp;— в&nbsp;среднем за&nbsp;9 минут в&nbsp;рабочее время.</p></div>
       <button class="btn btn-red mag" id="msgBtn"><span>Написать нам</span></button>
     </div>
     <div class="foot-grid">
@@ -819,6 +855,19 @@ html.js .hero-sep.in{ transform:none; }
       </div></div>
       <div class="fitem"><div class="l">Адрес</div><div class="v">Ярославль, Октябрьский пер. 3</div></div>
     </div>
+
+    <div class="foot-legal">
+      <div class="legal-co">
+        <div class="l">Реквизиты</div>
+        <p class="co-name">ООО «ЦРВЕНА ЗВЕЗДА»</p>
+        <p>ОГРН: 1227600001243<br>ИНН: 7604382475<br>КПП: 760401001</p>
+        <p style="margin-top:10px">г.&nbsp;Ярославль, Октябрьский переулок, дом&nbsp;3, офис&nbsp;№207</p>
+      </div>
+      <div class="legal-links">
+        <a class="policy-link" href="redstar-privacy.html">Политика конфиденциальности<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        <p class="copy">© Редстар 2026. Все права защищены</p>
+      </div>
+    </div>
   </div>
 </footer>
 
@@ -826,20 +875,20 @@ html.js .hero-sep.in{ transform:none; }
   <button class="mx" id="mxBtn" aria-label="Закрыть">✕</button>
   <h3 id="mt">Оставить заявку</h3><p class="msub" id="ms"></p>
   <form id="modalForm">
-    <div class="fld"><label for="m-site">Ссылка на сайт</label><input id="m-site" type="text" placeholder="example.ru" required></div>
+    <div class="fld"><label for="m-site">Ссылка на&nbsp;сайт</label><input id="m-site" type="text" placeholder="example.ru" required></div>
     <div class="fld"><label for="m-phone">Номер телефона</label><input id="m-phone" type="tel" placeholder="+7 900 000-00-00" required></div>
-    <label class="consent"><input type="checkbox" required><span>Согласен(на) на обработку персональных данных</span></label>
+    <label class="consent"><input type="checkbox" required><span>Согласен(на) на&nbsp;обработку персональных данных</span></label>
     <button type="submit" class="btn btn-red"><span>Отправить</span></button>
-    <div class="status" id="modalStatus">Заявка отправлена — свяжемся в течение 1 рабочего дня.</div>
+    <div class="status" id="modalStatus">Заявка отправлена&nbsp;— свяжемся в&nbsp;течение 1 рабочего дня.</div>
   </form>
 </div></div>
 
 <div class="ov" id="ovMsg"><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mst">
   <button class="mx" id="mxMsg" aria-label="Закрыть">✕</button>
-  <h3 id="mst">Написать нам</h3><p class="msub">Выберите мессенджер — ответим быстро.</p>
+  <h3 id="mst">Написать нам</h3><p class="msub">Выберите мессенджер&nbsp;— ответим быстро.</p>
   <div class="mlinks">
-    <a class="mlink tg" href="https://t.me/redstar_support" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Написать в Telegram</a>
-    <a class="mlink max" href="https://max.ru/redstar_support" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Написать в Max</a>
+    <a class="mlink tg" href="https://t.me/redstar_support" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Написать в&nbsp;Telegram</a>
+    <a class="mlink max" href="https://max.ru/redstar_support" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Написать в&nbsp;Max</a>
   </div>
 </div></div>
 
