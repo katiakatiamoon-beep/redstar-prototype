@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Редстар — аудит 152-ФЗ · motion</title>
@@ -8,10 +9,11 @@
 <style>
 :root{
   --ink:#17181C; --text:#1A1A1A; --text-2:#5A6070; --text-3:#8B93A3;
-  --bg:#EFF6FF; --surface:#FFFFFF; --bg-soft:#F3F7FD;
+  /* палитра синхронизирована с redstar-support.ru */
+  --bg:#F0F9FF; --surface:#FFFFFF; --bg-soft:#F4FAFF;
   --line:#DCE6F5; --line-dk:rgba(255,255,255,.22);
-  --red:#D92C04; --red-lift:#EF4116;
-  --blue:#2B5FD9; --blue-deep:#1E4BB8; --navy:#10275C;
+  --red:#D92C04; --red-lift:#F95B37;
+  --blue:#245BA9; --blue-deep:#0E418B; --navy:#083575;
   --font:'Manrope',-apple-system,'Segoe UI',Arial,sans-serif;
   --wrap:1180px; --gutter:clamp(20px,5vw,72px); --sec:40px;
   --cell:clamp(44px,5vw,72px);
@@ -20,8 +22,8 @@
   --fs-h2:clamp(24px,2.9vw,42px);      /* заголовки секций */
   --fs-h3:clamp(18px,1.7vw,24px);      /* подзаголовки внутри секций */
   --fs-num:clamp(26px,2.8vw,40px);     /* крупные цифры-акценты */
-  --fs-lead:clamp(16px,1.3vw,19px);    /* вводный текст под заголовком */
-  --fs-body:clamp(15px,1.15vw,17px);   /* основной текст */
+  --fs-lead:clamp(17px,1.3vw,19px);    /* вводный текст под заголовком */
+  --fs-body:clamp(16px,1.15vw,17px);   /* основной текст */
   --fs-sm:13.5px;                      /* подписи и пояснения */
   --fs-xs:11.5px;                      /* метки капсом */
   --r:28px; --r-sm:16px; --e:cubic-bezier(.16,1,.3,1);
@@ -94,7 +96,7 @@ html.js .rv.in{ opacity:1; transform:none; }
 .hdr.is-stuck{ border-bottom-color:var(--line); box-shadow:0 8px 24px -20px rgba(16,39,92,.45); }
 .hdr-phone{ padding:9px 16px; border-radius:999px; background:var(--navy); color:#fff !important; }
 .hdr.up{ transform:translateY(-100%); }
-.hdr-row{ height:70px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.hdr-row{ height:92px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
 .brand-wrap{ display:flex; align-items:center; gap:14px; min-width:0; }
 .brand{ display:flex; align-items:center; color:var(--text); flex:none; }
 .brand-logo{ display:block; height:27px; width:auto; }
@@ -112,7 +114,9 @@ html.js .rv.in{ opacity:1; transform:none; }
 .soc-tg{ background:#229ED9; } .soc-max{ background:linear-gradient(135deg,#00E0FF 0%,#1B6CFF 45%,#8109FC 100%); }
 
 /* ===== секции ===== */
+/* светлые секции: 40+40 = 80px между блоками; синие баннеры: 80px внутри */
 .sec{ padding:var(--sec) 0; position:relative; }
+.sec.dark{ padding-block:80px; }
 .dark{ background:linear-gradient(150deg,var(--blue) 0%,var(--blue-deep) 100%); color:#fff; }
 .dark .lead{ color:rgba(255,255,255,.78); }
 /* белые карточки на бледно-голубом — как в фирменной сетке */
@@ -144,15 +148,16 @@ html.js .rv.in{ opacity:1; transform:none; }
 
 /* ===== HERO ===== */
 .hero{ background:linear-gradient(160deg,var(--blue) 0%,var(--blue-deep) 100%); color:#fff;
-       padding:clamp(100px,11vw,132px) 0 clamp(26px,3vw,38px); position:relative; overflow:hidden; }
+       padding:clamp(128px,13vw,164px) 0 clamp(44px,4.5vw,60px); position:relative; overflow:hidden; }
 .hero-halo{ position:absolute; left:50%; top:34%; width:min(1400px,130vw); aspect-ratio:2.6/1; transform:translateX(-50%);
   background:radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,.26), rgba(255,255,255,.06) 55%, transparent 74%); pointer-events:none;
   animation:breathe 7s ease-in-out infinite; }
 @keyframes breathe{ 0%,100%{ opacity:.75; transform:translateX(-50%) scale(1); } 50%{ opacity:1; transform:translateX(-50%) scale(1.06); } }
 .hero-in{ position:relative; z-index:3; }
 .hero .dec{ z-index:2; }
-.hero-orbit{ right:clamp(8px,2.2vw,32px); top:clamp(60px,7.2vw,96px);
-             width:clamp(190px,30vw,430px); aspect-ratio:1; opacity:.9; }
+/* радар всегда вписан в высоту первого экрана и не наезжает на бегущую строку */
+.hero-orbit{ right:clamp(8px,2.2vw,32px); top:50%; transform:translateY(-50%);
+             height:min(clamp(190px,30vw,430px), 76%); width:auto; aspect-ratio:1; opacity:.9; }
 .hero-orbit .r{ fill:none; stroke:rgba(255,255,255,.3); stroke-width:1.4; }
 .hero-orbit .r.dash{ stroke-dasharray:3 9; stroke:rgba(255,255,255,.45); }
 .hero-orbit .cross{ stroke:rgba(255,255,255,.22); stroke-width:1; stroke-dasharray:4 10; }
@@ -173,12 +178,12 @@ html.js .rv.in{ opacity:1; transform:none; }
               border-color:var(--red); }
 .hero h1{ font-size:var(--fs-h1); line-height:1.16; letter-spacing:-.032em; font-weight:700;
           max-width:26ch; }
-.hero-promise{ margin-top:clamp(16px,2vw,22px); max-width:44ch;
+.hero-promise{ margin-top:clamp(24px,3.2vw,38px); max-width:44ch;
                font-size:var(--fs-lead); line-height:1.42; font-weight:600;
                color:rgba(255,255,255,.94); }
 /* плашка слева, кнопка ровно по центру блока */
 .hero-fine{ display:grid; grid-template-columns:1fr auto 1fr; align-items:stretch;
-            gap:clamp(14px,2vw,24px); margin-top:clamp(24px,3vw,36px); }
+            gap:clamp(14px,2vw,24px); margin-top:clamp(38px,5vw,62px); }
 .hero-fine .fine-sum{ justify-self:start; }
 .hero-fine .btn-red{ grid-column:2; padding-inline:clamp(24px,2.6vw,34px); }
 .fine-sum{ display:flex; flex-direction:column; gap:5px; padding:12px 20px 13px; border-radius:14px;
@@ -290,12 +295,14 @@ html.js .hero-sep.in{ transform:none; }
   .lrow:hover::before{ transform:scaleY(1); }
   .lrow:hover .n{ background:var(--red); color:#fff; box-shadow:inset 0 0 0 1px var(--red); }
 }
-.co-badges{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:clamp(20px,2.4vw,30px); }
-.co-badge{ display:inline-flex; align-items:center; gap:9px; padding:11px 19px 11px 16px;
+/* пять фичеров укладываются ровно в два ряда: 3 + 2 */
+.co-badges{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
+            margin-bottom:clamp(26px,3vw,38px); }
+.co-badge{ display:inline-flex; align-items:center; gap:9px; padding:13px 19px 13px 16px;
            border-radius:999px; background:var(--surface); box-shadow:inset 0 0 0 1px var(--line);
-           font-size:var(--fs-sm); line-height:1.3; color:var(--text-2);
+           font-size:clamp(13px,1.05vw,15px); line-height:1.3; color:var(--text-2); white-space:nowrap;
            transition:box-shadow .35s var(--e), transform .35s var(--e); }
-.co-badge::before{ content:''; width:7px; height:7px; border-radius:50%; background:var(--red); flex:none; }
+.co-badge::before{ content:''; width:8px; height:8px; border-radius:50%; background:var(--red); flex:none; }
 .co-badge b{ color:var(--text); font-weight:800; letter-spacing:-.015em; }
 @media (hover:hover){ .co-badge:hover{ box-shadow:inset 0 0 0 1px var(--red); transform:translateY(-2px); } }
 .nb{ display:block; }
@@ -344,7 +351,7 @@ html.js .hero-sep.in{ transform:none; }
 .cmp-table{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
             column-gap:clamp(20px,4vw,64px); }
 .cmp-legend{ display:contents; }
-.cmp-legend span{ font-size:var(--fs-lead); font-weight:800; letter-spacing:-.015em;
+.cmp-legend span{ font-size:var(--fs-body); font-weight:800; letter-spacing:-.015em;
                   color:var(--text); padding:0 0 clamp(14px,1.8vw,20px); }
 .cmp-legend span:last-child{ color:var(--blue); }
 .cmp-cell{ display:flex; gap:14px; align-items:flex-start;
@@ -355,21 +362,21 @@ html.js .hero-sep.in{ transform:none; }
 .cmp-yes .cmp-mk{ background:var(--blue); color:#fff; }
 .cmp-no p{ color:var(--text-3); font-size:var(--fs-body); line-height:1.45; }
 .cmp-no p.one-line{ white-space:normal; }
-.cmp-yes p{ font-size:var(--fs-lead); line-height:1.4; font-weight:700; letter-spacing:-.015em; }
+.cmp-yes p{ font-size:var(--fs-body); line-height:1.4; font-weight:700; letter-spacing:-.015em; }
 @media (hover:hover){ .cmp-cell:hover .cmp-mk{ transform:scale(1.15); } }
 
 /* ===== ПАУЗА / РАЗВИЛКА ===== */
 .pause-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px,5vw,80px); align-items:start; }
-.pause-grid p{ font-size:var(--fs-lead); line-height:1.34; letter-spacing:-.022em; font-weight:600; }
+.pause-grid p{ font-size:var(--fs-body); line-height:1.4; letter-spacing:-.022em; font-weight:600; }
 .pause-grid p + p{ font-weight:500; color:var(--text-2); }
 
 /* вертикальный путь: отчёт → развилка на две дорожки */
-.path{ display:grid; grid-template-columns:1fr; margin-top:clamp(10px,2vw,24px); }
+.path{ display:grid; grid-template-columns:1fr; margin-top:clamp(28px,3.4vw,46px); }
 
 .path-src{ position:relative; padding:clamp(20px,2.2vw,28px) clamp(22px,2.5vw,34px); border-radius:var(--r);
            background:var(--surface); border:1px solid var(--line);
            box-shadow:0 26px 64px -48px rgba(16,39,92,.5); }
-.path-src p{ font-size:var(--fs-lead); line-height:1.38; letter-spacing:-.02em; font-weight:600; }
+.path-src p{ font-size:var(--fs-body); line-height:1.4; letter-spacing:-.02em; font-weight:600; text-align:center; }
 
 .path-join{ height:clamp(52px,6vw,88px); }
 .path-join svg{ width:100%; height:100%; display:block; overflow:visible; }
@@ -379,13 +386,13 @@ html.js .hero-sep.in{ transform:none; }
 .path-join .l2{ stroke:var(--red); transition-delay:.5s; }
 .path-join.in path{ stroke-dashoffset:0; }
 
-.path-outs{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(14px,1.8vw,22px); align-items:start; }
+.path-outs{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(14px,1.8vw,22px); align-items:stretch; }
 .path-out{ position:relative; padding:clamp(20px,2.3vw,30px) clamp(22px,2.5vw,34px);
            border-radius:var(--r-sm); background:var(--surface); border:1px solid var(--line);
            transition:transform .5s var(--e), box-shadow .5s var(--e), border-color .5s var(--e); }
 .path-out .plabel{ display:block; font-size:var(--fs-xs); font-weight:800; letter-spacing:.16em;
                 text-transform:uppercase; color:var(--text-3); margin-bottom:12px; }
-.path-out p{ font-size:var(--fs-lead); line-height:1.38; letter-spacing:-.02em; font-weight:600; }
+.path-out p{ font-size:var(--fs-body); line-height:1.4; letter-spacing:-.02em; font-weight:600; }
 .path-out p + p{ margin-top:12px; font-size:var(--fs-body); line-height:1.5;
                  font-weight:500; color:var(--text-2); letter-spacing:-.008em; }
 .path-out.is-us{ border-left:3px solid var(--red); }
@@ -498,7 +505,8 @@ html.js .hero-sep.in{ transform:none; }
 .foot-ask h3{ font-size:var(--fs-h3); letter-spacing:-.028em; line-height:1.15; max-width:none; }
 .foot-ask p{ font-size:var(--fs-sm); line-height:1.5; color:rgba(255,255,255,.5); }
 .foot-ask .btn-red{ margin-top:3px; }
-.foot-grid{ display:flex; flex-wrap:wrap; gap:clamp(24px,4vw,56px); }
+.foot-grid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) minmax(0,.7fr) minmax(0,1.4fr);
+            gap:clamp(20px,3vw,40px); }
 .fitem .l{ font-size:var(--fs-xs); font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:9px; }
 .fitem .v{ font-size:var(--fs-body); font-weight:700; }
 .foot-legal{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start;
@@ -541,8 +549,8 @@ html.js .hero-sep.in{ transform:none; }
 .mlink svg{ width:17px; height:17px; }
 
 @media (max-width:1024px){
-  .brand-wrap{ flex-direction:column; align-items:flex-start; gap:2px; }
-  .brand-desc{ line-height:1.28; padding-left:0; border-left:none; }
+  .brand-wrap{ flex-direction:column; align-items:center; gap:3px; }
+  .brand-desc{ line-height:1.28; padding-left:0; border-left:none; text-align:center; }
   .shead,#s-risks .shead{ grid-template-columns:1fr; gap:22px; align-items:start; }
   .shead h2,.shead > h2:only-child{ max-width:20ch; }
   #s-risks .shead h2,.shead-stack h2{ max-width:none; }
@@ -567,12 +575,14 @@ html.js .hero-sep.in{ transform:none; }
 }
 @media (max-width:640px){
   body{ font-size:16px; }
+  .foot-grid{ grid-template-columns:1fr 1fr; }
   .foot-legal{ flex-direction:column; align-items:flex-start; gap:24px; }
   .legal-links{ align-items:flex-start; text-align:left; }
-  .hdr-row{ height:auto; min-height:62px; padding:9px 0; gap:10px; }
-  .brand-logo{ height:22px; }
+  .hdr-row{ height:auto; min-height:78px; padding:14px 0; gap:10px; }
+  .brand-wrap{ padding-left:8px; }
+  .brand-logo{ height:23px; }
   .brand-desc{ line-height:1.25; padding-left:0; }
-  .hero{ padding-top:118px; }
+  .hero{ padding-top:146px; }
   .hdr-act{ gap:8px; }
   .hdr-act .btn-line{ display:none; }
   .hdr-phone{ width:34px; height:34px; padding:0; border-radius:50%;
@@ -582,7 +592,7 @@ html.js .hero-sep.in{ transform:none; }
   .ph-ic{ display:block; width:15px; height:15px; }
   .shead h2,.shead > h2:only-child,.final h2,.final .lead,.case-desc,.risk-row p,
   .hero-promise,.fine-q{ max-width:none; }
-  .hero-fine{ grid-template-columns:1fr; gap:16px; }
+  .hero-fine{ grid-template-columns:1fr; gap:22px; }
   .hero-fine .btn-red{ grid-column:1; }
   .fine-sum{ width:100%; }
   .hero-act-btn{ width:100%; }
@@ -733,7 +743,7 @@ html.js .hero-sep.in{ transform:none; }
     <div class="grain" aria-hidden="true"></div>
     <div class="wrap" style="position:relative;z-index:2">
       <div class="shead shead-stack">
-        <h2 class="h2 split" data-split>Поможем избежать штрафов до&nbsp;6&nbsp;000&nbsp;000 рублей.</h2>
+        <h2 class="h2 split" data-split>Поможем избежать штрафов до&nbsp;6&nbsp;000&nbsp;000 рублей</h2>
         <p class="lead rv" style="--i:1">Специалист вручную проверит сайт по&nbsp;9&nbsp;пунктам и&nbsp;пришлёт отчёт: что в&nbsp;порядке, а&nbsp;что нужно исправить.</p>
       </div>
       <div class="chk-card rv">
@@ -766,7 +776,7 @@ html.js .hero-sep.in{ transform:none; }
       <div class="cmp-table rv">
         <div class="cmp-legend"><span>Без&nbsp;аудита</span><span>С&nbsp;аудитом Редстар</span></div>
 
-        <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p class="one-line">Проверка находит нарушения → штраф от&nbsp;30&nbsp;000 до&nbsp;6&nbsp;000&nbsp;000&nbsp;₽</p></div>
+        <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p class="one-line">Проверка находит нарушения → штраф <br>от&nbsp;30&nbsp;000 до&nbsp;6&nbsp;000&nbsp;000&nbsp;₽</p></div>
         <div class="cmp-cell cmp-yes"><span class="cmp-mk">✓</span><p>Знаете список нарушений до&nbsp;проверки</p></div>
 
         <div class="cmp-cell cmp-no"><span class="cmp-mk">✕</span><p>Репутационные риски и&nbsp;объяснения перед клиентами</p></div>
@@ -797,10 +807,10 @@ html.js .hero-sep.in{ transform:none; }
         <div class="path-outs">
           <div class="path-out rv">
             <span class="plabel">Самостоятельно</span>
-            <p>Можете использовать его как готовый чек-лист и&nbsp;устранить всё самостоятельно</p>
+            <p>Можете использовать его как готовый чек-лист и&nbsp;устранить всё самостоятельно.</p>
           </div>
           <div class="path-out is-us rv" style="--i:1">
-            <p>…а&nbsp;можете передать задачи нам.</p>
+            <p>…а&nbsp;можете передать задачи нам</p>
             <p>Мы не&nbsp;только приведём сайт в&nbsp;соответствие с&nbsp;требованиями РКН, но&nbsp;и&nbsp;возьмём на&nbsp;себя его техническую поддержку целиком: от&nbsp;небольших правок до&nbsp;регулярного сопровождения и&nbsp;развития.</p>
           </div>
         </div>
@@ -816,8 +826,8 @@ html.js .hero-sep.in{ transform:none; }
         <p class="lead rv" style="--i:1">Работаем с&nbsp;проектами по&nbsp;всей России, находимся в&nbsp;Ярославле</p>
       </div>
       <div class="co-badges rv">
-        <span class="co-badge"><b>16 лет опыта</b> — работаем с&nbsp;2010 года</span>
         <span class="co-badge"><b>800+</b> выполненных проектов</span>
+        <span class="co-badge"><b>16 лет опыта</b> — работаем с&nbsp;2010 года</span>
         <span class="co-badge"><b>Сертифицированный партнёр</b> 1С-Битрикс</span>
         <span class="co-badge"><b>Аккредитованная</b> Минцифры ИТ-компания</span>
         <span class="co-badge"><b>Офис в&nbsp;центре Ярославля</b> — все сотрудники в&nbsp;штате</span>
@@ -962,7 +972,7 @@ html.js .hero-sep.in{ transform:none; }
     <div class="wrap final" style="position:relative;z-index:2">
       <div>
         <h2 class="h2 split" data-split>Пока вы это читаете,<br>ваш сайт продолжает<br>собирать данные клиентов</h2>
-        <p class="lead rv" style="--i:1">Обезопасьте ваш бизнес от&nbsp;штрафов&nbsp;— отправьте сайт на&nbsp;проверку.<br>Это 5 минут вашего времени и&nbsp;1 рабочий день&nbsp;— нашего.</p>
+        <p class="lead rv" style="--i:1">Обезопасьте ваш бизнес от&nbsp;штрафов&nbsp;— отправьте сайт на&nbsp;проверку.<br>Это 5 минут вашего времени<br>и&nbsp;1 рабочий день&nbsp;— нашего.</p>
       </div>
       <form class="form rv" style="--i:2" id="finalForm">
         <div class="fld"><label for="f-site">Ссылка на&nbsp;сайт</label><input id="f-site" type="text" placeholder="example.ru" required></div>
@@ -998,7 +1008,7 @@ html.js .hero-sep.in{ transform:none; }
       </div>
       <div class="foot-ask">
         <h3>Остались вопросы?</h3>
-        <p>Отвечаем быстро&nbsp;— в&nbsp;среднем за&nbsp;9 минут в&nbsp;рабочее время.</p>
+        <p>Отвечаем быстро&nbsp;— в&nbsp;среднем за&nbsp;9 минут<br>в&nbsp;рабочее время.</p>
         <button class="btn btn-red mag" id="msgBtn"><span>Написать нам</span></button>
       </div>
       <div class="legal-links">
