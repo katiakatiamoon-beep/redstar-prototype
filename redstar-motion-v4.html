@@ -15,7 +15,8 @@
   --red:#D92C04; --red-lift:#F95B37;
   --blue:#245BA9; --blue-deep:#0E418B; --navy:#083575;
   --font:'Manrope',-apple-system,'Segoe UI',Arial,sans-serif;
-  --wrap:1180px; --gutter:clamp(20px,5vw,72px); --sec:40px;
+  --wrap:1180px; --gutter:clamp(20px,5vw,72px); --sec:80px;
+  --hdr-top:14px; --hdr-h:68px;        /* плавающая капсула шапки */
   --cell:clamp(44px,5vw,72px);
   /* ===== типографическая шкала ===== */
   --fs-h1:clamp(34px,4.9vw,68px);      /* заголовок первого экрана */
@@ -83,14 +84,16 @@ html.js .rv.in{ opacity:1; transform:none; }
 .tbtn .ln2{ display:block; width:26px; height:1.5px; background:var(--red); transition:width .4s var(--e); }
 .tbtn:hover .ln2{ width:46px; }
 
-/* ===== шапка ===== */
-.hdr{ position:fixed; inset:0 0 auto 0; z-index:120;
-      background:rgba(255,255,255,.88); backdrop-filter:saturate(180%) blur(22px);
-      -webkit-backdrop-filter:saturate(180%) blur(22px); border-bottom:1px solid transparent;
-      transition:box-shadow .4s var(--e), border-color .4s var(--e), transform .5s var(--e); }
-.hdr.is-stuck{ border-bottom-color:var(--line); box-shadow:0 8px 24px -20px rgba(16,39,92,.45); }
-.hdr-phone{ padding:9px 16px; border-radius:999px; background:var(--navy); color:#fff !important; }
-.hdr-row{ height:92px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+/* ===== шапка: белая капсула поверх баннера, как на redstar-support.ru ===== */
+.hdr{ position:fixed; inset:0 0 auto 0; z-index:120; padding:var(--hdr-top) var(--gutter) 0;
+      transition:padding .4s var(--e), transform .5s var(--e); }
+.hdr-row{ min-height:var(--hdr-h); display:flex; align-items:center; justify-content:space-between;
+          gap:16px; background:#fff; border-radius:999px; padding:10px 12px 10px 26px;
+          box-shadow:0 12px 30px -20px rgba(16,39,92,.5);
+          transition:box-shadow .4s var(--e); }
+.hdr.is-stuck{ padding-top:10px; }
+.hdr.is-stuck .hdr-row{ box-shadow:0 16px 36px -18px rgba(16,39,92,.6); }
+.hdr-phone{ padding:11px 18px; border-radius:999px; background:var(--navy); color:#fff !important; }
 .brand-wrap{ display:flex; align-items:center; gap:14px; min-width:0; }
 .brand{ display:flex; align-items:center; color:var(--text); flex:none; }
 .brand-logo{ display:block; height:27px; width:auto; }
@@ -108,12 +111,8 @@ html.js .rv.in{ opacity:1; transform:none; }
 .soc-tg{ background:#229ED9; } .soc-max{ background:linear-gradient(135deg,#00E0FF 0%,#1B6CFF 45%,#8109FC 100%); }
 
 /* ===== секции ===== */
-/* 80px между всеми блоками (40+40 у соседних светлых) и 80px внутри синих */
+/* padding 80px сверху и снизу у каждой секции без исключений */
 .sec{ padding:var(--sec) 0; position:relative; }
-.sec.dark{ padding-block:80px; }
-/* у границы с синим баннером светлая секция тоже держит 80px от края цвета */
-.sec.pre-dark{ padding-bottom:80px; }
-.sec.dark + .sec{ padding-top:80px; }
 .dark{ background:linear-gradient(150deg,var(--blue) 0%,var(--blue-deep) 100%); color:#fff; }
 .dark .lead{ color:rgba(255,255,255,.78); }
 .grain{ position:absolute; inset:0; pointer-events:none; opacity:.5; mix-blend-mode:overlay;
@@ -141,7 +140,7 @@ html.js .rv.in{ opacity:1; transform:none; }
 
 /* ===== HERO ===== */
 .hero{ background:linear-gradient(160deg,var(--blue) 0%,var(--blue-deep) 100%); color:#fff;
-       padding:clamp(128px,13vw,164px) 0 clamp(44px,4.5vw,60px); position:relative; overflow:hidden; }
+       padding:calc(var(--hdr-top) + var(--hdr-h) + 80px) 0 80px; position:relative; overflow:hidden; }
 .hero-halo{ position:absolute; left:50%; top:34%; width:min(1400px,130vw); aspect-ratio:2.6/1; transform:translateX(-50%);
   background:radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,.26), rgba(255,255,255,.06) 55%, transparent 74%); pointer-events:none;
   animation:breathe 7s ease-in-out infinite; }
@@ -347,6 +346,8 @@ html.js .rv.in{ opacity:1; transform:none; }
 .cmp-no p{ color:var(--text-2); font-size:var(--fs-body); line-height:1.45; }
 .cmp-no p.one-line{ white-space:normal; }
 .cmp-yes p{ font-size:var(--fs-body); line-height:1.4; font-weight:700; letter-spacing:-.015em; }
+/* у последней строки таблицы нижний отступ не нужен — он читался как пустая строка */
+.cmp-table > .cmp-cell:nth-last-child(-n+2){ padding-bottom:0; }
 @media (hover:hover){ .cmp-cell:hover .cmp-mk{ transform:scale(1.15); } }
 
 /* вертикальный путь: отчёт → развилка на две дорожки */
@@ -474,7 +475,7 @@ html.js .rv.in{ opacity:1; transform:none; }
 .form .btn-red{ width:100%; padding-block:15px; margin-top:1px; }
 
 /* ===== ФУТЕР ===== */
-.foot{ background:var(--ink); color:#fff; padding:40px 0 clamp(28px,3vw,38px); border-top:1px solid var(--line-dk); }
+.foot{ background:var(--ink); color:#fff; padding:80px 0; border-top:1px solid var(--line-dk); }
 .foot-ask{ display:flex; flex-direction:column; align-items:flex-start; gap:11px; max-width:34ch; }
 .foot-ask h3{ font-size:var(--fs-h3); letter-spacing:-.028em; line-height:1.15; max-width:none; }
 .foot-ask p{ font-size:var(--fs-sm); line-height:1.5; color:rgba(255,255,255,.5); }
@@ -546,6 +547,7 @@ html.js .rv.in{ opacity:1; transform:none; }
   .final{ grid-template-columns:1fr; }
 }
 @media (max-width:640px){
+  :root{ --hdr-top:10px; --hdr-h:64px; }
   body{ font-size:16px; }
   /* minmax(0,…) обязателен: голый 1fr не даёт колонке стать уже своего
      содержимого, и неразрывный адрес почты выталкивал футер за экран на 320px */
@@ -553,15 +555,12 @@ html.js .rv.in{ opacity:1; transform:none; }
   .fitem .v{ overflow-wrap:anywhere; }
   .foot-legal{ flex-direction:column; align-items:flex-start; gap:24px; }
   .legal-links{ align-items:flex-start; text-align:left; }
-  .hdr-row{ height:auto; min-height:78px; padding:14px 0; gap:10px; }
-  .brand-wrap{ padding-left:8px; }
+  .hdr-row{ min-height:64px; padding:9px 9px 9px 16px; gap:10px; border-radius:22px; }
   .brand-logo{ height:23px; }
   .brand-desc{ line-height:1.25; padding-left:0; }
-  .hero{ padding-top:146px; }
   .hdr-act{ gap:8px; }
   .hdr-phone{ width:34px; height:34px; padding:0; border-radius:50%;
               display:inline-flex; align-items:center; justify-content:center; flex:none; }
-  .hdr.is-stuck .hdr-phone{ color:#fff; }
   .ph-txt{ display:none; }
   .ph-ic{ display:block; width:15px; height:15px; }
   .shead h2,.shead > h2:only-child,.final h2,.final .lead,.case-desc,
@@ -668,7 +667,7 @@ html.js .rv.in{ opacity:1; transform:none; }
   </div>
 
   <!-- РИСКИ -->
-  <section class="sec pre-dark" id="s-risks">
+  <section class="sec" id="s-risks">
     <div class="wrap">
       <div class="shead shead-stack">
         <h2 class="h2 split" data-split>Роскомнадзор не смотрит,<br>большой у&nbsp;вас бизнес или&nbsp;маленький</h2>
@@ -909,7 +908,7 @@ html.js .rv.in{ opacity:1; transform:none; }
   </section>
 
   <!-- FAQ -->
-  <section class="sec pre-dark">
+  <section class="sec">
     <div class="wrap">
       <div class="shead"><h2 class="h2 split" data-split>Часто задаваемые вопросы</h2></div>
       <div class="faq rv">
