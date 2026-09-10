@@ -111,8 +111,10 @@ html.js .rv.in{ opacity:1; transform:none; }
 .soc-tg{ background:#229ED9; } .soc-max{ background:linear-gradient(135deg,#00E0FF 0%,#1B6CFF 45%,#8109FC 100%); }
 
 /* ===== секции ===== */
-/* padding 80px сверху и снизу у каждой секции без исключений */
+/* верхняя часть страницы — 80px, всё ниже блока сравнения — 40px */
 .sec{ padding:var(--sec) 0; position:relative; }
+#s-cmp{ padding-bottom:40px; }
+#s-next,#s-co,#s-sup,#s-cases,#s-faq,#s-final{ padding-block:40px; }
 .dark{ background:linear-gradient(150deg,var(--blue) 0%,var(--blue-deep) 100%); color:#fff; }
 .dark .lead{ color:rgba(255,255,255,.78); }
 .grain{ position:absolute; inset:0; pointer-events:none; opacity:.5; mix-blend-mode:overlay;
@@ -475,7 +477,7 @@ html.js .rv.in{ opacity:1; transform:none; }
 .form .btn-red{ width:100%; padding-block:15px; margin-top:1px; }
 
 /* ===== ФУТЕР ===== */
-.foot{ background:var(--ink); color:#fff; padding:80px 0; border-top:1px solid var(--line-dk); }
+.foot{ background:var(--ink); color:#fff; padding:40px 0; border-top:1px solid var(--line-dk); }
 .foot-ask{ display:flex; flex-direction:column; align-items:flex-start; gap:11px; max-width:34ch; }
 .foot-ask h3{ font-size:var(--fs-h3); letter-spacing:-.028em; line-height:1.15; max-width:none; }
 .foot-ask p{ font-size:var(--fs-sm); line-height:1.5; color:rgba(255,255,255,.5); }
@@ -908,7 +910,7 @@ html.js .rv.in{ opacity:1; transform:none; }
   </section>
 
   <!-- FAQ -->
-  <section class="sec">
+  <section class="sec" id="s-faq">
     <div class="wrap">
       <div class="shead"><h2 class="h2 split" data-split>Часто задаваемые вопросы</h2></div>
       <div class="faq rv">
