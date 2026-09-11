@@ -351,6 +351,9 @@ html.js .rv.in{ opacity:1; transform:none; }
 .path-outs{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(14px,1.8vw,22px); align-items:stretch; }
 /* на десктопе развилку рисует SVG сверху, разделитель «или» не нужен */
 .path-or{ display:none; }
+/* когда карточки встают в столбик и между ними появляется «или»,
+   союз «а» в начале второй карточки теряет смысл — показываем вариант без него */
+.pm{ display:none; }
 .path-out{ position:relative; padding:clamp(20px,2.3vw,30px) clamp(22px,2.5vw,34px);
            border-radius:var(--r-sm); background:var(--surface); border:1px solid var(--line);
            transition:transform .5s var(--e), box-shadow .5s var(--e), border-color .5s var(--e); }
@@ -529,6 +532,8 @@ html.js .rv.in{ opacity:1; transform:none; }
   .path-outs{ grid-template-columns:1fr; gap:14px; }
   /* на мобильном выбор из двух путей держится на разделителе «или» */
   .path-or{ display:flex; align-items:center; gap:12px; padding:2px 0; }
+  .pw{ display:none; }
+  .pm{ display:inline; }
   .path-or::before,.path-or::after{ content:""; flex:1; height:1px; background:var(--line); }
   .path-or span{ flex:none; font-size:var(--fs-xs); font-weight:800; letter-spacing:.16em;
                  text-transform:uppercase; color:var(--text-3); }
@@ -547,6 +552,8 @@ html.js .rv.in{ opacity:1; transform:none; }
 @media (max-width:640px){
   :root{ --hdr-top:10px; --hdr-h:64px; }
   body{ font-size:16px; }
+  /* белое размытие на маленьких экранах мешает читать заголовок */
+  .hero-halo{ display:none; }
   /* minmax(0,…) обязателен: голый 1fr не даёт колонке стать уже своего
      содержимого, и неразрывный адрес почты выталкивал футер за экран на 320px */
   /* один столбец: в две колонки адрес почты не помещается и рвётся посреди слова */
@@ -702,7 +709,7 @@ html.js .rv.in{ opacity:1; transform:none; }
     <div class="grain" aria-hidden="true"></div>
     <div class="wrap" style="position:relative;z-index:2">
       <div class="shead shead-stack">
-        <h2 class="h2 split" data-split>Проверим ваш сайт<br>по&nbsp;9 требованиям РКН за&nbsp;1 рабочий день</h2>
+        <h2 class="h2 split" data-split>Проверим ваш сайт<br>по&nbsp;9 требованиям РКН за&nbsp;1&nbsp;рабочий&nbsp;день</h2>
         <p class="lead rv" style="--i:1">Специалист вручную проверит сайт по&nbsp;9&nbsp;пунктам и&nbsp;пришлёт отчёт: что в&nbsp;порядке, а&nbsp;что нужно исправить.</p>
       </div>
       <div class="chk-card rv">
@@ -770,7 +777,7 @@ html.js .rv.in{ opacity:1; transform:none; }
           </div>
           <div class="path-or" aria-hidden="true"><span>или</span></div>
           <div class="path-out is-us rv" style="--i:1">
-            <p>…а&nbsp;можете передать задачи нам</p>
+            <p><span class="pw">…а&nbsp;можете передать задачи нам</span><span class="pm">…&nbsp;можете передать задачи нам</span></p>
             <p>Мы не&nbsp;только приведём сайт в&nbsp;соответствие с&nbsp;требованиями РКН, но&nbsp;и&nbsp;возьмём на&nbsp;себя его техническую поддержку целиком: от&nbsp;небольших правок до&nbsp;регулярного сопровождения и&nbsp;развития.</p>
           </div>
         </div>
