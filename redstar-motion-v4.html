@@ -144,7 +144,9 @@ html.js .rv.in{ opacity:1; transform:none; }
 .hero .dec{ z-index:2; }
 /* радар всегда вписан в высоту первого экрана и не наезжает на бегущую строку */
 .hero-orbit{ --orb-h:min(clamp(230px,37vw,540px), 84%);
-             right:clamp(48px,7vw,120px);
+             /* на ноутбуках отступ справа фиксированный; на широких экранах (от ~1560px)
+                радар идёт за контейнером контента и остаётся на том же месте относительно текста */
+             right:max(clamp(48px,7vw,120px), calc((100vw - var(--wrap)) / 2 - 70px));
              /* верх внешнего кольца ложится ровно на 2-ю линию фоновой сетки;
                 0.06333 = (300-262)/600 — доля высоты svg до верхнего края кольца */
              top:calc(var(--cell) * 2 - var(--orb-h) * 0.06333);
@@ -250,24 +252,25 @@ html.js .rv.in{ opacity:1; transform:none; }
   .lrow:hover::before{ transform:scaleY(1); }
   .lrow:hover .n{ background:var(--red); color:#fff; box-shadow:inset 0 0 0 1px var(--red); }
 }
-/* пять фичеров укладываются ровно в два ряда: 3 + 2 */
-.co-badges{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
-            margin-bottom:clamp(26px,3vw,38px); }
-.co-badge{ display:inline-flex; align-items:center; gap:9px; padding:13px 19px 13px 16px;
-           border-radius:999px; background:var(--surface); box-shadow:inset 0 0 0 1px var(--line);
-           font-size:clamp(13px,1.05vw,15px); line-height:1.3; color:var(--text-2); white-space:nowrap;
-           transition:box-shadow .35s var(--e), transform .35s var(--e); }
-.co-badge::before{ content:''; width:8px; height:8px; border-radius:50%; background:var(--red); flex:none; }
-.co-badge b{ color:var(--text); font-weight:800; letter-spacing:-.015em; }
-@media (hover:hover){ .co-badge:hover{ box-shadow:inset 0 0 0 1px var(--red); transform:translateY(-2px); } }
-/* на узком экране плашка переносит текст, а не вылезает за край.
-   display:block вместо inline-flex — иначе <b> и текст после него становятся
-   отдельными flex-элементами и переносятся двумя колонками */
+/* ===== О КОМПАНИИ — оформление повторяет блок «О нас» на redstar-support.ru:
+   заголовок и подзаголовок по центру, фото со скруглением 12px, под ним ряд из четырёх
+   карточек с иконками ===== */
+#s-co .shead{ text-align:center; justify-items:center; margin-bottom:clamp(22px,2.6vw,30px); }
+#s-co .shead h2{ max-width:none; }
+#s-co .shead .lead{ color:var(--text); }
+.co-photo{ max-width:1036px; margin:0 auto; border-radius:12px; overflow:hidden; }
+.co-photo img{ display:block; width:100%; height:auto; }
+.co-cards{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px;
+           max-width:1036px; margin:10px auto 0; }
+.co-card{ display:flex; align-items:center; gap:11px; min-height:100px; padding:14px;
+          background:#F5FBFF; border-radius:12px; box-shadow:0 3px 21px rgba(231,235,238,.4);
+          font-size:14px; line-height:1.3; font-weight:500; color:var(--text); }
+.co-card img{ width:40px; height:40px; flex:none; }
+@media (max-width:1024px){ .co-cards{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; } }
 @media (max-width:640px){
-  .co-badges{ justify-content:flex-start; }
-  .co-badge{ display:block; position:relative; white-space:normal; width:100%; max-width:100%;
-             padding:12px 18px 12px 36px; border-radius:18px; }
-  .co-badge::before{ position:absolute; left:17px; top:1.05em; }
+  .co-cards{ grid-template-columns:1fr; gap:12px; }
+  .co-card{ min-height:0; padding:16px 18px; font-size:14px; }
+  .co-card img{ width:34px; height:34px; }
 }
 .ledger-more{ display:grid; grid-template-rows:0fr; }
 .ledger-more.open{ grid-template-rows:1fr; }
@@ -484,6 +487,7 @@ html.js .rv.in{ opacity:1; transform:none; }
 .legal-co p{ font-size:var(--fs-sm); line-height:1.55; color:rgba(255,255,255,.5); }
 .legal-links{ display:flex; flex-direction:column; align-items:flex-end; gap:12px; text-align:right; }
 .policy-link{ display:inline-flex; align-items:center; gap:8px; font-size:var(--fs-sm); font-weight:600;
+              background:none; border:0; border-radius:0; padding:0; font-family:inherit;
               color:rgba(255,255,255,.85); padding-bottom:3px;
               border-bottom:1px solid rgba(255,255,255,.28);
               transition:color .35s var(--e), border-color .35s var(--e); }
@@ -497,7 +501,7 @@ html.js .rv.in{ opacity:1; transform:none; }
 /* ===== баннер о файлах cookie =====
    выбор сохраняется в localStorage и управляет загрузкой аналитики:
    до нажатия «Принять» необязательные счётчики не подключаются */
-.ckb{ position:fixed; left:16px; right:16px; bottom:16px; z-index:150; max-width:700px; margin-inline:auto;
+.ckb{ position:fixed; left:16px; right:16px; bottom:16px; z-index:150; max-width:820px; margin-inline:auto;
       background:var(--surface); border:1px solid var(--line); border-radius:22px;
       box-shadow:0 26px 60px -26px rgba(16,39,92,.55);
       padding:20px clamp(20px,2.4vw,26px);
@@ -612,12 +616,10 @@ html.js .rv.in{ opacity:1; transform:none; }
 }
 
 /* ===== курсор =====
-   обычная белая стрелка со светлым контуром — одинаковая на всей странице.
-   блок стоит в конце стилей, чтобы перекрыть точечные cursor:pointer выше */
-html{ cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M5%202.2%205%2019.6%209.4%2015.9%2012.1%2021.8%2014.8%2020.6%2012.1%2014.8%2018.1%2014.4Z'%20fill='%23FFFFFF'%20stroke='%235A6070'%20stroke-width='1'%20stroke-linejoin='round'/%3E%3C/svg%3E") 5 2, auto; }
+   стандартная системная стрелка; над ссылками, кнопками и другими интерактивными
+   элементами — «палец». блок стоит в конце стилей, чтобы список был в одном месте */
 a,button,summary,label.consent,input[type="checkbox"],
-.btn,.tbtn,.svc-link,.policy-link,.q,.chk-more,.ckb-b,.mx,.tag,.case-img,[data-modal]{
-  cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M5%202.2%205%2019.6%209.4%2015.9%2012.1%2021.8%2014.8%2020.6%2012.1%2014.8%2018.1%2014.4Z'%20fill='%23FFFFFF'%20stroke='%235A6070'%20stroke-width='1'%20stroke-linejoin='round'/%3E%3C/svg%3E") 5 2, pointer; }
+.btn,.tbtn,.svc-link,.policy-link,.q,.chk-more,.ckb-b,.mx,[data-modal]{ cursor:pointer; }
 input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; }
 
 @media (prefers-reduced-motion: reduce){
@@ -836,14 +838,13 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
         <h2 class="h2 split" data-split>Агентство интернет-маркетинга Редстар</h2>
         <p class="lead rv" style="--i:1">Работаем с&nbsp;проектами по&nbsp;всей России, находимся в&nbsp;Ярославле</p>
       </div>
-      <div class="co-badges rv">
-        <span class="co-badge"><b>800+</b> выполненных проектов</span>
-        <span class="co-badge"><b>16 лет опыта</b> — работаем с&nbsp;2010 года</span>
-        <span class="co-badge"><b>Сертифицированный партнёр</b> 1С-Битрикс</span>
-        <span class="co-badge"><b>Аккредитованная</b> Минцифры ИТ-компания</span>
-        <span class="co-badge"><b>Офис в&nbsp;центре Ярославля</b> — все сотрудники в&nbsp;штате</span>
+      <div class="co-photo rv" style="--i:1"><img src="team-photo.webp" alt="Команда Редстар"></div>
+      <div class="co-cards rv" style="--i:2">
+        <div class="co-card"><img src="ico-bitrix.png" alt="" aria-hidden="true">Сертифицированный партнёр 1С&#8209;Битрикс</div>
+        <div class="co-card"><img src="ico-mincifry.png" alt="" aria-hidden="true">Аккредитованная Минцифры ИТ&#8209;компания</div>
+        <div class="co-card"><img src="ico-years.png" alt="" aria-hidden="true">16 лет опыта (работаем с&nbsp;2010 года)</div>
+        <div class="co-card"><img src="ico-projects.png" alt="" aria-hidden="true">Выполнили более 800 проектов</div>
       </div>
-      <div class="photo rv" style="--i:1"><img src="team-photo.webp" alt="Команда Редстар" data-par="0.05"></div>
     </div>
   </section>
   <!-- ПОДДЕРЖКА -->
@@ -1000,7 +1001,7 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
         <a class="soc soc-tg" href="https://t.me/redstar_support" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9.417 15.181l-.397 5.584c.568 0 .814-.244 1.109-.537l2.663-2.545 5.518 4.041c1.012.564 1.725.267 1.998-.931L23.93 3.821c.321-1.496-.541-2.081-1.527-1.714L1.113 10.258c-1.453.564-1.431 1.374-.247 1.741l5.443 1.693L18.558 5.79c.599-.397 1.143-.177.695.22L9.417 15.181z" fill="#fff"/></svg></a>
         <a class="soc soc-max" href="https://max.ru/redstar_support" target="_blank" rel="noopener" aria-label="Max"><svg viewBox="0 0 100 100" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M50.7571 0.2617C78.2929 0.2617 99.8857 22.5974 99.8857 50.1474C99.8857 77.6974 77.6071 99.4903 51.0214 99.4903C41.5857 99.4903 37.0143 98.1617 29.65 92.9474C29.1429 92.5903 28.45 92.6831 28.0214 93.1403C22.3571 99.1831 7.85 103.426 7.18571 95.176C7.18571 80.7903 0 71.4474 0 49.876C0 21.5546 23.2214 0.2617 50.7571 0.2617ZM51.5286 24.8117C38.4643 24.126 28.2643 33.1974 26.0143 47.3831C24.15 59.1332 27.45 73.4546 30.2786 74.176C31.4786 74.4832 34.3571 72.276 36.4571 70.2974C36.85 69.926 37.45 69.8617 37.9071 70.1474C41.1786 72.1474 44.8786 73.6474 48.9571 73.8617C62.3714 74.5617 74.2571 64.0617 74.9643 50.6474C75.6643 37.2331 64.9429 25.5046 51.5286 24.8046V24.8117Z" fill="#fff"/></svg></a>
       </div></div>
-      <div class="fitem"><div class="l">Адрес</div><div class="v">Ярославль, Октябрьский пер. 3</div></div>
+      <div class="fitem"><div class="l">Адрес</div><div class="v">Ярославль, Октябрьский пер.&nbsp;3, офис&nbsp;207</div></div>
     </div>
 
     <div class="foot-legal">
@@ -1017,6 +1018,7 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
       </div>
       <div class="legal-links">
         <a class="policy-link" href="redstar-privacy.html">Политика конфиденциальности<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        <button type="button" class="policy-link" id="ckbSettings">Настройки cookie</button>
         <a class="policy-link" href="redstar-cookies.html">Политика cookie<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
         <p class="copy">© Редстар 2026. Все права защищены</p>
       </div>
@@ -1025,9 +1027,10 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
 </footer>
 
 <div class="ckb" id="ckb" role="region" aria-label="Файлы cookie">
-  <p>Мы используем файлы cookie, чтобы сайт работал корректно и&nbsp;чтобы понимать, как им&nbsp;пользуются. Продолжая пользоваться сайтом, вы&nbsp;соглашаетесь с&nbsp;этим. <a href="redstar-cookies.html" target="_blank" rel="noopener">Политика cookie</a></p>
+  <p>Мы используем файлы cookie: технические&nbsp;— чтобы сайт работал, и&nbsp;аналитические (Яндекс Метрика)&nbsp;— чтобы понимать, как им&nbsp;пользуются. Аналитика включится только после вашего согласия. <a href="redstar-cookies.html" target="_blank" rel="noopener">Политика cookie</a></p>
   <div class="ckb-act">
     <button type="button" class="ckb-b ckb-ok" id="ckbOk">Принять</button>
+    <button type="button" class="ckb-b ckb-no" id="ckbNo">Отклонить</button>
   </div>
 </div>
 
@@ -1209,26 +1212,15 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
 </script>
 
 <script>
-/* ===== баннер о файлах cookie ===== */
-(function(){
-  var KEY = 'rs-cookie', box = document.getElementById('ckb');
-  if(!box) return;
-  var seen = null;
-  try{ seen = localStorage.getItem(KEY); }catch(e){}
-  if(!seen) setTimeout(function(){ box.classList.add('show'); }, 1400);
-  document.getElementById('ckbOk').addEventListener('click', function(){
-    try{ localStorage.setItem(KEY, 'ok'); }catch(e){}
-    box.classList.remove('show');
-  });
-})();
-
-/* ===== Яндекс Метрика =====
+/* ===== баннер о файлах cookie и Яндекс Метрика =====
+   Счётчик подключается только после нажатия «Принять». До этого, а также после
+   «Отклонить», сайт использует только технические файлы (в них хранится сам выбор).
    Разработчику: подставьте номер счётчика в METRIKA_ID вместо null — больше ничего менять не нужно.
-   Цели отправляются так: ym(METRIKA_ID, 'reachGoal', 'lead_audit'); */
+   Цели отправляются так: if(window.ym) ym(METRIKA_ID, 'reachGoal', 'lead_audit'); */
 (function(){
   var METRIKA_ID = null;
-  var loaded = false;
-  function load(){
+  var KEY = 'rs-cookie', box = document.getElementById('ckb'), loaded = false;
+  function loadMetrika(){
     if(loaded || !METRIKA_ID) return;
     loaded = true;
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -1237,6 +1229,18 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
       (window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
     ym(METRIKA_ID,'init',{ clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
   }
-  load();
+  function choice(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
+  function save(v){ try{ localStorage.setItem(KEY, v); }catch(e){} }
+  function show(){ if(box) box.classList.add('show'); }
+  function hide(){ if(box) box.classList.remove('show'); }
+
+  if(choice() === 'ok') loadMetrika();          /* согласие дано раньше */
+  else if(!choice()) setTimeout(show, 1400);    /* выбора ещё не было — спрашиваем */
+
+  if(!box) return;
+  document.getElementById('ckbOk').addEventListener('click', function(){ save('ok'); hide(); loadMetrika(); });
+  document.getElementById('ckbNo').addEventListener('click', function(){ save('no'); hide(); });
+  var st = document.getElementById('ckbSettings');
+  if(st) st.addEventListener('click', function(){ show(); });
 })();
 </script>
