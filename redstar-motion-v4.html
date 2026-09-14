@@ -40,14 +40,6 @@ img{ max-width:100%; display:block; }
 ::selection{ background:var(--red); color:#fff; }
 .wrap{ max-width:var(--wrap); margin:0 auto; padding:0 var(--gutter); }
 
-/* ===== курсор ===== */
-.cur,.cur-dot{ position:fixed; top:0; left:0; z-index:400; pointer-events:none; border-radius:50%; will-change:transform; }
-.cur{ width:38px; height:38px; margin:-19px 0 0 -19px; border:1.5px solid var(--red);
-      transition:width .3s var(--e), height .3s var(--e), margin .3s var(--e), background .3s, opacity .3s; }
-.cur-dot{ width:5px; height:5px; margin:-2.5px 0 0 -2.5px; background:var(--red); }
-.cur.grow{ width:74px; height:74px; margin:-37px 0 0 -37px; background:rgba(217,44,4,.12); }
-@media (hover:none),(max-width:900px){ .cur,.cur-dot{ display:none; } }
-
 /* ===== прогресс ===== */
 .prog{ position:fixed; top:0; left:0; height:2px; width:0; background:var(--red); z-index:130; }
 
@@ -151,8 +143,12 @@ html.js .rv.in{ opacity:1; transform:none; }
 .hero-in{ position:relative; z-index:3; }
 .hero .dec{ z-index:2; }
 /* радар всегда вписан в высоту первого экрана и не наезжает на бегущую строку */
-.hero-orbit{ right:clamp(28px,4.4vw,72px); top:calc(50% + 34px); transform:translateY(-50%);
-             height:min(clamp(230px,37vw,540px), 84%); width:auto; aspect-ratio:1; opacity:.9; }
+.hero-orbit{ --orb-h:min(clamp(230px,37vw,540px), 84%);
+             right:clamp(48px,7vw,120px);
+             /* верх внешнего кольца ложится ровно на 2-ю линию фоновой сетки;
+                0.06333 = (300-262)/600 — доля высоты svg до верхнего края кольца */
+             top:calc(var(--cell) * 2 - var(--orb-h) * 0.06333);
+             height:var(--orb-h); width:auto; aspect-ratio:1; opacity:.9; }
 .hero-orbit .r{ fill:none; stroke:rgba(255,255,255,.3); stroke-width:1.4; }
 .hero-orbit .r.dash{ stroke-dasharray:3 9; stroke:rgba(255,255,255,.45); }
 .hero-orbit .cross{ stroke:rgba(255,255,255,.22); stroke-width:1; stroke-dasharray:4 10; }
@@ -498,6 +494,33 @@ html.js .rv.in{ opacity:1; transform:none; }
 .fitem a.v:hover{ color:var(--red); }
 .fsoc{ display:flex; gap:8px; }
 
+/* ===== баннер о файлах cookie =====
+   выбор сохраняется в localStorage и управляет загрузкой аналитики:
+   до нажатия «Принять» необязательные счётчики не подключаются */
+.ckb{ position:fixed; left:16px; right:16px; bottom:16px; z-index:150; max-width:700px; margin-inline:auto;
+      background:var(--surface); border:1px solid var(--line); border-radius:22px;
+      box-shadow:0 26px 60px -26px rgba(16,39,92,.55);
+      padding:20px clamp(20px,2.4vw,26px);
+      display:flex; flex-wrap:wrap; align-items:center; gap:14px clamp(16px,2vw,22px);
+      transform:translateY(calc(100% + 24px)); opacity:0; visibility:hidden;
+      transition:transform .65s var(--e), opacity .45s var(--e), visibility 0s linear .65s; }
+.ckb.show{ transform:none; opacity:1; visibility:visible; transition-delay:0s; }
+.ckb p{ flex:1 1 300px; margin:0; font-size:var(--fs-sm); line-height:1.5; color:var(--text-2); }
+.ckb p a{ color:var(--red); text-decoration:underline; text-underline-offset:2px; }
+.ckb-act{ display:flex; gap:10px; flex:none; }
+.ckb-b{ font:inherit; font-size:var(--fs-sm); font-weight:700; cursor:pointer; white-space:nowrap;
+        padding:13px 20px; border-radius:999px; border:1px solid transparent;
+        transition:background .3s var(--e), color .3s var(--e), border-color .3s var(--e); }
+.ckb-ok{ background:var(--red); color:#fff; }
+.ckb-no{ background:none; color:var(--text-2); border-color:var(--line); }
+@media (hover:hover){ .ckb-ok:hover{ background:#B82403; }
+                      .ckb-no:hover{ color:var(--text); border-color:var(--text-3); } }
+@media (max-width:640px){
+  .ckb{ left:12px; right:12px; bottom:12px; padding:18px; border-radius:20px; }
+  .ckb-act{ width:100%; }
+  .ckb-b{ flex:1 1 0; padding-inline:12px; }
+}
+
 /* ===== модалки ===== */
 .ov{ position:fixed; inset:0; background:rgba(10,11,13,.6); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
      display:grid; place-items:center; padding:20px; z-index:200; opacity:0; pointer-events:none; transition:opacity .35s var(--e); }
@@ -588,15 +611,22 @@ html.js .rv.in{ opacity:1; transform:none; }
   .chk-act .btn-red,.hero .btn-red{ width:100%; }
 }
 
+/* ===== курсор =====
+   обычная белая стрелка со светлым контуром — одинаковая на всей странице.
+   блок стоит в конце стилей, чтобы перекрыть точечные cursor:pointer выше */
+html{ cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M5%202.2%205%2019.6%209.4%2015.9%2012.1%2021.8%2014.8%2020.6%2012.1%2014.8%2018.1%2014.4Z'%20fill='%23FFFFFF'%20stroke='%235A6070'%20stroke-width='1'%20stroke-linejoin='round'/%3E%3C/svg%3E") 5 2, auto; }
+a,button,summary,label.consent,input[type="checkbox"],
+.btn,.tbtn,.svc-link,.policy-link,.q,.chk-more,.ckb-b,.mx,.tag,.case-img,[data-modal]{
+  cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M5%202.2%205%2019.6%209.4%2015.9%2012.1%2021.8%2014.8%2020.6%2012.1%2014.8%2018.1%2014.4Z'%20fill='%23FFFFFF'%20stroke='%235A6070'%20stroke-width='1'%20stroke-linejoin='round'/%3E%3C/svg%3E") 5 2, pointer; }
+input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; }
+
 @media (prefers-reduced-motion: reduce){
   *{ animation:none !important; transition-duration:.001ms !important; }
   html.js .rv{ opacity:1; transform:none; }
   .split .ln > span{ transform:none !important; }
-  .cur,.cur-dot{ display:none; }
 }
 </style>
 
-<div class="cur" id="cur"></div><div class="cur-dot" id="curDot"></div>
 <div class="prog" id="prog"></div>
 
 <header class="hdr" id="hdr">
@@ -953,7 +983,7 @@ html.js .rv.in{ opacity:1; transform:none; }
         <div class="fld"><label for="f-phone">Номер телефона</label><input id="f-phone" type="tel" placeholder="+7 900 000-00-00" required>
           <span class="fhint">Пришлём отчёт в&nbsp;Телеграм или Макс на&nbsp;этот номер</span></div>
         <label class="consent"><input type="checkbox" required><span>Согласен(на) на&nbsp;обработку персональных данных на&nbsp;условиях <a href="redstar-privacy.html" target="_blank" rel="noopener">политики конфиденциальности</a></span></label>
-        <label class="consent"><input type="checkbox"><span>Согласен(на) получать информацию об&nbsp;услугах в&nbsp;мессенджерах и&nbsp;по&nbsp;телефону</span></label>
+        <label class="consent"><input type="checkbox"><span>Согласен(на) получать информационные и&nbsp;рекламные сообщения об&nbsp;услугах Редстар по&nbsp;телефону и&nbsp;в&nbsp;мессенджерах на&nbsp;условиях <a href="redstar-consent.html" target="_blank" rel="noopener">согласия на&nbsp;рассылку</a></span></label>
         <button type="submit" class="btn btn-red"><span>Отправить сайт на&nbsp;проверку</span></button>
         <div class="status" id="finalStatus">Заявка отправлена&nbsp;— пришлём отчёт в&nbsp;течение 1 рабочего дня.</div>
       </form>
@@ -987,11 +1017,19 @@ html.js .rv.in{ opacity:1; transform:none; }
       </div>
       <div class="legal-links">
         <a class="policy-link" href="redstar-privacy.html">Политика конфиденциальности<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        <a class="policy-link" href="redstar-cookies.html">Политика cookie<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
         <p class="copy">© Редстар 2026. Все права защищены</p>
       </div>
     </div>
   </div>
 </footer>
+
+<div class="ckb" id="ckb" role="region" aria-label="Файлы cookie">
+  <p>Мы используем файлы cookie, чтобы сайт работал корректно и&nbsp;чтобы понимать, как им&nbsp;пользуются. Продолжая пользоваться сайтом, вы&nbsp;соглашаетесь с&nbsp;этим. <a href="redstar-cookies.html" target="_blank" rel="noopener">Политика cookie</a></p>
+  <div class="ckb-act">
+    <button type="button" class="ckb-b ckb-ok" id="ckbOk">Принять</button>
+  </div>
+</div>
 
 <div class="ov" id="ov"><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mt">
   <button class="mx" id="mxBtn" aria-label="Закрыть">✕</button>
@@ -1001,7 +1039,7 @@ html.js .rv.in{ opacity:1; transform:none; }
     <div class="fld"><label for="m-phone">Номер телефона</label><input id="m-phone" type="tel" placeholder="+7 900 000-00-00" required>
       <span class="fhint">Пришлём отчёт в&nbsp;Телеграм или Макс на&nbsp;этот номер</span></div>
     <label class="consent"><input type="checkbox" required><span>Согласен(на) на&nbsp;обработку персональных данных на&nbsp;условиях <a href="redstar-privacy.html" target="_blank" rel="noopener">политики конфиденциальности</a></span></label>
-    <label class="consent"><input type="checkbox"><span>Согласен(на) получать информацию об&nbsp;услугах в&nbsp;мессенджерах и&nbsp;по&nbsp;телефону</span></label>
+    <label class="consent"><input type="checkbox"><span>Согласен(на) получать информационные и&nbsp;рекламные сообщения об&nbsp;услугах Редстар по&nbsp;телефону и&nbsp;в&nbsp;мессенджерах на&nbsp;условиях <a href="redstar-consent.html" target="_blank" rel="noopener">согласия на&nbsp;рассылку</a></span></label>
     <button type="submit" class="btn btn-red"><span>Отправить</span></button>
     <div class="status" id="modalStatus">Заявка отправлена&nbsp;— пришлём отчёт в&nbsp;течение 1 рабочего дня.</div>
   </form>
@@ -1075,21 +1113,8 @@ html.js .rv.in{ opacity:1; transform:none; }
     document.querySelectorAll('.cnt').forEach(function(el){ cio.observe(el); });
   }
 
-  /* ---- курсор + магнит ---- */
-  var cur = document.getElementById('cur'), dot = document.getElementById('curDot');
+  /* ---- магнитные кнопки ---- */
   if(!reduce && window.matchMedia('(hover:hover)').matches){
-    var tx=0,ty=0,cx=0,cy=0,dx=0,dy=0;
-    window.addEventListener('mousemove', function(e){ tx=e.clientX; ty=e.clientY; }, {passive:true});
-    (function loop(){
-      cx += (tx-cx)*.16; cy += (ty-cy)*.16; dx += (tx-dx)*.42; dy += (ty-dy)*.42;
-      cur.style.transform = 'translate('+cx+'px,'+cy+'px)';
-      dot.style.transform = 'translate('+dx+'px,'+dy+'px)';
-      requestAnimationFrame(loop);
-    })();
-    document.querySelectorAll('a,button,.tag,.case-img,input').forEach(function(el){
-      el.addEventListener('mouseenter', function(){ cur.classList.add('grow'); });
-      el.addEventListener('mouseleave', function(){ cur.classList.remove('grow'); });
-    });
     document.querySelectorAll('.mag').forEach(function(b){
       b.addEventListener('mousemove', function(e){
         var r = b.getBoundingClientRect();
@@ -1180,5 +1205,38 @@ html.js .rv.in{ opacity:1; transform:none; }
     e.preventDefault(); document.getElementById('modalStatus').classList.add('show'); setTimeout(close, 1600); });
   document.getElementById('finalForm').addEventListener('submit', function(e){
     e.preventDefault(); document.getElementById('finalStatus').classList.add('show'); });
+})();
+</script>
+
+<script>
+/* ===== баннер о файлах cookie ===== */
+(function(){
+  var KEY = 'rs-cookie', box = document.getElementById('ckb');
+  if(!box) return;
+  var seen = null;
+  try{ seen = localStorage.getItem(KEY); }catch(e){}
+  if(!seen) setTimeout(function(){ box.classList.add('show'); }, 1400);
+  document.getElementById('ckbOk').addEventListener('click', function(){
+    try{ localStorage.setItem(KEY, 'ok'); }catch(e){}
+    box.classList.remove('show');
+  });
+})();
+
+/* ===== Яндекс Метрика =====
+   Разработчику: подставьте номер счётчика в METRIKA_ID вместо null — больше ничего менять не нужно.
+   Цели отправляются так: ym(METRIKA_ID, 'reachGoal', 'lead_audit'); */
+(function(){
+  var METRIKA_ID = null;
+  var loaded = false;
+  function load(){
+    if(loaded || !METRIKA_ID) return;
+    loaded = true;
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],
+      k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+      (window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
+    ym(METRIKA_ID,'init',{ clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+  }
+  load();
 })();
 </script>

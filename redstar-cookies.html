@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Политика использования cookie — Редстар</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0B0D'/%3E%3Ccircle cx='32' cy='32' r='13' fill='%23D92C04'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --text:#1A1A1A; --text-2:#5A6070; --text-3:#8B93A3;
+  --bg:#EFF6FF; --surface:#FFFFFF; --line:#DCE6F5;
+  --red:#D92C04; --navy:#10275C;
+  --font:'Manrope',-apple-system,'Segoe UI',Arial,sans-serif;
+  --wrap:820px; --gutter:clamp(20px,5vw,48px);
+  --e:cubic-bezier(.16,1,.3,1);
+}
+*{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--font);
+      font-size:16px; line-height:1.6; font-weight:400; -webkit-font-smoothing:antialiased; }
+a{ color:inherit; text-decoration:none; }
+h1,h2,h3,p{ margin:0; }
+::selection{ background:var(--red); color:#fff; }
+.wrap{ width:100%; max-width:var(--wrap); margin:0 auto; padding:0 var(--gutter); }
+
+.top{ background:var(--surface); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10; }
+.top-row{ height:66px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.brand{ display:flex; align-items:center; gap:9px; font-weight:800; font-size:19px; letter-spacing:-.02em; }
+.brand i{ width:12px; height:12px; border-radius:50%; background:var(--red); display:block; }
+.back{ display:inline-flex; align-items:center; gap:9px; font-size:14.5px; font-weight:600; color:var(--text-2);
+       transition:color .3s var(--e); }
+.back svg{ width:13px; height:13px; }
+@media (hover:hover){ .back:hover{ color:var(--red); } }
+
+.doc{ padding:clamp(34px,5vw,64px) 0 clamp(48px,7vw,96px); }
+h1{ font-size:clamp(28px,4.4vw,44px); line-height:1.08; letter-spacing:-.032em; font-weight:800; }
+.sub{ margin-top:12px; font-size:clamp(15px,1.4vw,18px); color:var(--text-2); font-weight:500; }
+.meta{ margin-top:clamp(22px,3vw,32px); padding:clamp(18px,2.4vw,26px); background:var(--surface);
+       border:1px solid var(--line); border-radius:18px; font-size:14px; line-height:1.55; color:var(--text-2); }
+.meta b{ display:block; color:var(--text); font-weight:700; font-size:15px; margin-bottom:8px; }
+.meta span{ display:block; }
+
+.ph{ margin:clamp(34px,4.4vw,52px) 0 14px; font-size:clamp(19px,2vw,25px); line-height:1.2;
+     letter-spacing:-.028em; font-weight:800; display:flex; gap:12px; align-items:baseline; }
+.pn{ flex:none; font-size:13px; font-weight:800; color:var(--red); font-variant-numeric:tabular-nums;
+     min-width:22px; }
+.pp{ margin-top:12px; color:var(--text-2); font-size:15.5px; }
+.pl{ margin:12px 0 0; padding-left:0; list-style:none; }
+.pl li{ position:relative; padding-left:20px; margin-top:9px; color:var(--text-2); font-size:15.5px; }
+.pl li::before{ content:''; position:absolute; left:0; top:.62em; width:9px; height:1.5px; background:var(--red); }
+.pp a,.pl a{ color:var(--red); text-decoration:underline; text-underline-offset:2px; }
+
+/* карточки категорий cookie */
+.ck{ margin-top:16px; padding:clamp(18px,2.2vw,24px); background:var(--surface);
+     border:1px solid var(--line); border-radius:18px; }
+.ck h3{ font-size:17px; font-weight:800; letter-spacing:-.02em; }
+.ck .tag{ display:inline-block; margin-bottom:10px; padding:4px 11px; border-radius:999px;
+          font-size:11.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.ck .tag.req{ background:#EAF0FF; color:var(--navy); }
+.ck .tag.opt{ background:#FDECE8; color:var(--red); }
+.ck dl{ margin:14px 0 0; display:grid; grid-template-columns:170px 1fr; gap:8px 18px;
+        font-size:14.5px; color:var(--text-2); }
+.ck dt{ font-weight:700; color:var(--text); }
+.ck dd{ margin:0; }
+@media (max-width:560px){ .ck dl{ grid-template-columns:minmax(0,1fr); gap:2px 0; }
+                          .ck dd{ margin-bottom:10px; } }
+
+.foot{ background:var(--navy); color:#fff; padding:clamp(30px,4vw,44px) 0; }
+.foot p{ font-size:13.5px; color:rgba(255,255,255,.6); }
+.foot a{ color:#fff; font-weight:600; }
+@media (hover:hover){ .foot a:hover{ color:#FF8B75; } }
+</style>
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="redstar-motion-v4.html"><i aria-hidden="true"></i>Редстар</a>
+    <a class="back" href="redstar-motion-v4.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>На главную</a>
+  </div>
+</header>
+
+<main class="doc">
+  <div class="wrap">
+    <h1>Политика использования файлов cookie</h1>
+    <p class="sub">Какие файлы cookie использует сайт, зачем и как отказаться от них</p>
+    <div class="meta">
+      <b>ООО «ЦРВЕНА ЗВЕЗДА»</b>
+      <span>ОГРН: 1227600001243</span>
+      <span>ИНН: 7604382475</span>
+      <span>КПП: 760401001</span>
+      <span style="margin-top:8px">г. Ярославль, Октябрьский переулок, дом 3, офис №207</span>
+    </div>
+
+    <h2 class="ph"><span class="pn">1</span>Общие положения</h2>
+    <p class="pp">1.1. Настоящая Политика использования файлов cookie (далее — Политика) разъясняет, какие файлы cookie и аналогичные технологии применяются на настоящем сайте, с какой целью, на каком правовом основании и каким образом Пользователь может отказаться от их использования.</p>
+    <p class="pp">1.2. Оператором сайта является ООО «ЦРВЕНА ЗВЕЗДА» (ОГРН 1227600001243, ИНН 7604382475, КПП 760401001, адрес: 150000, город Ярославль, переулок Октябрьский, дом 3, помещение 6) — далее Оператор.</p>
+    <p class="pp">1.3. Настоящая Политика является неотъемлемой частью <a href="redstar-privacy.html">Политики в отношении обработки персональных данных</a>. Термины, не определённые в настоящей Политике, используются в значении, установленном указанным документом и Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных».</p>
+    <p class="pp">1.4. При первом посещении сайта Пользователю отображается информационный баннер об использовании файлов cookie. Продолжая использовать сайт, в том числе нажимая кнопку «Принять» в баннере, Пользователь выражает согласие на использование файлов cookie на условиях настоящей Политики. Если Пользователь не согласен с использованием файлов cookie, он вправе отключить их в настройках браузера способами, указанными в разделе 5 настоящей Политики, либо прекратить использование сайта.</p>
+
+    <h2 class="ph"><span class="pn">2</span>Что такое файлы cookie</h2>
+    <p class="pp">2.1. Файлы cookie — небольшие текстовые файлы, которые сайт сохраняет в браузере Пользователя при посещении и считывает при последующих обращениях. Наряду с ними сайт может использовать аналогичные технологии локального хранения данных браузера (localStorage, sessionStorage), к которым применяются правила настоящей Политики.</p>
+    <p class="pp">2.2. Сами по себе файлы cookie не содержат имени, номера телефона или адреса электронной почты Пользователя. Вместе с тем отдельные идентификаторы, сохраняемые в cookie, в сочетании с иными сведениями могут быть отнесены к персональным данным, в связи с чем Оператор обрабатывает их с соблюдением требований законодательства о персональных данных.</p>
+
+    <h2 class="ph"><span class="pn">3</span>Категории используемых файлов cookie</h2>
+    <p class="pp">3.1. Сайт использует две категории файлов cookie и технологий локального хранения данных.</p>
+
+    <div class="ck">
+      <span class="tag req">Необходимые</span>
+      <h3>Технические файлы</h3>
+      <dl>
+        <dt>Назначение</dt><dd>Сохранение выбора Пользователя в баннере о файлах cookie, чтобы баннер не отображался повторно при каждом посещении, и обеспечение корректной работы интерфейса сайта.</dd>
+        <dt>Кто устанавливает</dt><dd>Оператор (собственные файлы сайта).</dd>
+        <dt>Состав данных</dt><dd>Отметка о сделанном выборе. Сведения, позволяющие идентифицировать Пользователя, не сохраняются.</dd>
+        <dt>Срок хранения</dt><dd>До очистки данных браузера Пользователем.</dd>
+        <dt>Согласие</dt><dd>Не требуется: без этих файлов сайт не может функционировать корректно и исполнить выбор самого Пользователя.</dd>
+      </dl>
+    </div>
+
+    <div class="ck">
+      <span class="tag opt">Необязательные</span>
+      <h3>Аналитические и рекламные файлы</h3>
+      <dl>
+        <dt>Назначение</dt><dd>Сбор обезличенной статистики посещаемости для оценки качества сайта и эффективности рекламных кампаний Оператора, а также показ Пользователю рекламных материалов Оператора на других сайтах (ретаргетинг).</dd>
+        <dt>Кто устанавливает</dt><dd>ООО «ЯНДЕКС» (сервис «Яндекс Метрика») — при условии подключения сервиса к сайту.</dd>
+        <dt>Состав данных</dt><dd>Источник перехода на сайт, просмотренные страницы, время и длительность посещения, тип устройства и браузера, приблизительный регион по IP-адресу, действия на странице.</dd>
+        <dt>Срок хранения</dt><dd>Определяется правилами соответствующего сервиса.</dd>
+        <dt>Согласие</dt><dd>Используются на основании согласия Пользователя, выраженного продолжением использования сайта после отображения информационного баннера. Отказаться можно способами, указанными в разделе 5.</dd>
+      </dl>
+    </div>
+
+    <p class="pp">3.2. Сведения об обработке данных сервисом «Яндекс Метрика» опубликованы по адресу <a href="https://yandex.ru/legal/confidential/" target="_blank" rel="noopener">https://yandex.ru/legal/confidential/</a>.</p>
+
+    <h2 class="ph"><span class="pn">4</span>Правовое основание и цели обработки</h2>
+    <p class="pp">4.1. Правовым основанием обработки данных, получаемых с использованием необязательных файлов cookie, является согласие Пользователя, выраженное путём продолжения использования сайта после отображения информационного баннера о файлах cookie, в том числе путём нажатия в нём кнопки «Принять» (пункт 1 части 1 статьи 6 Федерального закона № 152-ФЗ).</p>
+    <p class="pp">4.2. Цели обработки: обеспечение работоспособности сайта, анализ посещаемости и поведения посетителей в обезличенном виде, оценка результативности рекламных кампаний Оператора, показ рекламных материалов Оператора.</p>
+    <p class="pp">4.3. Оператор не использует файлы cookie для принятия решений, порождающих юридические последствия для Пользователя, и не осуществляет на их основе автоматизированную обработку, затрагивающую права и законные интересы Пользователя.</p>
+
+    <h2 class="ph"><span class="pn">5</span>Как отказаться от файлов cookie и отозвать согласие</h2>
+    <p class="pp">5.1. Пользователь вправе в любой момент отказаться от необязательных файлов cookie или отозвать ранее данное согласие одним из следующих способов:</p>
+    <ul class="pl">
+      <li>запретить сохранение файлов cookie в настройках браузера полностью или для отдельных сайтов;</li>
+      <li>удалить уже сохранённые сайтом файлы cookie в настройках браузера;</li>
+      <li>использовать режим приватного просмотра браузера;</li>
+      <li>установить блокирующее дополнение к браузеру для сервиса «Яндекс Метрика», доступное по адресу <a href="https://yandex.ru/support/metrica/general/opt-out.html" target="_blank" rel="noopener">yandex.ru/support/metrica/general/opt-out.html</a>;</li>
+      <li>направить обращение на адрес электронной почты <a href="mailto:info@redstaragency.ru">info@redstaragency.ru</a>.</li>
+    </ul>
+    <p class="pp">5.2. Отзыв согласия не влияет на правомерность обработки данных, осуществлённой до момента такого отзыва.</p>
+    <p class="pp">5.3. Отключение необязательных файлов cookie не ограничивает доступ Пользователя к содержанию сайта и к возможности направить заявку через формы обратной связи. Отключение всех файлов cookie средствами браузера может привести к некорректной работе отдельных элементов сайта.</p>
+
+    <h2 class="ph"><span class="pn">6</span>Передача данных третьим лицам</h2>
+    <p class="pp">6.1. Данные, собираемые с использованием необязательных файлов cookie, обрабатываются в информационных системах поставщика соответствующего сервиса аналитики на условиях, установленных таким поставщиком.</p>
+    <p class="pp">6.2. Оператор не продаёт и не передаёт данные, полученные с использованием файлов cookie, иным третьим лицам, за исключением случаев, прямо предусмотренных законодательством Российской Федерации.</p>
+
+    <h2 class="ph"><span class="pn">7</span>Заключительные положения</h2>
+    <p class="pp">7.1. Оператор вправе вносить изменения в настоящую Политику. Актуальная редакция всегда размещена на настоящей странице.</p>
+    <p class="pp">7.2. Вопросы, связанные с использованием файлов cookie и обработкой персональных данных, Пользователь может направить на адрес электронной почты <a href="mailto:info@redstaragency.ru">info@redstaragency.ru</a> или по телефону <a href="tel:+74852319404">8 (4852) 31-94-04</a>.</p>
+    <p class="pp">7.3. Политика действует бессрочно до замены её новой редакцией.</p>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>© Редстар 2026. Все права защищены. <a href="redstar-motion-v4.html">Вернуться на главную</a></p>
+  </div>
+</footer>
