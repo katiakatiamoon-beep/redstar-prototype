@@ -466,6 +466,11 @@ html.js .rv.in{ opacity:1; transform:none; }
 .fhint{ display:block; margin-top:5px; font-size:var(--fs-xs); line-height:1.4; color:var(--text-2); }
 .status{ display:none; font-size:var(--fs-sm); font-weight:700; color:#12864A; }
 .status.show{ display:block; animation:pop .4s var(--e) both; }
+.status.err{ color:var(--red); }
+.status.err a{ text-decoration:underline; text-underline-offset:2px; }
+.btn-red[disabled]{ opacity:.6; pointer-events:none; }
+/* скрытое поле-ловушка: человек его не видит, бот заполняет — такую заявку отбрасываем */
+.hp{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
 .form .btn-red{ width:100%; padding-block:15px; margin-top:1px; }
 
 /* ===== ФУТЕР ===== */
@@ -980,6 +985,7 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
         <p class="lead rv" style="--i:1">Обезопасьте ваш бизнес от&nbsp;штрафов&nbsp;— отправьте сайт на&nbsp;проверку.<br>Это 5 минут вашего времени<br>и&nbsp;1 рабочий день&nbsp;— нашего.</p>
       </div>
       <form class="form rv" style="--i:2" id="finalForm">
+        <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="fld"><label for="f-site">Ссылка на&nbsp;сайт</label><input id="f-site" type="text" placeholder="example.ru" required></div>
         <div class="fld"><label for="f-phone">Номер телефона</label><input id="f-phone" type="tel" placeholder="+7 900 000-00-00" required>
           <span class="fhint">Пришлём отчёт в&nbsp;Телеграм или Макс на&nbsp;этот номер</span></div>
@@ -1038,6 +1044,7 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
   <button class="mx" id="mxBtn" aria-label="Закрыть">✕</button>
   <h3 id="mt">Оставить заявку</h3><p class="msub" id="ms"></p>
   <form id="modalForm">
+    <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
     <div class="fld"><label for="m-site">Ссылка на&nbsp;сайт</label><input id="m-site" type="text" placeholder="example.ru" required></div>
     <div class="fld"><label for="m-phone">Номер телефона</label><input id="m-phone" type="tel" placeholder="+7 900 000-00-00" required>
       <span class="fhint">Пришлём отчёт в&nbsp;Телеграм или Макс на&nbsp;этот номер</span></div>
@@ -1204,10 +1211,57 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape'){ if(ov.classList.contains('open')) close(); if(ovMsg.classList.contains('open')) closeMsg(); } });
 
-  document.getElementById('modalForm').addEventListener('submit', function(e){
-    e.preventDefault(); document.getElementById('modalStatus').classList.add('show'); setTimeout(close, 1600); });
-  document.getElementById('finalForm').addEventListener('submit', function(e){
-    e.preventDefault(); document.getElementById('finalStatus').classList.add('show'); });
+  /* ---- отправка заявок ----
+     Разработчику: FORM_ENDPOINT — адрес веб-приложения Google Apps Script
+     (как его получить — в redstar-forms-instruction.md). Пока адрес пустой,
+     форма никуда не отправляет и просто показывает «спасибо». */
+  var FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxnDVR6zq8KFFWqBw_gZ0NRM_MXoUHCLDbsvnOqiDCv5U4F96bkGm6sWBTeU45Ki1vLfw/exec';
+
+  /* рекламные метки из адреса страницы запоминаем при первом заходе,
+     чтобы они не потерялись, если посетитель походит по странице */
+  var utm = (function(){
+    var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','yclid'],
+        q = new URLSearchParams(location.search), out = {}, has = false;
+    keys.forEach(function(k){ var v = q.get(k); if(v){ out[k] = v; has = true; } });
+    try{ if(has) sessionStorage.setItem('rs-utm', JSON.stringify(out));
+         else out = JSON.parse(sessionStorage.getItem('rs-utm') || '{}'); }catch(e){}
+    return out;
+  })();
+
+  function wireForm(form, status, after){
+    var okHtml = status.innerHTML;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var boxes = form.querySelectorAll('input[type="checkbox"]'),
+          btn = form.querySelector('button[type="submit"]');
+      var data = {
+        site: form.querySelector('input[type="text"]:not(.hp)').value.trim(),
+        phone: form.querySelector('input[type="tel"]').value.trim(),
+        consent_pd: boxes[0].checked,
+        consent_ads: boxes[1] ? boxes[1].checked : false,
+        utm: utm, page: location.href, form: form.id,
+        hp: form.querySelector('.hp').value
+      };
+      function done(){
+        status.classList.remove('err'); status.innerHTML = okHtml; status.classList.add('show');
+        form.reset(); if(window.rsGoal) rsGoal('lead_audit'); if(after) after();
+      }
+      function fail(){
+        status.classList.add('err');
+        status.innerHTML = 'Не удалось отправить заявку. Напишите нам в&nbsp;<a href="https://t.me/islantev" target="_blank" rel="noopener">Telegram</a> или позвоните <a href="tel:+74852319404">8&nbsp;(4852)&nbsp;31-94-04</a>.';
+        status.classList.add('show');
+      }
+      if(!FORM_ENDPOINT){ done(); return; }
+      btn.disabled = true;
+      fetch(FORM_ENDPOINT, { method:'POST', body: JSON.stringify(data) })
+        .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function(j){ if(j && j.ok) done(); else fail(); })
+        .catch(fail)
+        .then(function(){ btn.disabled = false; });
+    });
+  }
+  wireForm(document.getElementById('modalForm'), document.getElementById('modalStatus'), function(){ setTimeout(close, 1600); });
+  wireForm(document.getElementById('finalForm'), document.getElementById('finalStatus'));
 })();
 </script>
 
@@ -1216,7 +1270,7 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
    Счётчик подключается только после нажатия «Принять». До этого, а также после
    «Отклонить», сайт использует только технические файлы (в них хранится сам выбор).
    Разработчику: подставьте номер счётчика в METRIKA_ID вместо null — больше ничего менять не нужно.
-   Цели отправляются так: if(window.ym) ym(METRIKA_ID, 'reachGoal', 'lead_audit'); */
+   Цель «заявка» отправляется из кода форм через rsGoal('lead_audit'). */
 (function(){
   var METRIKA_ID = null;
   var KEY = 'rs-cookie', box = document.getElementById('ckb'), loaded = false;
@@ -1229,6 +1283,7 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
       (window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
     ym(METRIKA_ID,'init',{ clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
   }
+  window.rsGoal = function(name){ if(loaded && window.ym) ym(METRIKA_ID, 'reachGoal', name); };
   function choice(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
   function save(v){ try{ localStorage.setItem(KEY, v); }catch(e){} }
   function show(){ if(box) box.classList.add('show'); }
