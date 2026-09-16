@@ -1234,6 +1234,8 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
       e.preventDefault();
       var boxes = form.querySelectorAll('input[type="checkbox"]'),
           btn = form.querySelector('button[type="submit"]');
+      /* без согласия на обработку данных заявка не уходит, даже если браузер пропустил required */
+      if(!boxes[0].checked){ boxes[0].focus(); return; }
       var data = {
         site: form.querySelector('input[type="text"]:not(.hp)').value.trim(),
         phone: form.querySelector('input[type="tel"]').value.trim(),
