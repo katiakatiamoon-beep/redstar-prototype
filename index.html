@@ -1272,9 +1272,17 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
    Счётчик подключается только после нажатия «Принять». До этого, а также после
    «Отклонить», сайт использует только технические файлы (в них хранится сам выбор).
    Разработчику: подставьте номер счётчика в METRIKA_ID вместо null — больше ничего менять не нужно.
-   Цель «заявка» отправляется из кода форм через rsGoal('lead_audit'). */
+   Цели (тип «JavaScript-событие» в настройках счётчика, идентификаторы — как в коде):
+     lead_audit          — заявка успешно отправлена (главная конверсия; вызывается из кода форм)
+     form_open           — открыл модалку с формой по любой CTA-кнопке
+     form_start          — начал заполнять форму (первый фокус в поле)
+     click_phone         — клик по телефону (шапка, футер, текст ошибки формы)
+     click_messenger     — клик на Telegram или Max (параметр messenger: telegram | max)
+     click_email         — клик по почте
+     checklist_expand    — раскрыл полный чек-лист из 9 пунктов
+     click_support_price — ушёл на тарифы техподдержки redstar-support.ru */
 (function(){
-  var METRIKA_ID = null;
+  var METRIKA_ID = 112857148;
   var KEY = 'rs-cookie', box = document.getElementById('ckb'), loaded = false;
   function loadMetrika(){
     if(loaded || !METRIKA_ID) return;
@@ -1285,7 +1293,30 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
       (window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
     ym(METRIKA_ID,'init',{ clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
   }
-  window.rsGoal = function(name){ if(loaded && window.ym) ym(METRIKA_ID, 'reachGoal', name); };
+  window.rsGoal = function(name, params){ if(loaded && window.ym) ym(METRIKA_ID, 'reachGoal', name, params || undefined); };
+
+  /* ---- цели по кликам: одна делегированная подписка на всю страницу ---- */
+  document.addEventListener('click', function(e){
+    var el = e.target.closest('a, button');
+    if(!el) return;
+    var href = el.getAttribute('href') || '';
+    if(el.hasAttribute('data-modal')) rsGoal('form_open');
+    else if(el.id === 'moreBtn' && el.getAttribute('aria-expanded') === 'true') rsGoal('checklist_expand'); /* обработчик кнопки уже переключил aria-expanded */
+    else if(href.indexOf('tel:') === 0) rsGoal('click_phone');
+    else if(href.indexOf('mailto:') === 0) rsGoal('click_email');
+    else if(href.indexOf('https://t.me/') === 0) rsGoal('click_messenger', { messenger:'telegram' });
+    else if(href.indexOf('https://max.ru/') === 0) rsGoal('click_messenger', { messenger:'max' });
+    else if(href.indexOf('redstar-support.ru') !== -1) rsGoal('click_support_price');
+  });
+  /* начал заполнять форму — первый введённый символ, один раз на каждую форму
+     (не focus: модалка сама ставит курсор в поле при открытии) */
+  document.addEventListener('input', function(e){
+    var form = e.target.closest('form');
+    if(!form || form.dataset.started || !e.target.matches('input:not(.hp)')) return;
+    form.dataset.started = '1';
+    rsGoal('form_start');
+  });
+
   function choice(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
   function save(v){ try{ localStorage.setItem(KEY, v); }catch(e){} }
   function show(){ if(box) box.classList.add('show'); }
