@@ -465,13 +465,29 @@ html.js .rv.in{ opacity:1; transform:none; }
 .consent + .consent{ margin-top:-6px; }
 .consent a{ color:var(--red); text-decoration:underline; text-underline-offset:2px; }
 .fhint{ display:block; margin-top:5px; font-size:var(--fs-xs); line-height:1.4; color:var(--text-2); }
-/* уведомление после отправки: плашкой, а не просто цветным текстом —
-   иначе строку под кнопкой легко не заметить */
-.status{ display:none; font-size:var(--fs-sm); font-weight:700; color:#0B6B3A;
-         background:#E6F7EE; border:1px solid #A6E3C4; border-radius:12px; padding:12px 14px; }
+/* сообщение об ошибке отправки — плашкой под кнопкой */
+.status{ display:none; font-size:var(--fs-sm); font-weight:700;
+         border-radius:12px; padding:12px 14px; }
 .status.show{ display:block; animation:pop .4s var(--e) both; }
-.status.err{ color:#A3210A; background:#FDECE7; border-color:#F3B9A6; }
+.status.err{ color:#A3210A; background:#FDECE7; border:1px solid #F3B9A6; }
 .status.err a{ text-decoration:underline; text-underline-offset:2px; }
+
+/* экран благодарности: после успешной отправки форма прячется целиком
+   и на её месте остаётся только он — так его нельзя не заметить */
+.thanks{ display:none; text-align:center; padding:10px 4px 4px; }
+.form.sent > *:not(.thanks), form.sent > *:not(.thanks){ display:none; }
+.form.sent .thanks, form.sent .thanks{ display:block; animation:pop .5s var(--e) both; }
+.thanks-ic{ width:68px; height:68px; margin:0 auto 18px; border-radius:50%; background:#E6F7EE;
+            display:flex; align-items:center; justify-content:center; }
+.thanks-ic svg{ width:34px; height:34px; stroke:#0B6B3A; }
+.thanks h4{ margin:0 0 10px; font-size:var(--fs-h3); line-height:1.15; letter-spacing:-.02em;
+            font-weight:800; color:var(--text); }
+.thanks p{ margin:0 auto; max-width:330px; font-size:var(--fs-body); line-height:1.5; color:var(--text-2); }
+.thanks .btn{ margin-top:22px; }
+/* в модалке на экране благодарности прячем её заголовок — иначе он висит слева
+   над центрированным блоком; крестик закрытия остаётся */
+.mbox.sent > h3, .mbox.sent > .msub{ display:none; }
+.mbox.sent{ padding-top:34px; }
 .btn-red[disabled]{ opacity:.6; pointer-events:none; }
 /* скрытое поле-ловушка: человек его не видит, бот заполняет — такую заявку отбрасываем */
 .hp{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
@@ -996,7 +1012,12 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
         <label class="consent"><input type="checkbox" required><span>Согласен(на) на&nbsp;обработку персональных данных на&nbsp;условиях <a href="redstar-privacy.html" target="_blank" rel="noopener">политики конфиденциальности</a></span></label>
         <label class="consent"><input type="checkbox"><span>Согласен(на) получать информационные и&nbsp;рекламные сообщения об&nbsp;услугах Редстар по&nbsp;телефону и&nbsp;в&nbsp;мессенджерах на&nbsp;условиях <a href="redstar-consent.html" target="_blank" rel="noopener">согласия на&nbsp;рассылку</a></span></label>
         <button type="submit" class="btn btn-red"><span>Отправить сайт на&nbsp;проверку</span></button>
-        <div class="status" id="finalStatus">Заявка отправлена&nbsp;— пришлём отчёт в&nbsp;течение 1 рабочего дня.</div>
+        <div class="status" id="finalStatus"></div>
+        <div class="thanks" aria-live="polite">
+          <div class="thanks-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg></div>
+          <h4>Спасибо, заявка отправлена</h4>
+          <p>Пришлём отчёт в&nbsp;Телеграм или Макс на&nbsp;указанный номер в&nbsp;течение 1 рабочего дня.</p>
+        </div>
       </form>
     </div>
   </section>
@@ -1055,7 +1076,13 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
     <label class="consent"><input type="checkbox" required><span>Согласен(на) на&nbsp;обработку персональных данных на&nbsp;условиях <a href="redstar-privacy.html" target="_blank" rel="noopener">политики конфиденциальности</a></span></label>
     <label class="consent"><input type="checkbox"><span>Согласен(на) получать информационные и&nbsp;рекламные сообщения об&nbsp;услугах Редстар по&nbsp;телефону и&nbsp;в&nbsp;мессенджерах на&nbsp;условиях <a href="redstar-consent.html" target="_blank" rel="noopener">согласия на&nbsp;рассылку</a></span></label>
     <button type="submit" class="btn btn-red"><span>Отправить</span></button>
-    <div class="status" id="modalStatus">Заявка отправлена&nbsp;— пришлём отчёт в&nbsp;течение 1 рабочего дня.</div>
+    <div class="status" id="modalStatus"></div>
+    <div class="thanks" aria-live="polite">
+      <div class="thanks-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg></div>
+      <h4>Спасибо, заявка отправлена</h4>
+      <p>Пришлём отчёт в&nbsp;Телеграм или Макс на&nbsp;указанный номер в&nbsp;течение 1 рабочего дня.</p>
+      <button type="button" class="btn btn-red" id="thanksClose"><span>Закрыть</span></button>
+    </div>
   </form>
 </div></div>
 
@@ -1200,6 +1227,10 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
   /* ---- модалки ---- */
   var ov = document.getElementById('ov'), mt = document.getElementById('mt'), ms = document.getElementById('ms'), last = null;
   function open(t,s){ mt.textContent = t||'Оставить заявку'; ms.textContent = s||''; last = document.activeElement;
+    /* если окно уже показывало благодарность, возвращаем форму в исходный вид */
+    var mform = document.getElementById('modalForm'), mst = document.getElementById('modalStatus');
+    mform.classList.remove('sent'); mst.classList.remove('show','err'); mst.innerHTML = '';
+    ov.querySelector('.mbox').classList.remove('sent');
     ov.classList.add('open'); document.body.style.overflow = 'hidden';
     setTimeout(function(){ var i = ov.querySelector('input'); if(i) i.focus(); }, 120); }
   function close(){ ov.classList.remove('open'); document.body.style.overflow = ''; if(last) last.focus(); }
@@ -1233,7 +1264,6 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
   })();
 
   function wireForm(form, status, after){
-    var okHtml = status.innerHTML;
     form.addEventListener('submit', function(e){
       e.preventDefault();
       var boxes = form.querySelectorAll('input[type="checkbox"]'),
@@ -1250,22 +1280,29 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
       };
       /* уведомление появляется под кнопкой, а кнопку часто нажимают у самого низа экрана —
          подтягиваем его в середину окна, иначе посетитель решит, что ничего не произошло */
-      function reveal(){
-        status.classList.add('show');
-        var r = status.getBoundingClientRect(), vh = window.innerHeight || 0;
-        /* дёргать страницу зря не надо — подтягиваем, только если уведомление за краем экрана */
+      /* дёргать страницу зря не надо — подтягиваем, только если блок оказался за краем экрана */
+      function bring(el){
+        if(!el) return;
+        var r = el.getBoundingClientRect(), vh = window.innerHeight || 0;
         if(r.top < 80 || r.bottom > vh - 20){
-          try{ status.scrollIntoView({ block:'center', behavior:'smooth' }); }catch(e){ status.scrollIntoView(); }
+          try{ el.scrollIntoView({ block:'center', behavior:'smooth' }); }catch(e){ el.scrollIntoView(); }
         }
       }
+      /* успех: форма прячется целиком, на её месте — экран благодарности */
       function done(){
-        status.classList.remove('err'); status.innerHTML = okHtml; reveal();
-        form.reset(); if(window.rsGoal) rsGoal('lead_audit'); if(after) after();
+        status.classList.remove('show','err'); status.innerHTML = '';
+        form.reset();
+        form.classList.add('sent');
+        if(window.rsGoal) rsGoal('lead_audit');
+        bring(form.querySelector('.thanks'));
+        if(after) after();
       }
+      /* ошибка: форма остаётся на месте, чтобы можно было отправить ещё раз */
       function fail(){
         status.classList.add('err');
         status.innerHTML = 'Не удалось отправить заявку. Напишите нам в&nbsp;<a href="https://t.me/islantev" target="_blank" rel="noopener">Telegram</a> или позвоните <a href="tel:+74852319404">8&nbsp;(4852)&nbsp;31-94-04</a>.';
-        reveal();
+        status.classList.add('show');
+        bring(status);
       }
       if(!FORM_ENDPOINT){ done(); return; }
       btn.disabled = true;
@@ -1276,9 +1313,12 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
         .then(function(){ btn.disabled = false; });
     });
   }
-  /* 1,6 с не хватало, чтобы прочитать подтверждение: окно закрывалось раньше,
-     и выглядело так, будто уведомления не было вовсе */
-  wireForm(document.getElementById('modalForm'), document.getElementById('modalStatus'), function(){ setTimeout(close, 3600); });
+  /* окно больше не закрывается само: раньше оно исчезало через 1,6 с, и выглядело так,
+     будто подтверждения не было вовсе. Теперь остаётся экран благодарности с кнопкой «Закрыть» */
+  wireForm(document.getElementById('modalForm'), document.getElementById('modalStatus'), function(){
+    ov.querySelector('.mbox').classList.add('sent');
+  });
+  document.getElementById('thanksClose').addEventListener('click', close);
   wireForm(document.getElementById('finalForm'), document.getElementById('finalStatus'));
 
   /* ---- телефон: +7 подставляется сам ----
