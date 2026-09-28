@@ -2,6 +2,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Редстар — бесплатный аудит сайта по 152-ФЗ</title>
+<meta name="description" content="Бесплатно проверим ваш сайт по 9 требованиям Роскомнадзора и пришлём список нарушений за 1 рабочий день. Штраф за нарушения 152-ФЗ — до 6 млн ₽. Агентство «Редстар», Ярославль.">
 <script>if('IntersectionObserver' in window){ document.documentElement.classList.add('js'); }</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0B0D'/%3E%3Ccircle cx='32' cy='32' r='13' fill='%23D92C04'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -464,9 +465,12 @@ html.js .rv.in{ opacity:1; transform:none; }
 .consent + .consent{ margin-top:-6px; }
 .consent a{ color:var(--red); text-decoration:underline; text-underline-offset:2px; }
 .fhint{ display:block; margin-top:5px; font-size:var(--fs-xs); line-height:1.4; color:var(--text-2); }
-.status{ display:none; font-size:var(--fs-sm); font-weight:700; color:#12864A; }
+/* уведомление после отправки: плашкой, а не просто цветным текстом —
+   иначе строку под кнопкой легко не заметить */
+.status{ display:none; font-size:var(--fs-sm); font-weight:700; color:#0B6B3A;
+         background:#E6F7EE; border:1px solid #A6E3C4; border-radius:12px; padding:12px 14px; }
 .status.show{ display:block; animation:pop .4s var(--e) both; }
-.status.err{ color:var(--red); }
+.status.err{ color:#A3210A; background:#FDECE7; border-color:#F3B9A6; }
 .status.err a{ text-decoration:underline; text-underline-offset:2px; }
 .btn-red[disabled]{ opacity:.6; pointer-events:none; }
 /* скрытое поле-ловушка: человек его не видит, бот заполняет — такую заявку отбрасываем */
@@ -1244,14 +1248,24 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
         utm: utm, page: location.href, form: form.id,
         hp: form.querySelector('.hp').value
       };
+      /* уведомление появляется под кнопкой, а кнопку часто нажимают у самого низа экрана —
+         подтягиваем его в середину окна, иначе посетитель решит, что ничего не произошло */
+      function reveal(){
+        status.classList.add('show');
+        var r = status.getBoundingClientRect(), vh = window.innerHeight || 0;
+        /* дёргать страницу зря не надо — подтягиваем, только если уведомление за краем экрана */
+        if(r.top < 80 || r.bottom > vh - 20){
+          try{ status.scrollIntoView({ block:'center', behavior:'smooth' }); }catch(e){ status.scrollIntoView(); }
+        }
+      }
       function done(){
-        status.classList.remove('err'); status.innerHTML = okHtml; status.classList.add('show');
+        status.classList.remove('err'); status.innerHTML = okHtml; reveal();
         form.reset(); if(window.rsGoal) rsGoal('lead_audit'); if(after) after();
       }
       function fail(){
         status.classList.add('err');
         status.innerHTML = 'Не удалось отправить заявку. Напишите нам в&nbsp;<a href="https://t.me/islantev" target="_blank" rel="noopener">Telegram</a> или позвоните <a href="tel:+74852319404">8&nbsp;(4852)&nbsp;31-94-04</a>.';
-        status.classList.add('show');
+        reveal();
       }
       if(!FORM_ENDPOINT){ done(); return; }
       btn.disabled = true;
@@ -1262,8 +1276,89 @@ input[type="text"],input[type="tel"],input[type="email"],textarea{ cursor:text; 
         .then(function(){ btn.disabled = false; });
     });
   }
-  wireForm(document.getElementById('modalForm'), document.getElementById('modalStatus'), function(){ setTimeout(close, 1600); });
+  /* 1,6 с не хватало, чтобы прочитать подтверждение: окно закрывалось раньше,
+     и выглядело так, будто уведомления не было вовсе */
+  wireForm(document.getElementById('modalForm'), document.getElementById('modalStatus'), function(){ setTimeout(close, 3600); });
   wireForm(document.getElementById('finalForm'), document.getElementById('finalStatus'));
+
+  /* ---- телефон: +7 подставляется сам ----
+     Пока в поле не встали, оно пустое и показывает подсказку «+7 900 000-00-00».
+     При клике или табе в поле появляется «+7 », курсор встаёт сразу после него —
+     посетителю остаётся набрать только 10 цифр, код страны он не набирает.
+     Стереть «+7 » нельзя. Если человек ушёл из поля, ничего не набрав, поле снова
+     становится пустым: сработает обычная проверка «Заполните это поле» и вернётся подсказка.
+     По ходу набора номер сам расставляется как «+7 999 123-45-67».
+     Вставка из буфера и автозаполнение браузера понимают любую запись:
+     89991234567, 79991234567, 9991234567, +7 (999) 123-45-67.
+     Незаконченный номер браузер отправить не даст. */
+  (function(){
+    var PREFIX = '+7 ';
+
+    /* из любой записи делаем 11 цифр вида 7XXXXXXXXXX.
+       Сначала отрезаем сам префикс «+7 », иначе привычно набранная восьмёрка
+       («+7 » уже в поле, человек по привычке добавляет 8 999…) уехала бы в номер. */
+    function digits(v){
+      var s = String(v || '');
+      if(s.indexOf(PREFIX) === 0) s = s.slice(PREFIX.length);
+      var d = s.replace(/\D/g, '');
+      /* после кода страны в российском номере ровно 10 цифр: всё лишнее в начале —
+         это набранная или вставленная восьмёрка либо семёрка */
+      if(d.length > 10 && (d.charAt(0) === '8' || d.charAt(0) === '7')) d = d.slice(1);
+      return ('7' + d).slice(0, 11);
+    }
+
+    /* 79991234567 → «+7 999 123-45-67» */
+    function format(d){
+      var s = PREFIX + d.slice(1, 4);
+      if(d.length > 4) s += ' ' + d.slice(4, 7);
+      if(d.length > 7) s += '-' + d.slice(7, 9);
+      if(d.length > 9) s += '-' + d.slice(9, 11);
+      return s;
+    }
+
+    /* пока в номере меньше десяти цифр, браузер не выпустит форму */
+    function check(el){
+      var d = digits(el.value);
+      el.setCustomValidity(!el.value || d.length === 11 ? '' : 'Введите номер полностью: 10 цифр после +7');
+    }
+
+    function apply(el, raw){
+      var d = digits(raw);
+      el.value = d.length > 1 ? format(d) : PREFIX;
+      check(el);
+    }
+
+    document.querySelectorAll('input[type="tel"]').forEach(function(el){
+      el.setAttribute('autocomplete', 'tel');
+      /* maxlength не ставим: он заблокировал бы 11-ю цифру у тех, кто по привычке
+         набирает 8 перед номером, и в поле остался бы неверный «+7 899 912-34-56».
+         Длину и так режет digits() — лишние цифры просто отбрасываются. */
+
+      el.addEventListener('focus', function(){
+        if(el.value) return;
+        /* value присваиваем напрямую: события input не будет, и цель form_start
+           не сработает раньше, чем посетитель действительно начнёт набирать */
+        el.value = PREFIX;
+        setTimeout(function(){ try{ el.setSelectionRange(PREFIX.length, PREFIX.length); }catch(e){} }, 0);
+      });
+
+      el.addEventListener('input',  function(){ apply(el, el.value); });
+      el.addEventListener('change', function(){ apply(el, el.value); });   /* автозаполнение браузера */
+
+      el.addEventListener('paste', function(e){
+        var cb = e.clipboardData || window.clipboardData;
+        if(!cb) return;
+        e.preventDefault();
+        apply(el, cb.getData('text'));      /* вставленный номер заменяет поле целиком */
+        /* своё событие input — иначе после вставки не сработает цель form_start */
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+
+      el.addEventListener('blur', function(){
+        if(digits(el.value).length < 2){ el.value = ''; el.setCustomValidity(''); }
+      });
+    });
+  })();
 })();
 </script>
 
